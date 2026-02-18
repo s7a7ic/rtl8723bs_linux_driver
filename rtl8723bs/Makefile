@@ -172,7 +172,6 @@ ifeq ($(CONFIG_PCI_HCI), y)
 HCI_NAME = pci
 endif
 
-
 _OS_INTFS_FILES :=	os_dep/osdep_service.o \
 			os_dep/linux/os_intfs.o \
 			os_dep/linux/$(HCI_NAME)_intf.o \
@@ -201,7 +200,6 @@ _OS_INTFS_FILES += os_dep/linux/custom_gpio_linux.o
 _OS_INTFS_FILES += os_dep/linux/$(HCI_NAME)_ops_linux.o
 endif
 
-
 _HAL_INTFS_FILES :=	hal/hal_intf.o \
 			hal/hal_com.o \
 			hal/hal_com_phycfg.o \
@@ -214,7 +212,6 @@ _HAL_INTFS_FILES :=	hal/hal_intf.o \
 			hal/hal_mcc.o \
 			hal/hal_hci/hal_$(HCI_NAME).o \
 			hal/led/hal_$(HCI_NAME)_led.o
-
 
 ccflags-y += -I$(src)/hal/btc
 _BTC_FILES += hal/btc/halbtc8723bwifionly.o \
@@ -1240,8 +1237,6 @@ CROSS_COMPILE := /home/share/CusEnv/FreeScale/arm-eabi-4.4.3/bin/arm-eabi-
 KSRC ?= /home/share/CusEnv/FreeScale/FS_kernel_env
 endif
 
-
-
 ifeq ($(CONFIG_PLATFORM_ACTIONS_ATJ227X), y)
 ccflags-y += -DCONFIG_LITTLE_ENDIAN -DCONFIG_PLATFORM_ACTIONS_ATJ227X
 ARCH := mips
@@ -1702,7 +1697,6 @@ ifeq ($(CONFIG_PCI_HCI), y)
 MODULE_NAME := rtw_pci
 endif
 
-
 endif
 
 USER_MODULE_NAME ?=
@@ -1740,7 +1734,7 @@ rtk_core :=	core/rtw_cmd.o \
 		core/rtw_btcoex.o \
 		core/rtw_beamforming.o \
 		core/rtw_odm.o \
-		core/efuse/rtw_efuse.o 
+		core/rtw_efuse.o
 
 ifeq ($(CONFIG_SDIO_HCI), y)
 rtk_core += core/rtw_sdio.o
@@ -1821,7 +1815,6 @@ config_r:
 	@echo "make config"
 	/bin/bash script/Configure script/config.in
 
-
 .PHONY: modules clean
 
 clean:
@@ -1838,4 +1831,3 @@ clean:
 	rm -fr *.mod.c *.mod *.o .*.cmd *.ko *~
 	rm -fr .tmp_versions
 endif
-
