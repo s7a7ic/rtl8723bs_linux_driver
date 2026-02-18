@@ -2,7 +2,7 @@
 
 Patched for use with newer linux kernel versions (tested on 6.12 to 6.19).
 
-I'm using this driver on the ASUS TinkerBoard S (RK3288 - ARMv7) under LibreELEC.
+I'm using this driver on the ASUS Tinker Board S (RK3288 - ARMv7) under LibreELEC.
 
 Module name: 8723bs
 
@@ -20,7 +20,7 @@ Original source from:
 
 https://github.com/rockchip-linux/kernel/tree/release-4.4/drivers/net/wireless/rockchip_wlan/rtl8723bs
 
-## Why using this driver instead of the staging driver from the kernel?
+## Why use this driver instead of the staging driver from the kernel?
 
 The staging driver often does not show all SSIDs and has the "invalid_key" error.
 If you manage to connect, it often randomly disconnects or won't automatically connect at all.
