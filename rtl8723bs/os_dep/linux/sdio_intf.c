@@ -16,7 +16,6 @@
 
 #include <drv_types.h>
 #include <hal_data.h>
-#include <platform_ops.h>
 
 #ifndef CONFIG_SDIO_HCI
 #error "CONFIG_SDIO_HCI shall be on!\n"
@@ -1104,13 +1103,6 @@ static int rtw_drv_entry(void)
 	rtw_android_wifictrl_func_add();
 #endif /* !CONFIG_PLATFORM_INTEL_BYT */
 
-	ret = platform_wifi_power_on();
-	if (ret) {
-		RTW_INFO("%s: power on failed!!(%d)\n", __FUNCTION__, ret);
-		ret = -1;
-		goto exit;
-	}
-
 	sdio_drvpriv.drv_registered = _TRUE;
 	rtw_suspend_lock_init();
 	rtw_drv_proc_init();
@@ -1125,13 +1117,9 @@ static int rtw_drv_entry(void)
 		rtw_ndev_notifier_unregister();
 		rtw_inetaddr_notifier_unregister();
 		RTW_INFO("%s: register driver failed!!(%d)\n", __FUNCTION__, ret);
-		goto poweroff;
 	}
 
 	goto exit;
-
-poweroff:
-	platform_wifi_power_off();
 
 exit:
 	RTW_PRINT("module init ret=%d\n", ret);
@@ -1147,8 +1135,6 @@ static void rtw_drv_halt(void)
 	sdio_unregister_driver(&sdio_drvpriv.r871xs_drv);
 
 	rtw_android_wifictrl_func_del();
-
-	platform_wifi_power_off();
 
 	rtw_suspend_lock_uninit();
 	rtw_drv_proc_deinit();

@@ -217,9 +217,6 @@ _HAL_INTFS_FILES :=	hal/hal_intf.o \
 			hal/led/hal_$(HCI_NAME)_led.o
 
 
-ccflags-y += -I$(src)/platform
-_PLATFORM_FILES := platform/platform_ops.o
-
 ccflags-y += -I$(src)/hal/btc
 _BTC_FILES += hal/btc/halbtc8723bwifionly.o \
 				hal/btc/halbtc8822bwifionly.o \
@@ -1058,11 +1055,6 @@ ccflags-y += -DCONFIG_IOCTL_CFG80211 -DRTW_USE_CFG80211_STA_EVENT
 # Enable this for Android 5.0
 ccflags-y += -DCONFIG_RADIO_WORK
 
-ifeq ($(CONFIG_SDIO_HCI), y)
-ccflags-y += -DCONFIG_PLATFORM_OPS
-_PLATFORM_FILES += platform/platform_arm_act_sdio.o
-endif
-
 ARCH := arm
 CROSS_COMPILE := /opt/arm-2011.09/bin/arm-none-linux-gnueabi-
 KSRC := /home/android_sdk/Action-semi/705a_android_L/android/kernel
@@ -1076,17 +1068,12 @@ ccflags-y += -DCONFIG_TRAFFIC_PROTECT
 ccflags-y += -DCONFIG_CONCURRENT_MODE
 ccflags-y += -DCONFIG_IOCTL_CFG80211 -DRTW_USE_CFG80211_STA_EVENT
 ccflags-y += -DCONFIG_RESUME_IN_WORKQUEUE
-ccflags-y += -DCONFIG_PLATFORM_OPS
 
 # Enable this for Android 5.0
 ccflags-y += -DCONFIG_RADIO_WORK
 
 ifeq ($(CONFIG_USB_HCI), y)
 ccflags-y += -DCONFIG_USE_USB_BUFFER_ALLOC_TX
-_PLATFORM_FILES += platform/platform_ARM_SUNxI_usb.o
-endif
-ifeq ($(CONFIG_SDIO_HCI), y)
-_PLATFORM_FILES += platform/platform_ARM_SUN50IW1P1_sdio.o
 endif
 
 ARCH := arm64
@@ -1230,10 +1217,6 @@ endif
 
 ifeq ($(CONFIG_PLATFORM_RTK_DMP), y)
 ccflags-y += -DCONFIG_LITTLE_ENDIAN -DRTK_DMP_PLATFORM  -DCONFIG_WIRELESS_EXT
-ccflags-y += -DCONFIG_PLATFORM_OPS
-ifeq ($(CONFIG_USB_HCI), y)
-_PLATFORM_FILES += platform/platform_RTK_DMP_usb.o
-endif
 ARCH:=mips
 CROSS_COMPILE:=mipsel-linux-
 KVER:=
@@ -1427,15 +1410,12 @@ ccflags-y += -DCONFIG_PLATFORM_ARM_SUNxI
 ccflags-y += -DCONFIG_CONCURRENT_MODE
 ccflags-y += -DCONFIG_IOCTL_CFG80211 -DRTW_USE_CFG80211_STA_EVENT
 
-ccflags-y += -DCONFIG_PLATFORM_OPS
 ifeq ($(CONFIG_USB_HCI), y)
 ccflags-y += -DCONFIG_USE_USB_BUFFER_ALLOC_TX
-_PLATFORM_FILES += platform/platform_ARM_SUNxI_usb.o
 endif
 ifeq ($(CONFIG_SDIO_HCI), y)
 # default setting for A10-EVB mmc0
 #ccflags-y += -DCONFIG_WITS_EVB_V13
-_PLATFORM_FILES += platform/platform_ARM_SUNxI_sdio.o
 endif
 
 ARCH := arm
@@ -1455,15 +1435,12 @@ ccflags-y += -DCONFIG_CONCURRENT_MODE
 ccflags-y += -DCONFIG_IOCTL_CFG80211 -DRTW_USE_CFG80211_STA_EVENT
 ccflags-y +=  -DCONFIG_QOS_OPTIMIZATION
 
-ccflags-y += -DCONFIG_PLATFORM_OPS
 ifeq ($(CONFIG_USB_HCI), y)
 ccflags-y += -DCONFIG_USE_USB_BUFFER_ALLOC_TX
-_PLATFORM_FILES += platform/platform_ARM_SUNxI_usb.o
 endif
 ifeq ($(CONFIG_SDIO_HCI), y)
 # default setting for A31-EVB mmc0
 ccflags-y += -DCONFIG_A31_EVB
-_PLATFORM_FILES += platform/platform_ARM_SUNnI_sdio.o
 endif
 
 ARCH := arm
@@ -1487,13 +1464,8 @@ ccflags-y += -DCONFIG_CONCURRENT_MODE
 ccflags-y += -DCONFIG_IOCTL_CFG80211 -DRTW_USE_CFG80211_STA_EVENT
 ccflags-y +=  -DCONFIG_QOS_OPTIMIZATION
 
-ccflags-y += -DCONFIG_PLATFORM_OPS
 ifeq ($(CONFIG_USB_HCI), y)
 ccflags-y += -DCONFIG_USE_USB_BUFFER_ALLOC_TX
-_PLATFORM_FILES += platform/platform_ARM_SUNxI_usb.o
-endif
-ifeq ($(CONFIG_SDIO_HCI), y)
-_PLATFORM_FILES += platform/platform_ARM_SUNnI_sdio.o
 endif
 
 ARCH := arm
@@ -1517,13 +1489,8 @@ ccflags-y += -DCONFIG_TRAFFIC_PROTECT
 ccflags-y += -DCONFIG_CONCURRENT_MODE
 ccflags-y += -DCONFIG_IOCTL_CFG80211 -DRTW_USE_CFG80211_STA_EVENT
 
-ccflags-y += -DCONFIG_PLATFORM_OPS
 ifeq ($(CONFIG_USB_HCI), y)
 ccflags-y += -DCONFIG_USE_USB_BUFFER_ALLOC_TX
-_PLATFORM_FILES += platform/platform_ARM_SUNxI_usb.o
-endif
-ifeq ($(CONFIG_SDIO_HCI), y)
-_PLATFORM_FILES += platform/platform_ARM_SUNnI_sdio.o
 endif
 
 ARCH := arm
@@ -1547,13 +1514,8 @@ ccflags-y += -DCONFIG_IOCTL_CFG80211 -DRTW_USE_CFG80211_STA_EVENT
 # Enable this for Android 5.0
 ccflags-y += -DCONFIG_RADIO_WORK
 
-ccflags-y += -DCONFIG_PLATFORM_OPS
 ifeq ($(CONFIG_USB_HCI), y)
 ccflags-y += -DCONFIG_USE_USB_BUFFER_ALLOC_TX
-_PLATFORM_FILES += platform/platform_ARM_SUNxI_usb.o
-endif
-ifeq ($(CONFIG_SDIO_HCI), y)
-_PLATFORM_FILES += platform/platform_ARM_SUNnI_sdio.o
 endif
 
 ARCH := arm
@@ -1611,10 +1573,6 @@ ccflags-y += -DCONFIG_LITTLE_ENDIAN
 ifeq ($(RTL871X), rtl8188e)
 ccflags-y += -DSOFTAP_PS_DURATION=50
 endif
-ifeq ($(CONFIG_SDIO_HCI), y)
-ccflags-y += -DCONFIG_PLATFORM_OPS
-_PLATFORM_FILES += platform/platform_sprd_sdio.o
-endif
 endif
 
 ifeq ($(CONFIG_PLATFORM_ARM_SPREADTRUM_8810), y)
@@ -1627,20 +1585,12 @@ ccflags-y += -DCONFIG_LITTLE_ENDIAN
 ifeq ($(RTL871X), rtl8188e)
 ccflags-y += -DSOFTAP_PS_DURATION=50
 endif
-ifeq ($(CONFIG_SDIO_HCI), y)
-ccflags-y += -DCONFIG_PLATFORM_OPS
-_PLATFORM_FILES += platform/platform_sprd_sdio.o
-endif
 endif
 
 ifeq ($(CONFIG_PLATFORM_ARM_WMT), y)
 ccflags-y += -DCONFIG_LITTLE_ENDIAN
 ccflags-y += -DCONFIG_CONCURRENT_MODE
 ccflags-y += -DCONFIG_IOCTL_CFG80211 -DRTW_USE_CFG80211_STA_EVENT
-ccflags-y += -DCONFIG_PLATFORM_OPS
-ifeq ($(CONFIG_SDIO_HCI), y)
-_PLATFORM_FILES += platform/platform_ARM_WMT_sdio.o
-endif
 ARCH := arm
 CROSS_COMPILE := /home/android_sdk/WonderMedia/wm8880-android4.4/toolchain/arm_201103_gcc4.5.2/mybin/arm_1103_le-
 KSRC := /home/android_sdk/WonderMedia/wm8880-android4.4/kernel4.4/
@@ -1661,10 +1611,6 @@ ccflags-y += -DCONFIG_QOS_OPTIMIZATION
 #ccflags-y += -DCONFIG_#PLATFORM_OPS
 ifeq ($(CONFIG_USB_HCI), y)
 ccflags-y += -DCONFIG_USE_USB_BUFFER_ALLOC_TX
-#_PLATFORM_FILES += platform/platform_ARM_SUNxI_usb.o
-endif
-ifeq ($(CONFIG_SDIO_HCI), y)
-_PLATFORM_FILES += platform/platform_ARM_SUNnI_sdio.o
 endif
 
 ARCH := arm
@@ -1817,7 +1763,6 @@ $(MODULE_NAME)-y += $(_OS_INTFS_FILES)
 $(MODULE_NAME)-y += $(_HAL_INTFS_FILES)
 $(MODULE_NAME)-y += $(_PHYDM_FILES)
 $(MODULE_NAME)-y += $(_BTC_FILES)
-$(MODULE_NAME)-y += $(_PLATFORM_FILES)
 
 $(MODULE_NAME)-$(CONFIG_MP_INCLUDED) += core/rtw_mp.o
 
@@ -1898,7 +1843,6 @@ clean:
 	cd core ; rm -fr *.mod.c *.mod *.o .*.cmd *.ko
 	cd os_dep/linux ; rm -fr *.mod.c *.mod *.o .*.cmd *.ko
 	cd os_dep ; rm -fr *.mod.c *.mod *.o .*.cmd *.ko
-	cd platform ; rm -fr *.mod.c *.mod *.o .*.cmd *.ko
 	rm -fr Module.symvers ; rm -fr Module.markers ; rm -fr modules.order
 	rm -fr *.mod.c *.mod *.o .*.cmd *.ko *~
 	rm -fr .tmp_versions
