@@ -127,12 +127,11 @@ _HAL_INTFS_FILES :=	hal/hal_intf.o \
 			hal/hal_$(HCI_NAME).o \
 			hal/led/hal_$(HCI_NAME)_led.o
 
-ccflags-y += -I$(src)/hal/btc
-_BTC_FILES += hal/btc/halbtc8723bwifionly.o
+_BTC_FILES += hal/HalBtc8723bWifiOnly.o
 
 ifeq ($(CONFIG_BT_COEXIST), y)
-_BTC_FILES += 			hal/btc/halbtc8723b1ant.o \
-				hal/btc/halbtc8723b2ant.o
+_BTC_FILES += 			hal/HalBtc8723b1Ant.o \
+				hal/HalBtc8723b2Ant.o
 endif
 
 include $(TopDIR)/hal/phydm/phydm.mk

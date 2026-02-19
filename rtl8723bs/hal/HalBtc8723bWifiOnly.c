@@ -13,16 +13,11 @@
  * more details.
  *
  *****************************************************************************/
-#include "mp_precomp.h"
+#include "Mp_Precomp.h"
 
-
-VOID
-ex_hal8723b_wifi_only_hw_config(
-	IN struct wifi_only_cfg *pwifionlycfg
-	)
+void ex_hal8723b_wifi_only_hw_config(IN struct wifi_only_cfg *pwifionlycfg)
 {
 	struct wifi_only_haldata *pwifionly_haldata = &pwifionlycfg->haldata_info;
-
 
 	halwifionly_write1byte(pwifionlycfg, 0x778, 0x3); /* Set pta for wifi first priority, 0x1 need to reference pta table to determine wifi and bt priority */
 	halwifionly_bitmaskwrite1byte(pwifionlycfg, 0x40, 0x20, 0x1);

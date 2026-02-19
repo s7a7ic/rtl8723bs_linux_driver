@@ -59,12 +59,12 @@ extern u4Byte GLBtcDbgType[];
 #define HS_SUPPORT		0
 #endif
 
-#include "halbtcoutsrc.h"
-#include "halbtc8723b1ant.h"
-#include "halbtc8723b2ant.h"
+#include "HalBtcOutSrc.h"
+#include "HalBtc8723b1Ant.h"
+#include "HalBtc8723b2Ant.h"
 
 /* for wifi only mode */
 #include "hal_btcoex_wifionly.h"
-#include "halbtc8723bwifionly.h"
+#include "HalBtc8723bWifiOnly.h"
 
 #endif /*  __MP_PRECOMP_H__ */

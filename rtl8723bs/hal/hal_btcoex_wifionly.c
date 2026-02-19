@@ -12,7 +12,7 @@
  * more details.
  *
  *****************************************************************************/
-#include "btc/mp_precomp.h"
+#include "Mp_Precomp.h"
 #include <hal_btcoex_wifionly.h>
 
 struct  wifi_only_cfg GLBtCoexistWifiOnly;
