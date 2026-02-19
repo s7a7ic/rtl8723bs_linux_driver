@@ -10,13 +10,7 @@
 #ifdef CONFIG_SINGLE_RECV_BUF
 	#define NR_RECVBUFF (1)
 #else
-	#if defined(CONFIG_GSPI_HCI)
-		#define NR_RECVBUFF (32)
-	#elif defined(CONFIG_SDIO_HCI)
-		#define NR_RECVBUFF (8)
-	#else
-		#define NR_RECVBUFF (8)
-	#endif
+	#define NR_RECVBUFF (8)
 #endif /* CONFIG_SINGLE_RECV_BUF */
 #ifdef CONFIG_PREALLOC_RX_SKB_BUFFER
 	#define NR_PREALLOC_RECV_SKB (rtw_rtkm_get_nr_recv_skb()>>1)
@@ -220,10 +214,17 @@ struct recv_stat {
 
 	unsigned int rxdw1;
 
+#if !((defined(CONFIG_RTL8192E) || defined(CONFIG_RTL8814A) || defined(CONFIG_RTL8822B) || defined(CONFIG_RTL8821C)) && defined(CONFIG_PCI_HCI))  /* exclude 8192ee, 8814ae, 8822be, 8821ce */
+	unsigned int rxdw2;
+
+	unsigned int rxdw3;
+#endif
+
 #ifndef BUF_DESC_ARCH
 	unsigned int rxdw4;
 
 	unsigned int rxdw5;
+
 #endif /* if BUF_DESC_ARCH is defined, rx_buf_desc occupy 4 double words */
 };
 #endif
@@ -300,7 +301,7 @@ struct recv_priv {
 
 #ifdef CONFIG_RTW_NAPI
 		struct sk_buff_head rx_napi_skb_queue;
-#endif 
+#endif
 
 #ifdef CONFIG_RX_INDICATE_QUEUE
 	struct task rx_indicate_tasklet;
@@ -312,7 +313,9 @@ struct recv_priv {
 	_queue	free_recv_buf_queue;
 	u32	free_recv_buf_queue_cnt;
 
+#if defined(CONFIG_SDIO_HCI)
 	_queue	recv_buf_pending_queue;
+#endif
 
 	/* For display the phy informatiom */
 	u8 is_signal_dbg;	/* for debug */
@@ -516,6 +519,7 @@ __inline static u8 *get_recvframe_data(union recv_frame *precvframe)
 __inline static u8 *recvframe_push(union recv_frame *precvframe, sint sz)
 {
 	/* append data before rx_data */
+
 	/* add data to the start of recv_frame
 	*
 	*      This function extends the used data area of the recv_frame at the buffer
@@ -539,6 +543,7 @@ __inline static u8 *recvframe_push(union recv_frame *precvframe, sint sz)
 __inline static u8 *recvframe_pull(union recv_frame *precvframe, sint sz)
 {
 	/* rx_data += sz; move rx_data sz bytes  hereafter */
+
 	/* used for extract sz bytes from rx_data, update rx_data and return the updated rx_data to the caller */
 
 	if (precvframe == NULL)
@@ -559,6 +564,7 @@ __inline static u8 *recvframe_pull(union recv_frame *precvframe, sint sz)
 __inline static u8 *recvframe_put(union recv_frame *precvframe, sint sz)
 {
 	/* rx_tai += sz; move rx_tail sz bytes  hereafter */
+
 	/* used for append sz bytes from ptr to rx_tail, update rx_tail and return the updated rx_tail to the caller */
 	/* after putting, rx_tail must be still larger than rx_end. */
 	unsigned char *prev_rx_tail;
@@ -585,8 +591,10 @@ __inline static u8 *recvframe_put(union recv_frame *precvframe, sint sz)
 __inline static u8 *recvframe_pull_tail(union recv_frame *precvframe, sint sz)
 {
 	/* rmv data from rx_tail (by yitsen) */
+
 	/* used for extract sz bytes from rx_end, update rx_end and return the updated rx_end to the caller */
 	/* after pulling, rx_end must be still larger than rx_data. */
+
 	if (precvframe == NULL)
 		return NULL;
 
@@ -625,27 +633,21 @@ __inline static union recv_frame *pkt_to_recvframe(_pkt *pkt)
 {
 	u8 *buf_star;
 	union recv_frame *precv_frame;
-
 	precv_frame = rxmem_to_recvframe((unsigned char *)buf_star);
-
 	return precv_frame;
 }
 
 __inline static u8 *pkt_to_recvmem(_pkt *pkt)
 {
 	/* return the rx_head */
-
 	union recv_frame *precv_frame = pkt_to_recvframe(pkt);
-
 	return	precv_frame->u.hdr.rx_head;
 }
 
 __inline static u8 *pkt_to_recvdata(_pkt *pkt)
 {
 	/* return the rx_data */
-
 	union recv_frame *precv_frame = pkt_to_recvframe(pkt);
-
 	return	precv_frame->u.hdr.rx_data;
 }
 

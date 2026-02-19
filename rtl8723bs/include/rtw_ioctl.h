@@ -7,8 +7,7 @@
 #ifndef _RTW_IOCTL_H_
 #define _RTW_IOCTL_H_
 
-/*	00 - Success
-*	11 - Error */
+/*	00 - Success 11 - Error */
 #define STATUS_SUCCESS				(0x00000000L)
 #define STATUS_PENDING				(0x00000103L)
 
@@ -142,7 +141,7 @@ static NDIS_STATUS oid_null_function(struct oid_par_priv *poid_par_priv)
 }
 #endif
 
-#if defined(PLATFORM_LINUX) && defined(CONFIG_WIRELESS_EXT)
+#if defined(CONFIG_WIRELESS_EXT)
 extern struct iw_handler_def  rtw_handlers_def;
 #endif
 

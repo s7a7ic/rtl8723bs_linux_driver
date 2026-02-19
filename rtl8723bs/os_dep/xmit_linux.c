@@ -1,17 +1,9 @@
+// SPDX-License-Identifier: GPL-2.0
 /******************************************************************************
  *
- * Copyright(c) 2007 - 2017 Realtek Corporation.
+ * Copyright(c) 2007 - 2017 Realtek Corporation. All rights reserved.
  *
- * This program is free software; you can redistribute it and/or modify it
- * under the terms of version 2 of the GNU General Public License as
- * published by the Free Software Foundation.
- *
- * This program is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
- * more details.
- *
- *****************************************************************************/
+ ******************************************************************************/
 #define _XMIT_OSDEP_C_
 
 #include <drv_types.h>
@@ -59,15 +51,59 @@ sint rtw_endofpktfile(struct pkt_file *pfile)
 
 void rtw_set_tx_chksum_offload(_pkt *pkt, struct pkt_attrib *pattrib)
 {
+
+#ifdef CONFIG_TCP_CSUM_OFFLOAD_TX
+	struct sk_buff *skb = (struct sk_buff *)pkt;
+	pattrib->hw_tcp_csum = 0;
+
+	if (skb->ip_summed == CHECKSUM_PARTIAL) {
+		if (skb_shinfo(skb)->nr_frags == 0) {
+			const struct iphdr *ip = ip_hdr(skb);
+			if (ip->protocol == IPPROTO_TCP) {
+				/* TCP checksum offload by HW */
+				RTW_INFO("CHECKSUM_PARTIAL TCP\n");
+				pattrib->hw_tcp_csum = 1;
+				/* skb_checksum_help(skb); */
+			} else if (ip->protocol == IPPROTO_UDP) {
+				/* RTW_INFO("CHECKSUM_PARTIAL UDP\n"); */
+#if 1
+				skb_checksum_help(skb);
+#else
+				/* Set UDP checksum = 0 to skip checksum check */
+				struct udphdr *udp = skb_transport_header(skb);
+				udp->check = 0;
+#endif
+			} else {
+				RTW_INFO("%s-%d TCP CSUM offload Error!!\n", __FUNCTION__, __LINE__);
+				WARN_ON(1);     /* we need a WARN() */
+			}
+		} else { /* IP fragmentation case */
+			RTW_INFO("%s-%d nr_frags != 0, using skb_checksum_help(skb);!!\n", __FUNCTION__, __LINE__);
+			skb_checksum_help(skb);
+		}
+	}
+#endif
 }
 
 int rtw_os_xmit_resource_alloc(_adapter *padapter, struct xmit_buf *pxmitbuf, u32 alloc_sz, u8 flag)
 {
+	if (alloc_sz > 0) {
+		pxmitbuf->pallocated_buf = rtw_zmalloc(alloc_sz);
+		if (pxmitbuf->pallocated_buf == NULL)
+			return _FAIL;
+
+		pxmitbuf->pbuf = (u8 *)N_BYTE_ALIGMENT((SIZE_PTR)(pxmitbuf->pallocated_buf), XMITBUF_ALIGN_SZ);
+	}
+
 	return _SUCCESS;
 }
 
 void rtw_os_xmit_resource_free(_adapter *padapter, struct xmit_buf *pxmitbuf, u32 free_sz, u8 flag)
 {
+	if (free_sz > 0) {
+		if (pxmitbuf->pallocated_buf)
+			rtw_mfree(pxmitbuf->pallocated_buf, free_sz);
+	}
 }
 
 void dump_os_queue(void *sel, _adapter *padapter)
