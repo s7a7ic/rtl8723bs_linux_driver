@@ -1,23 +1,9 @@
+// SPDX-License-Identifier: GPL-2.0
 /******************************************************************************
  *
- * Copyright(c) 2007 - 2017 Realtek Corporation.
+ * Copyright(c) 2007 - 2017 Realtek Corporation. All rights reserved.
  *
- * This program is free software; you can redistribute it and/or modify it
- * under the terms of version 2 of the GNU General Public License as
- * published by the Free Software Foundation.
- *
- * This program is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
- * more details.
- *
- *****************************************************************************/
-
-/* ************************************************************
- * include files
- * ************************************************************ */
-
-#include "mp_precomp.h"
+ ******************************************************************************/
 #include "phydm_precomp.h"
 
 /*
@@ -47,12 +33,7 @@ odm_read_1byte(
 
 }
 
-
-u16
-odm_read_2byte(
-	struct PHY_DM_STRUCT		*p_dm,
-	u32			reg_addr
-)
+u16 odm_read_2byte(struct PHY_DM_STRUCT *p_dm, u32 reg_addr)
 {
 #if (DM_ODM_SUPPORT_TYPE & (ODM_AP))
 	struct rtl8192cd_priv	*priv	= p_dm->priv;

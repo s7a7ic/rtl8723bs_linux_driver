@@ -4,8 +4,6 @@
  * Copyright(c) 2007 - 2017 Realtek Corporation. All rights reserved.
  *
  ******************************************************************************/
-#include "mp_precomp.h"
-
 #if RT_PLATFORM==PLATFORM_MACOSX
 #include "phydm_precomp.h"
 #else
@@ -34,7 +32,6 @@
 #define     idx_0xc1c                       0
 #define     idx_0xc78                       1
 
-/*---------------------------Define Local Constant---------------------------*/
 /* 3============================================================
  * 3 Tx Power Tracking
  * 3============================================================ */

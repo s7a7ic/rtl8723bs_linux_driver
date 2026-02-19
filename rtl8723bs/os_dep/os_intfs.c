@@ -58,7 +58,6 @@ int rtw_soft_ap = 0;
 	int rtw_lps_level = LPS_NORMAL;
 #endif /* CONFIG_POWER_SAVING */
 
-
 module_param(rtw_ips_mode, int, 0644);
 MODULE_PARM_DESC(rtw_ips_mode, "The default IPS mode");
 

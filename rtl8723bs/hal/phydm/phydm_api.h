@@ -1,29 +1,13 @@
+// SPDX-License-Identifier: GPL-2.0
 /******************************************************************************
  *
- * Copyright(c) 2007 - 2017 Realtek Corporation.
+ * Copyright(c) 2007 - 2017 Realtek Corporation. All rights reserved.
  *
- * This program is free software; you can redistribute it and/or modify it
- * under the terms of version 2 of the GNU General Public License as
- * published by the Free Software Foundation.
- *
- * This program is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
- * more details.
- *
- *****************************************************************************/
-
-
+ ******************************************************************************/
 #ifndef	__PHYDM_API_H__
 #define    __PHYDM_API_H__
 
 #define PHYDM_API_VERSION	"1.0"		/* 2017.07.10  Dino, Add phydm_api.h*/
-
-
-/* 1 ============================================================
- * 1  Definition
- * 1 ============================================================ */
-
 
 #define	FUNC_ENABLE 1
 #define	FUNC_DISABLE 2
@@ -43,11 +27,6 @@
 
 #define	FREQ_POSITIVE	1
 #define	FREQ_NEGATIVE	2
-/*------------------------------------------------*/
-
-/* 1 ============================================================
- * 1  structure
- * 1 ============================================================ */
 
 struct phydm_api_stuc {
 
@@ -56,16 +35,6 @@ struct phydm_api_stuc {
 	u8	tx_queue_bitmap;/*REG0x520[23:16]*/
 
 };
-
-/* 1 ============================================================
- * 1  enumeration
- * 1 ============================================================ */
-
-
-
-/* 1 ============================================================
- * 1  function prototype
- * 1 ============================================================ */
 
 void
 phydm_init_trx_antenna_setting(

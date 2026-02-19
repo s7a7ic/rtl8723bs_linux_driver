@@ -1,17 +1,9 @@
+// SPDX-License-Identifier: GPL-2.0
 /******************************************************************************
  *
- * Copyright(c) 2007 - 2017 Realtek Corporation.
+ * Copyright(c) 2007 - 2017 Realtek Corporation. All rights reserved.
  *
- * This program is free software; you can redistribute it and/or modify it
- * under the terms of version 2 of the GNU General Public License as
- * published by the Free Software Foundation.
- *
- * This program is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
- * more details.
- *
- *****************************************************************************/
+ ******************************************************************************/
 #define _RTW_BR_EXT_C_
 
 #ifdef __KERNEL__
@@ -82,7 +74,6 @@
   PPPoE |type|   SID   |           AC MAC            |
 -----------------------------------------------------------------*/
 
-
 /* Find a tag in pppoe frame and return the pointer */
 static __inline__ unsigned char *__nat25_find_pppoe_tag(struct pppoe_hdr *ph, unsigned short type)
 {
@@ -100,7 +91,6 @@ static __inline__ unsigned char *__nat25_find_pppoe_tag(struct pppoe_hdr *ph, un
 	}
 	return 0;
 }
-
 
 static __inline__ int __nat25_add_pppoe_tag(struct sk_buff *skb, struct pppoe_tag *tag)
 {
@@ -151,7 +141,6 @@ static __inline__ unsigned long __nat25_timeout(_adapter *priv)
 	return timeout;
 }
 
-
 static __inline__ int  __nat25_has_expired(_adapter *priv,
 		struct nat25_network_db_entry *fdb)
 {
@@ -160,7 +149,6 @@ static __inline__ int  __nat25_has_expired(_adapter *priv,
 
 	return 0;
 }
-
 
 static __inline__ void __nat25_generate_ipv4_network_addr(unsigned char *networkAddr,
 		unsigned int *ipAddr)
@@ -181,7 +169,6 @@ static __inline__ void __nat25_generate_ipx_network_addr_with_node(unsigned char
 	memcpy(networkAddr + 1, (unsigned char *)ipxNetAddr, 4);
 	memcpy(networkAddr + 5, ipxNodeAddr, 6);
 }
-
 
 static __inline__ void __nat25_generate_ipx_network_addr_with_socket(unsigned char *networkAddr,
 		unsigned int *ipxNetAddr, unsigned short *ipxSocketAddr)
@@ -204,7 +191,6 @@ static __inline__ void __nat25_generate_apple_network_addr(unsigned char *networ
 	networkAddr[3] = *node;
 }
 
-
 static __inline__ void __nat25_generate_pppoe_network_addr(unsigned char *networkAddr,
 		unsigned char *ac_mac, unsigned short *sid)
 {
@@ -215,7 +201,6 @@ static __inline__ void __nat25_generate_pppoe_network_addr(unsigned char *networ
 	memcpy(networkAddr + 3, (unsigned char *)ac_mac, 6);
 }
 
-
 #ifdef CL_IPV6_PASS
 static  void __nat25_generate_ipv6_network_addr(unsigned char *networkAddr,
 		unsigned int *ipAddr)
@@ -225,7 +210,6 @@ static  void __nat25_generate_ipv6_network_addr(unsigned char *networkAddr,
 	networkAddr[0] = NAT25_IPV6;
 	memcpy(networkAddr + 1, (unsigned char *)ipAddr, 16);
 }
-
 
 static unsigned char *scan_tlv(unsigned char *data, int len, unsigned char tag, unsigned char len8b)
 {
@@ -238,7 +222,6 @@ static unsigned char *scan_tlv(unsigned char *data, int len, unsigned char tag, 
 	}
 	return NULL;
 }
-
 
 static int update_nd_link_layer_addr(unsigned char *data, int len, unsigned char *replace_mac)
 {
@@ -304,7 +287,6 @@ static int update_nd_link_layer_addr(unsigned char *data, int len, unsigned char
 	return 0;
 }
 
-
 static void convert_ipv6_mac_to_mc(struct sk_buff *skb)
 {
 	struct ipv6hdr *iph = (struct ipv6hdr *)(skb->data + ETH_HLEN);
@@ -322,7 +304,6 @@ static void convert_ipv6_mac_to_mc(struct sk_buff *skb)
 #endif
 }
 #endif /* CL_IPV6_PASS */
-
 
 static __inline__ int __nat25_network_hash(unsigned char *networkAddr)
 {
@@ -375,7 +356,6 @@ static __inline__ int __nat25_network_hash(unsigned char *networkAddr)
 	}
 }
 
-
 static __inline__ void __network_hash_link(_adapter *priv,
 		struct nat25_network_db_entry *ent, int hash)
 {
@@ -392,7 +372,6 @@ static __inline__ void __network_hash_link(_adapter *priv,
 	/* _exit_critical_bh(&priv->br_ext_lock, &irqL); */
 }
 
-
 static __inline__ void __network_hash_unlink(struct nat25_network_db_entry *ent)
 {
 	/* Caller must _enter_critical_bh already! */
@@ -407,7 +386,6 @@ static __inline__ void __network_hash_unlink(struct nat25_network_db_entry *ent)
 
 	/* _exit_critical_bh(&priv->br_ext_lock, &irqL); */
 }
-
 
 static int __nat25_db_network_lookup_and_replace(_adapter *priv,
 		struct sk_buff *skb, unsigned char *networkAddr)
@@ -482,7 +460,6 @@ static int __nat25_db_network_lookup_and_replace(_adapter *priv,
 	return 0;
 }
 
-
 static void __nat25_db_network_insert(_adapter *priv,
 		      unsigned char *macAddr, unsigned char *networkAddr)
 {
@@ -519,7 +496,6 @@ static void __nat25_db_network_insert(_adapter *priv,
 
 	_exit_critical_bh(&priv->br_ext_lock, &irqL);
 }
-
 
 static void __nat25_db_print(_adapter *priv)
 {
@@ -601,9 +577,6 @@ static void __nat25_db_print(_adapter *priv)
 	_exit_critical_bh(&priv->br_ext_lock, &irqL);
 }
 
-
-
-
 /*
  *	NAT2.5 interface
  */
@@ -635,7 +608,6 @@ void nat25_db_cleanup(_adapter *priv)
 
 	_exit_critical_bh(&priv->br_ext_lock, &irqL);
 }
-
 
 void nat25_db_expire(_adapter *priv)
 {
@@ -1384,7 +1356,6 @@ int nat25_db_handle(_adapter *priv, struct sk_buff *skb, int method)
 	return -1;
 }
 
-
 int nat25_handle_frame(_adapter *priv, struct sk_buff *skb)
 {
 #ifdef BR_EXT_DEBUG
@@ -1474,7 +1445,6 @@ void mac_clone(_adapter *priv, unsigned char *addr)
 	rtl8192cd_set_hwaddr(priv->dev, &sa);
 }
 
-
 int mac_clone_handle_frame(_adapter *priv, struct sk_buff *skb)
 {
 	if (priv->ethBrExtInfo.macclone_enable && !priv->macclone_completed) {
@@ -1555,7 +1525,6 @@ void dhcp_flag_bcast(_adapter *priv, struct sk_buff *skb)
 		}
 	}
 }
-
 
 void *scdb_findEntry(_adapter *priv, unsigned char *macAddr,
 		     unsigned char *ipAddr)

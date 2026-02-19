@@ -1,18 +1,9 @@
+// SPDX-License-Identifier: GPL-2.0
 /******************************************************************************
  *
- * Copyright(c) 2013 - 2017 Realtek Corporation.
+ * Copyright(c) 2007 - 2017 Realtek Corporation. All rights reserved.
  *
- * This program is free software; you can redistribute it and/or modify it
- * under the terms of version 2 of the GNU General Public License as
- * published by the Free Software Foundation.
- *
- * This program is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
- * more details.
- *
- *****************************************************************************/
-
+ ******************************************************************************/
 #include <rtw_odm.h>
 #include <hal_data.h>
 
@@ -189,7 +180,6 @@ void rtw_odm_get_perpkt_rssi(void *sel, _adapter *adapter)
 	RTW_PRINT_SEL(sel, "rx_rate = %s, RSSI_A = %d(%%), RSSI_B = %d(%%)\n",
 		      HDATA_RATE(odm->rx_rate), odm->RSSI_A, odm->RSSI_B);
 }
-
 
 void rtw_odm_acquirespinlock(_adapter *adapter,	enum rt_spinlock_type type)
 {
@@ -449,6 +439,4 @@ type1_end:
 		}
 	}
 #endif /* (ODM_PHY_STATUS_NEW_TYPE_SUPPORT == 1) */
-
 }
-

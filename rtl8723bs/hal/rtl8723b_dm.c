@@ -1,17 +1,9 @@
+// SPDX-License-Identifier: GPL-2.0
 /******************************************************************************
  *
- * Copyright(c) 2007 - 2017 Realtek Corporation.
+ * Copyright(c) 2007 - 2017 Realtek Corporation. All rights reserved.
  *
- * This program is free software; you can redistribute it and/or modify it
- * under the terms of version 2 of the GNU General Public License as
- * published by the Free Software Foundation.
- *
- * This program is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
- * more details.
- *
- *****************************************************************************/
+ ******************************************************************************/
 /* ************************************************************
  * Description:
  *
@@ -26,15 +18,7 @@
  * ************************************************************ */
 #include <rtl8723b_hal.h>
 
-/* ************************************************************
- * Global var
- * ************************************************************ */
-
-
-static VOID
-dm_CheckProtection(
-	IN	PADAPTER	Adapter
-)
+static VOID dm_CheckProtection(IN PADAPTER Adapter)
 {
 #if 0
 	PMGNT_INFO		pMgntInfo = &(Adapter->MgntInfo);
@@ -101,7 +85,6 @@ static void dm_CheckPbcGPIO(_adapter *padapter)
 	}
 }
 #endif /* #ifdef CONFIG_SUPPORT_HW_WPS_PBC */
-
 
 #ifdef CONFIG_PCI_HCI
 /*
@@ -178,7 +161,6 @@ dm_InterruptMigration(
 		}
 	}
 #endif
-
 }
 
 #endif
@@ -236,10 +218,7 @@ rtl8723b_InitHalDm(
 
 }
 
-VOID
-rtl8723b_HalDmWatchDog(
-	IN	PADAPTER	Adapter
-)
+VOID rtl8723b_HalDmWatchDog(IN PADAPTER Adapter)
 {
 	BOOLEAN		bFwCurrentInPSMode = _FALSE;
 	u8 bFwPSAwake = _TRUE;
@@ -292,7 +271,6 @@ rtl8723b_HalDmWatchDog(
 	rtw_phydm_watchdog(Adapter);
 
 skip_dm:
-
 	/* Check GPIO to determine current RF on/off and Pbc status. */
 	/* Check Hardware Radio ON/OFF or not */
 	/* if(Adapter->MgntInfo.PowerSaveControl.bGpioRfSw) */
@@ -312,14 +290,11 @@ void rtl8723b_init_dm_priv(IN PADAPTER Adapter)
 	struct PHY_DM_STRUCT		*podmpriv = &pHalData->odmpriv;
 	Init_ODM_ComInfo_8723b(Adapter);
 	odm_init_all_timers(podmpriv);
-
 }
 
 void rtl8723b_deinit_dm_priv(IN PADAPTER Adapter)
 {
 	PHAL_DATA_TYPE	pHalData = GET_HAL_DATA(Adapter);
 	struct PHY_DM_STRUCT		*podmpriv = &pHalData->odmpriv;
-
 	odm_cancel_all_timers(podmpriv);
-
 }

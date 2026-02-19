@@ -1,58 +1,14 @@
+// SPDX-License-Identifier: GPL-2.0
 /******************************************************************************
  *
- * Copyright(c) 2007 - 2017 Realtek Corporation.
+ * Copyright(c) 2007 - 2017 Realtek Corporation. All rights reserved.
  *
- * This program is free software; you can redistribute it and/or modify it
- * under the terms of version 2 of the GNU General Public License as
- * published by the Free Software Foundation.
- *
- * This program is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
- * more details.
- *
- *****************************************************************************/
-
-/* ************************************************************
- * include files
- * ************************************************************ */
-
-#include "mp_precomp.h"
+ ******************************************************************************/
 #include "phydm_precomp.h"
 
-void
-phydm_dynamicsoftmletting(
-	struct PHY_DM_STRUCT		*p_dm
-)
+void phydm_dynamicsoftmletting(struct PHY_DM_STRUCT *p_dm)
 {
-
 	u32 ret_val;
-
-#if (RTL8822B_SUPPORT == 1)
-	if (*(p_dm->p_mp_mode) == false) {
-		if (p_dm->support_ic_type & ODM_RTL8822B) {
-
-			if ((!p_dm->is_linked)|(p_dm->iot_table.is_linked_cmw500))
-				return;
-
-			if (true == p_dm->bsomlenabled) {
-				PHYDM_DBG(p_dm, ODM_COMP_API, ("PHYDM_DynamicSoftMLSetting(): SoML has been enable, skip dynamic SoML switch\n"));
-				return; 		
-			}
-
-			ret_val = odm_get_bb_reg(p_dm, 0xf8c, MASKBYTE0);
-			PHYDM_DBG(p_dm, ODM_COMP_API, ("PHYDM_DynamicSoftMLSetting(): Read 0xF8C = 0x%08X\n", ret_val));
-
-			if (ret_val < 0x16) {
-				PHYDM_DBG(p_dm, ODM_COMP_API, ("PHYDM_DynamicSoftMLSetting(): 0xF8C(== 0x%08X) < 0x16, enable SoML\n", ret_val));
-				phydm_somlrxhp_setting(p_dm, true);
-				/*odm_set_bb_reg(p_dm, 0x19a8, MASKDWORD, 0xc10a0000);*/
-				p_dm->bsomlenabled = true;
-			}
-		}
-	}
-#endif
-
 }
 
 #ifdef CONFIG_ADAPTIVE_SOML

@@ -1,23 +1,12 @@
+// SPDX-License-Identifier: GPL-2.0
 /******************************************************************************
  *
- * Copyright(c) 2007 - 2017 Realtek Corporation.
+ * Copyright(c) 2007 - 2017 Realtek Corporation. All rights reserved.
  *
- * This program is free software; you can redistribute it and/or modify it
- * under the terms of version 2 of the GNU General Public License as
- * published by the Free Software Foundation.
- *
- * This program is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
- * more details.
- *
- *****************************************************************************/
-
-
+ ******************************************************************************/
 #define _MLME_OSDEP_C_
 
 #include <drv_types.h>
-
 
 #ifdef RTK_DMP_PLATFORM
 void Linkup_workitem_callback(struct work_struct *work)
@@ -25,14 +14,11 @@ void Linkup_workitem_callback(struct work_struct *work)
 	struct mlme_priv *pmlmepriv = container_of(work, struct mlme_priv, Linkup_workitem);
 	_adapter *padapter = container_of(pmlmepriv, _adapter, mlmepriv);
 
-
-
 #if (LINUX_VERSION_CODE > KERNEL_VERSION(2, 6, 12))
 	kobject_uevent(&padapter->pnetdev->dev.kobj, KOBJ_LINKUP);
 #else
 	kobject_hotplug(&padapter->pnetdev->class_dev.kobj, KOBJ_LINKUP);
 #endif
-
 }
 
 void Linkdown_workitem_callback(struct work_struct *work)
@@ -40,14 +26,11 @@ void Linkdown_workitem_callback(struct work_struct *work)
 	struct mlme_priv *pmlmepriv = container_of(work, struct mlme_priv, Linkdown_workitem);
 	_adapter *padapter = container_of(pmlmepriv, _adapter, mlmepriv);
 
-
-
 #if (LINUX_VERSION_CODE > KERNEL_VERSION(2, 6, 12))
 	kobject_uevent(&padapter->pnetdev->dev.kobj, KOBJ_LINKDOWN);
 #else
 	kobject_hotplug(&padapter->pnetdev->class_dev.kobj, KOBJ_LINKDOWN);
 #endif
-
 }
 #endif
 
@@ -75,8 +58,6 @@ void rtw_os_indicate_connect(_adapter *adapter)
 #ifdef RTK_DMP_PLATFORM
 	_set_workitem(&adapter->mlmepriv.Linkup_workitem);
 #endif
-
-
 }
 
 extern void indicate_wx_scan_complete_event(_adapter *padapter);
@@ -155,7 +136,6 @@ void rtw_os_indicate_disconnect(_adapter *adapter,  u16 reason, u8 locally_gener
 {
 	/* RT_PMKID_LIST   backupPMKIDList[NUM_PMKID_CACHE]; */
 
-
 	netif_carrier_off(adapter->pnetdev); /* Do it first for tx broadcast pkt after disconnection issue! */
 
 #ifdef CONFIG_IOCTL_CFG80211
@@ -169,8 +149,6 @@ void rtw_os_indicate_disconnect(_adapter *adapter,  u16 reason, u8 locally_gener
 #endif
 	/* modify for CONFIG_IEEE80211W, none 11w also can use the same command */
 	rtw_reset_securitypriv_cmd(adapter);
-
-
 }
 
 void rtw_report_sec_ie(_adapter *adapter, u8 authmode, u8 *sec_ie)
@@ -178,8 +156,6 @@ void rtw_report_sec_ie(_adapter *adapter, u8 authmode, u8 *sec_ie)
 	uint	len;
 	u8	*buff, *p, i;
 	union iwreq_data wrqu;
-
-
 
 	buff = NULL;
 	if (authmode == _WPA_IE_ID_) {
@@ -214,8 +190,6 @@ void rtw_report_sec_ie(_adapter *adapter, u8 authmode, u8 *sec_ie)
 
 		rtw_mfree(buff, IW_CUSTOM_MAX);
 	}
-
-
 }
 
 #ifdef CONFIG_AP_MODE
@@ -234,7 +208,6 @@ void rtw_indicate_sta_assoc_event(_adapter *padapter, struct sta_info *psta)
 	if (pstapriv->sta_aid[psta->cmn.aid - 1] != psta)
 		return;
 
-
 	wrqu.addr.sa_family = ARPHRD_ETHER;
 
 	_rtw_memcpy(wrqu.addr.sa_data, psta->cmn.mac_addr, ETH_ALEN);
@@ -244,7 +217,6 @@ void rtw_indicate_sta_assoc_event(_adapter *padapter, struct sta_info *psta)
 #ifndef CONFIG_IOCTL_CFG80211
 	wireless_send_event(padapter->pnetdev, IWEVREGISTERED, &wrqu, NULL);
 #endif
-
 }
 
 void rtw_indicate_sta_disassoc_event(_adapter *padapter, struct sta_info *psta)
@@ -261,7 +233,6 @@ void rtw_indicate_sta_disassoc_event(_adapter *padapter, struct sta_info *psta)
 	if (pstapriv->sta_aid[psta->cmn.aid - 1] != psta)
 		return;
 
-
 	wrqu.addr.sa_family = ARPHRD_ETHER;
 
 	_rtw_memcpy(wrqu.addr.sa_data, psta->cmn.mac_addr, ETH_ALEN);
@@ -271,9 +242,7 @@ void rtw_indicate_sta_disassoc_event(_adapter *padapter, struct sta_info *psta)
 #ifndef CONFIG_IOCTL_CFG80211
 	wireless_send_event(padapter->pnetdev, IWEVEXPIRED, &wrqu, NULL);
 #endif
-
 }
-
 
 #ifdef CONFIG_HOSTAPD_MLME
 
@@ -293,7 +262,6 @@ static int mgnt_netdev_open(struct net_device *pnetdev)
 
 	RTW_INFO("mgnt_netdev_open: MAC Address:" MAC_FMT "\n", MAC_ARG(pnetdev->dev_addr));
 
-
 	init_usb_anchor(&phostapdpriv->anchored);
 
 	rtw_netif_wake_queue(pnetdev);
@@ -304,6 +272,7 @@ static int mgnt_netdev_open(struct net_device *pnetdev)
 
 	return 0;
 }
+
 static int mgnt_netdev_close(struct net_device *pnetdev)
 {
 	struct hostapd_priv *phostapdpriv = rtw_netdev_priv(pnetdev);
@@ -386,14 +355,10 @@ int hostapd_mode_init(_adapter *padapter)
 	pnetdev->features |= NETIF_F_IP_CSUM;
 #endif
 
-
-
 	if (dev_alloc_name(pnetdev, "mgnt.wlan%d") < 0)
 		RTW_INFO("hostapd_mode_init(): dev_alloc_name, fail!\n");
 
-
 	/* SET_NETDEV_DEV(pnetdev, pintfpriv->udev); */
-
 
 	mac[0] = 0x00;
 	mac[1] = 0xe0;
@@ -410,7 +375,6 @@ int hostapd_mode_init(_adapter *padapter)
 
 	netif_carrier_off(pnetdev);
 
-
 	/* Tell the network stack we exist */
 	if (register_netdev(pnetdev) != 0) {
 		RTW_INFO("hostapd_mode_init(): register_netdev fail!\n");
@@ -420,7 +384,6 @@ int hostapd_mode_init(_adapter *padapter)
 	}
 
 	return 0;
-
 }
 
 void hostapd_mode_unload(_adapter *padapter)
@@ -430,7 +393,6 @@ void hostapd_mode_unload(_adapter *padapter)
 
 	unregister_netdev(pnetdev);
 	rtw_free_netdev(pnetdev);
-
 }
 
 #endif

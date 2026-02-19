@@ -1,26 +1,12 @@
+// SPDX-License-Identifier: GPL-2.0
 /******************************************************************************
  *
- * Copyright(c) 2007 - 2017 Realtek Corporation.
+ * Copyright(c) 2007 - 2017 Realtek Corporation. All rights reserved.
  *
- * This program is free software; you can redistribute it and/or modify it
- * under the terms of version 2 of the GNU General Public License as
- * published by the Free Software Foundation.
- *
- * This program is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
- * more details.
- *
- *****************************************************************************/
-
-
+ ******************************************************************************/
 #ifndef	__HALDMOUTSRC_H__
 #define __HALDMOUTSRC_H__
 
-/*============================================================*/
-/*include files*/
-/*============================================================*/
-/*PHYDM header*/
 #include "phydm_pre_define.h"
 #include "phydm_dig.h"
 #include "phydm_pathdiv.h"
@@ -35,7 +21,7 @@
 #include "phydm_adaptivity.h"
 #include "phydm_dfs.h"
 #include "phydm_ccx.h"
-#include "txbf/phydm_hal_txbf_api.h"
+//#include "txbf/phydm_hal_txbf_api.h"
 #include "phydm_adc_sampling.h"
 #include "phydm_dynamic_rx_path.h"
 #include "phydm_psd.h"

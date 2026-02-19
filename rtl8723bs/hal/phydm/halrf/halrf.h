@@ -1,31 +1,12 @@
+// SPDX-License-Identifier: GPL-2.0
 /******************************************************************************
  *
- * Copyright(c) 2007 - 2017 Realtek Corporation.
+ * Copyright(c) 2007 - 2017 Realtek Corporation. All rights reserved.
  *
- * This program is free software; you can redistribute it and/or modify it
- * under the terms of version 2 of the GNU General Public License as
- * published by the Free Software Foundation.
- *
- * This program is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
- * more details.
- *
- *****************************************************************************/
-
-
+ ******************************************************************************/
 #ifndef	_HALRF_H__
 #define _HALRF_H__
 
-/*============================================================*/
-/*include files*/
-/*============================================================*/
-
-
-
-/*============================================================*/
-/*Definition */
-/*============================================================*/
 /*IQK version*/
 #if (DM_ODM_SUPPORT_TYPE & (ODM_WIN))
 #define IQK_VERSION_8188E	"0x14"
@@ -69,7 +50,6 @@
 #define LCK_VERSION_8723D	"0x01"
 #define LCK_VERSION_8822B	"0x01"
 #define LCK_VERSION_8821C	"0x01"
-
 
 #define HALRF_IQK_VER	(p_dm->support_ic_type == ODM_RTL8188E)? IQK_VERSION_8188E :\
 						(p_dm->support_ic_type == ODM_RTL8192E)? IQK_VERSION_8192E :\

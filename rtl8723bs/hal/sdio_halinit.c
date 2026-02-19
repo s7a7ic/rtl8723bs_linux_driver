@@ -1,17 +1,9 @@
+// SPDX-License-Identifier: GPL-2.0
 /******************************************************************************
  *
- * Copyright(c) 2007 - 2017 Realtek Corporation.
+ * Copyright(c) 2007 - 2017 Realtek Corporation. All rights reserved.
  *
- * This program is free software; you can redistribute it and/or modify it
- * under the terms of version 2 of the GNU General Public License as
- * published by the Free Software Foundation.
- *
- * This program is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
- * more details.
- *
- *****************************************************************************/
+ ******************************************************************************/
 #define _SDIO_HALINIT_C_
 
 #include <rtl8723b_hal.h>
@@ -338,7 +330,6 @@ _InitNormalChipTwoOutEpPriority(
 	}
 
 	_InitNormalChipRegPriority(Adapter, beQ, bkQ, viQ, voQ, mgtQ, hiQ);
-
 }
 
 static VOID
@@ -388,8 +379,6 @@ _InitNormalChipQueuePriority(
 		/* RT_ASSERT(FALSE,("Shall not reach here!\n")); */
 		break;
 	}
-
-
 }
 
 static void _InitQueuePriority(PADAPTER padapter)
@@ -1706,5 +1695,4 @@ void rtl8723bs_set_hal_ops(PADAPTER padapter)
 	pHalFunc->hal_cancle_checkbthang_workqueue = &rtl8723bs_cancle_checkbthang_workqueue;
 	pHalFunc->hal_checke_bt_hang = &rtl8723bs_hal_check_bt_hang;
 #endif
-
 }

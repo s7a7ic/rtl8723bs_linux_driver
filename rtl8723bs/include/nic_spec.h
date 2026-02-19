@@ -1,19 +1,9 @@
+// SPDX-License-Identifier: GPL-2.0
 /******************************************************************************
  *
- * Copyright(c) 2007 - 2017 Realtek Corporation.
+ * Copyright(c) 2007 - 2017 Realtek Corporation. All rights reserved.
  *
- * This program is free software; you can redistribute it and/or modify it
- * under the terms of version 2 of the GNU General Public License as
- * published by the Free Software Foundation.
- *
- * This program is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
- * more details.
- *
- *****************************************************************************/
-
-
+ ******************************************************************************/
 #ifndef __NIC_SPEC_H__
 #define __NIC_SPEC_H__
 
@@ -32,10 +22,8 @@
 #define RTL8711_SYSCTRL_	(0x620000)
 #define RTL8711_MCCTRL_		(0x020000)
 
-
 #include <rtl8711_regdef.h>
 
 #include <rtl8711_bitdef.h>
-
 
 #endif /* __RTL8711_SPEC_H__ */

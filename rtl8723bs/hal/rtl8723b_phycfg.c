@@ -1,41 +1,19 @@
+// SPDX-License-Identifier: GPL-2.0
 /******************************************************************************
  *
- * Copyright(c) 2007 - 2017 Realtek Corporation.
+ * Copyright(c) 2007 - 2017 Realtek Corporation. All rights reserved.
  *
- * This program is free software; you can redistribute it and/or modify it
- * under the terms of version 2 of the GNU General Public License as
- * published by the Free Software Foundation.
- *
- * This program is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
- * more details.
- *
- *****************************************************************************/
+ ******************************************************************************/
 #define _RTL8723B_PHYCFG_C_
 
 #include <rtl8723b_hal.h>
 
-
-/*---------------------------Define Local Constant---------------------------*/
 /* Channel switch:The size of command tables for switch channel*/
 #define MAX_PRECMD_CNT 16
 #define MAX_RFDEPENDCMD_CNT 16
 #define MAX_POSTCMD_CNT 16
 
 #define MAX_DOZE_WAITING_TIMES_9x 64
-
-/*---------------------------Define Local Constant---------------------------*/
-
-
-/*------------------------Define global variable-----------------------------*/
-
-/*------------------------Define local variable------------------------------*/
-
-
-/*--------------------Define export function prototype-----------------------*/
-/* Please refer to header file
- *--------------------Define export function prototype-----------------------*/
 
 /*----------------------------Function Body----------------------------------*/
 /*
@@ -67,7 +45,6 @@ phy_CalculateBitShift(
 
 	return i;
 }
-
 
 /**
 * Function:	PHY_QueryBBReg
@@ -103,9 +80,7 @@ PHY_QueryBBReg_8723B(
 	ReturnValue = (OriginalValue & BitMask) >> BitShift;
 
 	return ReturnValue;
-
 }
-
 
 /**
 * Function:	PHY_SetBBReg
@@ -125,8 +100,7 @@ PHY_QueryBBReg_8723B(
 * Note:		This function is equal to "PutRegSetting" in PHY programming guide
 */
 
-VOID
-PHY_SetBBReg_8723B(
+VOID PHY_SetBBReg_8723B(
 	IN	PADAPTER	Adapter,
 	IN	u32		RegAddr,
 	IN	u32		BitMask,
@@ -141,7 +115,6 @@ PHY_SetBBReg_8723B(
 	return;
 #endif
 
-
 	if (BitMask != bMaskDWord) { /* if not "double word" write */
 		OriginalValue = rtw_read32(Adapter, RegAddr);
 		BitShift = phy_CalculateBitShift(BitMask);
@@ -151,7 +124,6 @@ PHY_SetBBReg_8723B(
 	rtw_write32(Adapter, RegAddr, Data);
 
 }
-
 
 /*
  * 2. RF register R/W API
@@ -173,8 +145,7 @@ PHY_SetBBReg_8723B(
  *	01/21/2008	MHC		Create Version 0.
  *
  *---------------------------------------------------------------------------*/
-static	u32
-phy_FwRFSerialRead(
+static	u32 phy_FwRFSerialRead(
 	IN	PADAPTER			Adapter,
 	IN	enum rf_path			eRFPath,
 	IN	u32				Offset)
@@ -184,7 +155,6 @@ phy_FwRFSerialRead(
 	return retValue;
 
 }	/* phy_FwRFSerialRead */
-
 
 /*-----------------------------------------------------------------------------
  * Function:	phy_FwRFSerialWrite()
@@ -212,8 +182,7 @@ phy_FwRFSerialWrite(
 	/* RT_ASSERT(FALSE,("deprecate!\n")); */
 }
 
-static	u32
-phy_RFSerialRead_8723B(
+static	u32 phy_RFSerialRead_8723B(
 	IN	PADAPTER			Adapter,
 	IN	enum rf_path			eRFPath,
 	IN	u32				Offset
@@ -320,8 +289,7 @@ phy_RFSerialRead_8723B(
  *
  *
 */
-static	VOID
-phy_RFSerialWrite_8723B(
+static VOID phy_RFSerialWrite_8723B(
 	IN	PADAPTER			Adapter,
 	IN	enum rf_path			eRFPath,
 	IN	u32				Offset,
@@ -356,9 +324,7 @@ phy_RFSerialWrite_8723B(
 	/*  */
 	phy_set_bb_reg(Adapter, pPhyReg->rf3wireOffset, bMaskDWord, DataAndAddr);
 	/* RTPRINT(FPHY, PHY_RFW, ("RFW-%d Addr[0x%lx]=0x%lx\n", eRFPath, pPhyReg->rf3wireOffset, DataAndAddr)); */
-
 }
-
 
 /**
 * Function:	PHY_QueryRFReg
@@ -376,8 +342,7 @@ phy_RFSerialWrite_8723B(
 * Return:		u4Byte			Readback value
 * Note:		This function is equal to "GetRFRegSetting" in PHY programming guide
 */
-u32
-PHY_QueryRFReg_8723B(
+u32 PHY_QueryRFReg_8723B(
 	IN	PADAPTER			Adapter,
 	IN	enum rf_path			eRFPath,
 	IN	u32				RegAddr,
@@ -416,9 +381,8 @@ PHY_QueryRFReg_8723B(
 * Return:		None
 * Note:		This function is equal to "PutRFRegSetting" in PHY programming guide
 */
-VOID
-PHY_SetRFReg_8723B(
-	IN	PADAPTER			Adapter,
+VOID PHY_SetRFReg_8723B(
+	IN PADAPTER Adapter,
 	IN	enum rf_path				eRFPath,
 	IN	u32				RegAddr,
 	IN	u32				BitMask,
@@ -441,11 +405,9 @@ PHY_SetRFReg_8723B(
 	phy_RFSerialWrite_8723B(Adapter, eRFPath, RegAddr, Data);
 }
 
-
 /*
  * 3. Initial MAC/BB/RF config by reading MAC/BB/RF txt.
  *   */
-
 
 /*-----------------------------------------------------------------------------
  * Function:    PHY_MACConfig8192C
@@ -527,20 +489,14 @@ phy_InitBBRFRegisterDefinition(
 	pHalData->PHYRegDef[RF_PATH_B].rfLSSIReadBack = rFPGA0_XB_LSSIReadBack;
 	pHalData->PHYRegDef[RF_PATH_A].rfLSSIReadBackPi = TransceiverA_HSPI_Readback;
 	pHalData->PHYRegDef[RF_PATH_B].rfLSSIReadBackPi = TransceiverB_HSPI_Readback;
-
 }
 
-static	int
-phy_BB8723b_Config_ParaFile(
-	IN	PADAPTER	Adapter
-)
+static	int phy_BB8723b_Config_ParaFile(IN PADAPTER Adapter)
 {
 	HAL_DATA_TYPE		*pHalData = GET_HAL_DATA(Adapter);
 	int			rtStatus = _SUCCESS;
 
-	/*  */
 	/* 1. Read PHY_REG.TXT BB INIT!! */
-	/*  */
 #ifdef CONFIG_LOAD_PHY_PARA_FROM_FILE
 	if (phy_ConfigBBWithParaFile(Adapter, PHY_FILE_PHY_REG, CONFIG_BB_PHY_REG) == _FAIL)
 #endif
@@ -578,9 +534,7 @@ phy_BB8723b_Config_ParaFile(
 	}
 #endif	/*  #if (MP_DRIVER == 1) */
 
-	/*  */
 	/* 2. Read BB AGC table Initialization */
-	/*  */
 #ifdef CONFIG_LOAD_PHY_PARA_FROM_FILE
 	if (phy_ConfigBBWithParaFile(Adapter, PHY_FILE_AGC_TAB, CONFIG_BB_AGC_TAB) == _FAIL)
 #endif
@@ -601,11 +555,7 @@ phy_BB8190_Config_ParaFile_Fail:
 	return rtStatus;
 }
 
-
-int
-PHY_BBConfig8723B(
-	IN	PADAPTER	Adapter
-)
+int PHY_BBConfig8723B(IN PADAPTER Adapter)
 {
 	int	rtStatus = _SUCCESS;
 	HAL_DATA_TYPE	*pHalData = GET_HAL_DATA(Adapter);
@@ -655,9 +605,7 @@ PHY_BBConfig8723B(
 	return rtStatus;
 }
 
-void phy_LCK_8723B(
-	IN	PADAPTER	Adapter
-)
+void phy_LCK_8723B(IN PADAPTER Adapter)
 {
 	phy_set_rf_reg(Adapter, RF_PATH_A, 0xB0, bRFRegOffsetMask, 0xDFBE0);
 	phy_set_rf_reg(Adapter, RF_PATH_A, RF_CHNLBW, bRFRegOffsetMask, 0x8C01);
@@ -701,9 +649,7 @@ PHY_BB8723B_Config_1T(
 #endif
 
 int
-PHY_RFConfig8723B(
-	IN	PADAPTER	Adapter
-)
+PHY_RFConfig8723B(IN PADAPTER Adapter)
 {
 	HAL_DATA_TYPE	*pHalData = GET_HAL_DATA(Adapter);
 	int		rtStatus = _SUCCESS;
@@ -734,8 +680,7 @@ PHY_RFConfig8723B(
  *
  * Note:		Delay may be required for RF configuration
  *---------------------------------------------------------------------------*/
-int
-PHY_ConfigRFWithParaFile_8723B(
+int PHY_ConfigRFWithParaFile_8723B(
 	IN	PADAPTER			Adapter,
 	IN	u8				*pFileName,
 	enum rf_path				eRFPath
@@ -751,8 +696,7 @@ PHY_ConfigRFWithParaFile_8723B(
  *                                                                                    <20120830, Kordan>
  **************************************************************************************************************/
 
-VOID
-PHY_SetTxPowerIndex_8723B(
+VOID PHY_SetTxPowerIndex_8723B(
 	IN	PADAPTER			Adapter,
 	IN	u32					PowerIndex,
 	IN	enum rf_path			RFPath,
@@ -833,8 +777,7 @@ PHY_SetTxPowerIndex_8723B(
 	}
 }
 
-u8
-PHY_GetTxPowerIndex_8723B(
+u8 PHY_GetTxPowerIndex_8723B(
 	IN	PADAPTER			pAdapter,
 	IN	enum rf_path			RFPath,
 	IN	u8					Rate,
@@ -873,8 +816,7 @@ PHY_GetTxPowerIndex_8723B(
 	return power_idx;
 }
 
-VOID
-PHY_SetTxPowerLevel8723B(
+VOID PHY_SetTxPowerLevel8723B(
 	IN	PADAPTER		Adapter,
 	IN	u8				Channel
 )
@@ -896,8 +838,7 @@ PHY_SetTxPowerLevel8723B(
 
 }
 
-VOID
-PHY_GetTxPowerLevel8723B(
+VOID PHY_GetTxPowerLevel8723B(
 	IN	PADAPTER		Adapter,
 	OUT s32				*powerlevel
 )
@@ -913,10 +854,8 @@ PHY_GetTxPowerLevel8723B(
 #endif
 }
 
-
 /* <20130321, VincentLan> A workaround to eliminate the 2440MHz & 2480MHz spur of 8723B. (Asked by Rock.) */
-VOID
-phy_SpurCalibration_8723B(
+VOID phy_SpurCalibration_8723B(
 	IN	PADAPTER					pAdapter,
 	IN	u1Byte						ToChannel,
 	IN	u1Byte						threshold
@@ -1052,8 +991,7 @@ phy_SpurCalibration_8723B(
 
 }
 
-VOID
-phy_SetRegBW_8723B(
+VOID phy_SetRegBW_8723B(
 	IN	PADAPTER		Adapter,
 	enum channel_width	CurrentBW
 )
@@ -1082,8 +1020,7 @@ phy_SetRegBW_8723B(
 	}
 }
 
-u8
-phy_GetSecondaryChnl_8723B(
+u8 phy_GetSecondaryChnl_8723B(
 	IN	PADAPTER	Adapter
 )
 {
@@ -1118,14 +1055,12 @@ phy_GetSecondaryChnl_8723B(
 	return (SCSettingOf40 << 4) | SCSettingOf20;
 }
 
-VOID
-phy_PostSetBwMode8723B(
+VOID phy_PostSetBwMode8723B(
 	IN	PADAPTER	Adapter
 )
 {
 	u1Byte			SubChnlNum = 0;
 	HAL_DATA_TYPE	*pHalData = GET_HAL_DATA(Adapter);
-
 
 	/* 3 Set Reg668 Reg440 BW */
 	phy_SetRegBW_8723B(Adapter, pHalData->current_channel_bw);
@@ -1134,9 +1069,7 @@ phy_PostSetBwMode8723B(
 	SubChnlNum = phy_GetSecondaryChnl_8723B(Adapter);
 	rtw_write8(Adapter, REG_DATA_SC_8723B, SubChnlNum);
 
-	/* 3 */
 	/* 3 */ /* <2>Set PHY related register */
-	/* 3 */
 	switch (pHalData->current_channel_bw) {
 	/* 20 MHz channel*/
 	case CHANNEL_WIDTH_20:
@@ -1148,7 +1081,6 @@ phy_PostSetBwMode8723B(
 
 		phy_set_bb_reg(Adapter, rOFDM0_TxPseudoNoiseWgt, (BIT31 | BIT30), 0x0);
 		break;
-
 
 	/* 40 MHz channel*/
 	case CHANNEL_WIDTH_40:
@@ -1167,19 +1099,15 @@ phy_PostSetBwMode8723B(
 
 		break;
 
-
-
 	default:
 		break;
-
 	}
 
 	/* 3<3>Set RF related register */
 	PHY_RF6052SetBandwidth8723B(Adapter, pHalData->current_channel_bw);
 }
 
-VOID
-phy_SwChnl8723B(
+VOID phy_SwChnl8723B(
 	IN	PADAPTER					pAdapter
 )
 {
@@ -1197,8 +1125,7 @@ phy_SwChnl8723B(
 	/* phy_SpurCalibration_8723B(pAdapter, channelToSW, 0x16); */
 }
 
-VOID
-phy_SwChnlAndSetBwMode8723B(
+VOID phy_SwChnlAndSetBwMode8723B(
 	IN  PADAPTER		Adapter
 )
 {
@@ -1229,8 +1156,7 @@ phy_SwChnlAndSetBwMode8723B(
 	PHY_SetTxPowerLevel8723B(Adapter, pHalData->current_channel);
 }
 
-VOID
-PHY_HandleSwChnlAndSetBW8723B(
+VOID PHY_HandleSwChnlAndSetBW8723B(
 	IN	PADAPTER			Adapter,
 	IN	BOOLEAN				bSwitchChannel,
 	IN	BOOLEAN				bSetBandWidth,
@@ -1339,8 +1265,7 @@ PHY_HandleSwChnlAndSetBW8723B(
 
 }
 
-VOID
-PHY_SetSwChnlBWMode8723B(
+VOID PHY_SetSwChnlBWMode8723B(
 	IN	PADAPTER			Adapter,
 	IN	u8					channel,
 	IN	enum channel_width	Bandwidth,
@@ -1355,8 +1280,7 @@ PHY_SetSwChnlBWMode8723B(
 	/* RTW_INFO("<==%s()\n",__FUNCTION__); */
 }
 
-static VOID
-_PHY_DumpRFReg_8723B(IN	PADAPTER	pAdapter)
+static VOID _PHY_DumpRFReg_8723B(IN	PADAPTER	pAdapter)
 {
 	u32 rfRegValue, rfRegOffset;
 

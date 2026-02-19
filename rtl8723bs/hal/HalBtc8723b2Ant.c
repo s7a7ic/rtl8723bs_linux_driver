@@ -13,7 +13,6 @@
  * 2012/11/15 Cosa first check in.
  *
  * ************************************************************ */
-
 #include "Mp_Precomp.h"
 
 #if (BT_SUPPORT == 1 && COEX_SUPPORT == 1)

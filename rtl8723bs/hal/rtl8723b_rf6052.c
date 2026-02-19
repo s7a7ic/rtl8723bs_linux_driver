@@ -1,21 +1,13 @@
+// SPDX-License-Identifier: GPL-2.0
 /******************************************************************************
  *
- * Copyright(c) 2007 - 2017 Realtek Corporation.
+ * Copyright(c) 2007 - 2017 Realtek Corporation. All rights reserved.
  *
- * This program is free software; you can redistribute it and/or modify it
- * under the terms of version 2 of the GNU General Public License as
- * published by the Free Software Foundation.
- *
- * This program is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
- * more details.
- *
- *****************************************************************************/
+ ******************************************************************************/
 /******************************************************************************
  *
  *
- * Module:	rtl8192c_rf6052.c	( Source C File)
+ * Module:	rtl8192c_rf6052.c
  *
  * Note:	Provide RF 6052 series relative API.
  *
@@ -35,14 +27,6 @@
 ******************************************************************************/
 
 #include <rtl8723b_hal.h>
-
-/*---------------------------Define Local Constant---------------------------*/
-/*---------------------------Define Local Constant---------------------------*/
-
-
-/*------------------------Define global variable-----------------------------*/
-/*------------------------Define global variable-----------------------------*/
-
 
 /*------------------------Define local variable------------------------------*/
 /* 2008/11/20 MH For Debug only, RF
@@ -87,26 +71,17 @@ PHY_RF6052SetBandwidth8723B(
 	default:
 		break;
 	}
-
 }
 
-static VOID
-phy_RF6052_Config_HardCode(
-	IN	PADAPTER		Adapter
-)
+static VOID phy_RF6052_Config_HardCode(IN PADAPTER Adapter)
 {
-
 	/* Set Default Bandwidth to 20M */
 	/* Adapter->HalFunc	.SetBWModeHandler(Adapter, CHANNEL_WIDTH_20); */
 
 	/* TODO: Set Default Channel to channel one for RTL8225 */
-
 }
 
-static int
-phy_RF6052_Config_ParaFile(
-	IN	PADAPTER		Adapter
-)
+static int phy_RF6052_Config_ParaFile(IN PADAPTER Adapter)
 {
 	u32					u4RegValue = 0;
 	enum rf_path			eRFPath;
@@ -207,9 +182,7 @@ phy_RF6052_Config_ParaFile(
 
 	}
 
-	/* 3 ----------------------------------------------------------------- */
 	/* 3 Configuration of Tx Power Tracking */
-	/* 3 ----------------------------------------------------------------- */
 
 #ifdef CONFIG_LOAD_PHY_PARA_FROM_FILE
 	if (PHY_ConfigRFWithTxPwrTrackParaFile(Adapter, PHY_FILE_TXPWR_TRACK) == _FAIL)
@@ -226,10 +199,7 @@ phy_RF6052_Config_ParaFile_Fail:
 	return rtStatus;
 }
 
-
-int
-PHY_RF6052_Config8723B(
-	IN	PADAPTER		Adapter)
+int PHY_RF6052_Config8723B(IN PADAPTER Adapter)
 {
 	HAL_DATA_TYPE				*pHalData = GET_HAL_DATA(Adapter);
 	int					rtStatus = _SUCCESS;
@@ -248,7 +218,6 @@ PHY_RF6052_Config8723B(
 	/*  */
 	rtStatus = phy_RF6052_Config_ParaFile(Adapter);
 	return rtStatus;
-
 }
 
 /* End of HalRf6052.c */

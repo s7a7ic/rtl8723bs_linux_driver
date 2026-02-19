@@ -1,21 +1,12 @@
+// SPDX-License-Identifier: GPL-2.0
 /******************************************************************************
  *
- * Copyright(c) 2007 - 2017 Realtek Corporation.
+ * Copyright(c) 2007 - 2017 Realtek Corporation. All rights reserved.
  *
- * This program is free software; you can redistribute it and/or modify it
- * under the terms of version 2 of the GNU General Public License as
- * published by the Free Software Foundation.
- *
- * This program is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
- * more details.
- *
- *****************************************************************************/
+ ******************************************************************************/
 #define _RTL8723BS_RECV_C_
 
 #include <rtl8723b_hal.h>
-
 
 static s32 initrecvbuf(struct recv_buf *precvbuf, PADAPTER padapter)
 {
@@ -46,7 +37,6 @@ static void rtl8723bs_recv_tasklet(void *priv)
 	u8	*ptr;
 	u32	pkt_offset;
 	u8	rx_report_sz = 0;
-
 
 	padapter = (PADAPTER)priv;
 	pHalData = GET_HAL_DATA(padapter);

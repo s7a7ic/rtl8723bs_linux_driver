@@ -1,25 +1,11 @@
+// SPDX-License-Identifier: GPL-2.0
 /******************************************************************************
  *
- * Copyright(c) 2007 - 2011 Realtek Corporation. All rights reserved.
- *
- * This program is free software; you can redistribute it and/or modify it
- * under the terms of version 2 of the GNU General Public License as
- * published by the Free Software Foundation.
- *
- * This program is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
- * more details.
- *
- * You should have received a copy of the GNU General Public License along with
- * this program; if not, write to the Free Software Foundation, Inc.,
- * 51 Franklin Street, Fifth Floor, Boston, MA 02110, USA
- *
+ * Copyright(c) 2007 - 2017 Realtek Corporation. All rights reserved.
  *
  ******************************************************************************/
 #ifndef __RTW_RSON_H_
 #define __RTW_RSON_H_
-
 
 #define RTW_RSON_VER						1
 
@@ -30,8 +16,6 @@
 #define RTW_RSON_HC_ROOT				0x0
 #define RTW_RSON_ALLOWCONNECT			0x1
 #define RTW_RSON_DENYCONNECT			0x0
-
-
 
 /*	for rtw self-origanization spec 1	*/
 struct rtw_rson_struct {

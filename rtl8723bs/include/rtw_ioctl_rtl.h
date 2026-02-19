@@ -1,20 +1,11 @@
+// SPDX-License-Identifier: GPL-2.0
 /******************************************************************************
  *
- * Copyright(c) 2007 - 2017 Realtek Corporation.
+ * Copyright(c) 2007 - 2017 Realtek Corporation. All rights reserved.
  *
- * This program is free software; you can redistribute it and/or modify it
- * under the terms of version 2 of the GNU General Public License as
- * published by the Free Software Foundation.
- *
- * This program is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
- * more details.
- *
- *****************************************************************************/
+ ******************************************************************************/
 #ifndef _RTW_IOCTL_RTL_H_
 #define _RTW_IOCTL_RTL_H_
-
 
 /* ************** oid_rtl_seg_01_01 ************** */
 NDIS_STATUS oid_rt_get_signal_quality_hdl(struct oid_par_priv *poid_par_priv);/* 84 */
@@ -68,8 +59,5 @@ NDIS_STATUS oid_rt_pro_rf_read_registry_hdl(struct oid_par_priv *poid_par_priv);
 /* **************  oid_rtl_seg_03_00 section start **************  */
 NDIS_STATUS oid_rt_get_connect_state_hdl(struct oid_par_priv *poid_par_priv);
 NDIS_STATUS oid_rt_set_default_key_id_hdl(struct oid_par_priv *poid_par_priv);
-
-
-
 
 #endif

@@ -1,33 +1,13 @@
+// SPDX-License-Identifier: GPL-2.0
 /******************************************************************************
  *
- * Copyright(c) 2007 - 2017 Realtek Corporation.
+ * Copyright(c) 2007 - 2017 Realtek Corporation. All rights reserved.
  *
- * This program is free software; you can redistribute it and/or modify it
- * under the terms of version 2 of the GNU General Public License as
- * published by the Free Software Foundation.
- *
- * This program is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
- * more details.
- *
- *****************************************************************************/
-
+ ******************************************************************************/
 #ifndef __PHYDM_DFS_H__
 #define __PHYDM_DFS_H__
 
 #define DFS_VERSION	"1.1"
-
-/* ============================================================
-  Definition
- ============================================================
-*/
-
-/*
-============================================================
-1  structure
- ============================================================
-*/
 
 struct _DFS_STATISTICS {
 	u8			mask_idx;
@@ -63,12 +43,6 @@ struct _DFS_STATISTICS {
 	boolean		det_print2;
 };
 
-
-/* ============================================================
-  enumeration
- ============================================================
-*/
-
 enum phydm_dfs_region_domain {
 	PHYDM_DFS_DOMAIN_UNKNOWN = 0,
 	PHYDM_DFS_DOMAIN_FCC = 1,
@@ -76,11 +50,6 @@ enum phydm_dfs_region_domain {
 	PHYDM_DFS_DOMAIN_ETSI = 3,
 };
 
-/*
-============================================================
-  function prototype
-============================================================
-*/
 #if defined(CONFIG_PHYDM_DFS_MASTER)
 void phydm_radar_detect_reset(void *p_dm_void);
 void phydm_radar_detect_disable(void *p_dm_void);

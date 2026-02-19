@@ -1,24 +1,14 @@
+// SPDX-License-Identifier: GPL-2.0
 /******************************************************************************
  *
- * Copyright(c) 2007 - 2017 Realtek Corporation.
+ * Copyright(c) 2007 - 2017 Realtek Corporation. All rights reserved.
  *
- * This program is free software; you can redistribute it and/or modify it
- * under the terms of version 2 of the GNU General Public License as
- * published by the Free Software Foundation.
- *
- * This program is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
- * more details.
- *
- *****************************************************************************/
+ ******************************************************************************/
 #ifndef __RTW_TDLS_H_
 #define __RTW_TDLS_H_
 
-
 #ifdef CONFIG_TDLS
 /* TDLS STA state */
-
 
 /* TDLS Diect Link Establishment */
 #define	TDLS_STATE_NONE				0x00000000		/* Default state */
@@ -35,7 +25,6 @@
 #define	TDLS_PEER_AT_OFF_STATE			BIT(17)			/* 0x00020000 */	/* Could send pkt on target ch */
 #define	TDLS_CH_SW_INITIATOR_STATE		BIT(18)			/* 0x00040000 */	/* Avoid duplicated or unconditional ch. switch rsp. */
 #define	TDLS_WAIT_CH_RSP_STATE			BIT(19)			/* 0x00080000 */	/* Wait Ch. response as we are TDLS channel switch initiator */
-
 
 #define	TDLS_TPK_RESEND_COUNT			86400	/*Unit: seconds */
 #define	TDLS_CH_SWITCH_TIME				15

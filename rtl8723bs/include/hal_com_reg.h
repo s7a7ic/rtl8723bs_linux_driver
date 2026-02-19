@@ -1,20 +1,11 @@
+// SPDX-License-Identifier: GPL-2.0
 /******************************************************************************
  *
- * Copyright(c) 2007 - 2017 Realtek Corporation.
+ * Copyright(c) 2007 - 2017 Realtek Corporation. All rights reserved.
  *
- * This program is free software; you can redistribute it and/or modify it
- * under the terms of version 2 of the GNU General Public License as
- * published by the Free Software Foundation.
- *
- * This program is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
- * more details.
- *
- *****************************************************************************/
+ ******************************************************************************/
 #ifndef __HAL_COMMON_REG_H__
 #define __HAL_COMMON_REG_H__
-
 
 #define MAC_ADDR_LEN				6
 
@@ -1824,7 +1815,6 @@ Current IOREG MAP
 #else
 	#define POLLING_READY_TIMEOUT_COUNT		1000
 #endif
-
 
 /* GPIO BIT */
 #define	HAL_8812A_HW_GPIO_WPS_BIT	BIT(2)

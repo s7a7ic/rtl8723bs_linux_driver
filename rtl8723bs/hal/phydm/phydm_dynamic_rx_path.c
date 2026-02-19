@@ -1,22 +1,9 @@
+/// SPDX-License-Identifier: GPL-2.0
 /******************************************************************************
  *
- * Copyright(c) 2007 - 2017 Realtek Corporation.
+ * Copyright(c) 2007 - 2017 Realtek Corporation. All rights reserved.
  *
- * This program is free software; you can redistribute it and/or modify it
- * under the terms of version 2 of the GNU General Public License as
- * published by the Free Software Foundation.
- *
- * This program is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
- * more details.
- *
- *****************************************************************************/
-
-/* ************************************************************
- * include files
- * ************************************************************ */
-#include "mp_precomp.h"
+ ******************************************************************************/
 #include "phydm_precomp.h"
 
 #ifdef CONFIG_DYNAMIC_RX_PATH
@@ -33,9 +20,6 @@ phydm_process_phy_status_for_dynamic_rx_path(
 	struct phydm_perpkt_info_struct		*p_pktinfo = (struct phydm_perpkt_info_struct *)p_pkt_info_void;
 	struct _DYNAMIC_RX_PATH_					*p_dm_drp_table	= &(p_dm->dm_drp_table);
 	/*u8					is_cck_rate=0;*/
-
-
-
 }
 
 void

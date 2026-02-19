@@ -1,17 +1,9 @@
+// SPDX-License-Identifier: GPL-2.0
 /******************************************************************************
  *
- * Copyright(c) 2007 - 2017 Realtek Corporation.
+ * Copyright(c) 2007 - 2017 Realtek Corporation. All rights reserved.
  *
- * This program is free software; you can redistribute it and/or modify it
- * under the terms of version 2 of the GNU General Public License as
- * published by the Free Software Foundation.
- *
- * This program is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
- * more details.
- *
- *****************************************************************************/
+ ******************************************************************************/
 #define _HAL_PHY_C_
 
 #include <drv_types.h>
@@ -33,10 +25,7 @@ static RF_SHADOW_T RF_Shadow[RF6052_MAX_PATH][RF6052_MAX_REG];
 * Output:	none
 * Return:		u4Byte		Return the shift bit bit position of the mask
 */
-u32
-PHY_CalculateBitShift(
-	u32 BitMask
-)
+u32 PHY_CalculateBitShift(u32 BitMask)
 {
 	u32 i;
 
@@ -47,7 +36,6 @@ PHY_CalculateBitShift(
 
 	return i;
 }
-
 
 /*
  * ==> RF shadow Operation API Code Section!!!
@@ -77,8 +65,7 @@ PHY_CalculateBitShift(
  * 11/20/2008	MHC		Create Version 0.
  *
  *---------------------------------------------------------------------------*/
-u32
-PHY_RFShadowRead(
+u32 PHY_RFShadowRead(
 	IN	PADAPTER		Adapter,
 	IN	enum rf_path		eRFPath,
 	IN	u32				Offset)
@@ -87,9 +74,7 @@ PHY_RFShadowRead(
 
 }	/* PHY_RFShadowRead */
 
-
-VOID
-PHY_RFShadowWrite(
+VOID PHY_RFShadowWrite(
 	IN	PADAPTER		Adapter,
 	IN	enum rf_path		eRFPath,
 	IN	u32				Offset,
@@ -100,9 +85,7 @@ PHY_RFShadowWrite(
 
 }	/* PHY_RFShadowWrite */
 
-
-BOOLEAN
-PHY_RFShadowCompare(
+BOOLEAN PHY_RFShadowCompare(
 	IN	PADAPTER		Adapter,
 	IN	enum rf_path		eRFPath,
 	IN	u32				Offset)
@@ -121,9 +104,7 @@ PHY_RFShadowCompare(
 	return _FALSE;
 }	/* PHY_RFShadowCompare */
 
-
-VOID
-PHY_RFShadowRecorver(
+VOID PHY_RFShadowRecorver(
 	IN	PADAPTER		Adapter,
 	IN	enum rf_path		eRFPath,
 	IN	u32				Offset)
@@ -139,9 +120,7 @@ PHY_RFShadowRecorver(
 
 }	/* PHY_RFShadowRecorver */
 
-
-VOID
-PHY_RFShadowCompareAll(
+VOID PHY_RFShadowCompareAll(
 	IN	PADAPTER			Adapter)
 {
 	enum rf_path	eRFPath = RF_PATH_A;
@@ -154,9 +133,7 @@ PHY_RFShadowCompareAll(
 
 }	/* PHY_RFShadowCompareAll */
 
-
-VOID
-PHY_RFShadowRecorverAll(
+VOID PHY_RFShadowRecorverAll(
 	IN	PADAPTER			Adapter)
 {
 	enum rf_path		eRFPath = RF_PATH_A;
@@ -169,9 +146,7 @@ PHY_RFShadowRecorverAll(
 
 }	/* PHY_RFShadowRecorverAll */
 
-
-VOID
-PHY_RFShadowCompareFlagSet(
+VOID PHY_RFShadowCompareFlagSet(
 	IN	PADAPTER		Adapter,
 	IN	enum rf_path		eRFPath,
 	IN	u32				Offset,
@@ -182,9 +157,7 @@ PHY_RFShadowCompareFlagSet(
 
 }	/* PHY_RFShadowCompareFlagSet */
 
-
-VOID
-PHY_RFShadowRecorverFlagSet(
+VOID PHY_RFShadowRecorverFlagSet(
 	IN	PADAPTER		Adapter,
 	IN	enum rf_path		eRFPath,
 	IN	u32				Offset,
@@ -195,10 +168,7 @@ PHY_RFShadowRecorverFlagSet(
 
 }	/* PHY_RFShadowRecorverFlagSet */
 
-
-VOID
-PHY_RFShadowCompareFlagSetAll(
-	IN	PADAPTER			Adapter)
+VOID PHY_RFShadowCompareFlagSetAll(IN PADAPTER Adapter)
 {
 	enum rf_path	eRFPath = RF_PATH_A;
 	u32		Offset = 0, maxReg = GET_RF6052_REAL_MAX_REG(Adapter);
@@ -215,10 +185,7 @@ PHY_RFShadowCompareFlagSetAll(
 
 }	/* PHY_RFShadowCompareFlagSetAll */
 
-
-VOID
-PHY_RFShadowRecorverFlagSetAll(
-	IN	PADAPTER			Adapter)
+VOID PHY_RFShadowRecorverFlagSetAll(IN PADAPTER Adapter)
 {
 	enum rf_path		eRFPath = RF_PATH_A;
 	u32		Offset = 0, maxReg = GET_RF6052_REAL_MAX_REG(Adapter);
@@ -235,9 +202,7 @@ PHY_RFShadowRecorverFlagSetAll(
 
 }	/* PHY_RFShadowCompareFlagSetAll */
 
-VOID
-PHY_RFShadowRefresh(
-	IN	PADAPTER			Adapter)
+VOID PHY_RFShadowRefresh(IN PADAPTER Adapter)
 {
 	enum rf_path		eRFPath = RF_PATH_A;
 	u32		Offset = 0, maxReg = GET_RF6052_REAL_MAX_REG(Adapter);

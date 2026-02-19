@@ -1,17 +1,9 @@
+// SPDX-License-Identifier: GPL-2.0
 /******************************************************************************
  *
- * Copyright(c) 2007 - 2017 Realtek Corporation.
+ * Copyright(c) 2007 - 2017 Realtek Corporation. All rights reserved.
  *
- * This program is free software; you can redistribute it and/or modify it
- * under the terms of version 2 of the GNU General Public License as
- * published by the Free Software Foundation.
- *
- * This program is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
- * more details.
- *
- *****************************************************************************/
+ ******************************************************************************/
 #ifndef __HAL_DATA_H__
 #define __HAL_DATA_H__
 
@@ -630,59 +622,6 @@ typedef struct hal_com_data {
 #endif /* !RTW_HALMAC */
 #endif /* CONFIG_SDIO_HCI */
 
-#ifdef CONFIG_USB_HCI
-
-	/* 2010/12/10 MH Add for USB aggreation mode dynamic shceme. */
-	BOOLEAN		UsbRxHighSpeedMode;
-	BOOLEAN		UsbTxVeryHighSpeedMode;
-	u32			UsbBulkOutSize;
-	BOOLEAN		bSupportUSB3;
-	u8			usb_intf_start;
-
-	/* Interrupt relatd register information. */
-	u32			IntArray[3];/* HISR0,HISR1,HSISR */
-	u32			IntrMask[3];
-#ifdef CONFIG_USB_TX_AGGREGATION
-	u8			UsbTxAggMode;
-	u8			UsbTxAggDescNum;
-#endif /* CONFIG_USB_TX_AGGREGATION */
-
-#ifdef CONFIG_USB_RX_AGGREGATION
-	u16			HwRxPageSize;				/* Hardware setting */
-
-	/* For RX Aggregation USB Mode */
-	u8			rxagg_usb_size;
-	u8			rxagg_usb_timeout;
-#endif/* CONFIG_USB_RX_AGGREGATION */
-#endif /* CONFIG_USB_HCI */
-
-
-#ifdef CONFIG_PCI_HCI
-	/*  */
-	/* EEPROM setting. */
-	/*  */
-	u32			TransmitConfig;
-	u32			IntrMaskToSet[2];
-	u32			IntArray[4];
-	u32			IntrMask[4];
-	u32			SysIntArray[1];
-	u32			SysIntrMask[1];
-	u32			IntrMaskReg[2];
-	u32			IntrMaskDefault[4];
-
-	BOOLEAN		bL1OffSupport;
-	BOOLEAN	bSupportBackDoor;
-	u32			pci_backdoor_ctrl;
-
-	u8			bDefaultAntenna;
-
-	u8			bInterruptMigration;
-	u8			bDisableTxInt;
-
-	u16			RxTag;
-#endif /* CONFIG_PCI_HCI */
-
-
 #ifdef DBG_CONFIG_ERROR_DETECT
 	struct sreset_priv srestpriv;
 #endif /* #ifdef DBG_CONFIG_ERROR_DETECT */
@@ -760,8 +699,6 @@ typedef struct hal_com_data {
 
 	u8 in_cta_test;
 } HAL_DATA_COMMON, *PHAL_DATA_COMMON;
-
-
 
 typedef struct hal_com_data HAL_DATA_TYPE, *PHAL_DATA_TYPE;
 #define GET_HAL_DATA(__pAdapter)			((HAL_DATA_TYPE *)((__pAdapter)->HalData))
@@ -1028,17 +965,10 @@ int rtw_halmac_deinit_adapter(struct dvobj_priv *);
 #define REG_APK	rAPK
 #define REG_ANTSEL_SW_JAGUAR	r_ANTSEL_SW_Jaguar
 
-
-
 #define rf_welut_jaguar	RF_WeLut_Jaguar
 #define rf_mode_table_addr	RF_ModeTableAddr
 #define rf_mode_table_data0	RF_ModeTableData0
 #define rf_mode_table_data1	RF_ModeTableData1
-
-
-
-
-
 
 #define RX_SMOOTH_FACTOR	Rx_Smooth_Factor
 

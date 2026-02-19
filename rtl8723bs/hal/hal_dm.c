@@ -1,18 +1,9 @@
+// SPDX-License-Identifier: GPL-2.0
 /******************************************************************************
  *
- * Copyright(c) 2014 - 2017 Realtek Corporation.
+ * Copyright(c) 2007 - 2017 Realtek Corporation. All rights reserved.
  *
- * This program is free software; you can redistribute it and/or modify it
- * under the terms of version 2 of the GNU General Public License as
- * published by the Free Software Foundation.
- *
- * This program is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
- * more details.
- *
- *****************************************************************************/
-
+ ******************************************************************************/
 #include <drv_types.h>
 #include <hal_data.h>
 
@@ -983,7 +974,7 @@ void rtw_phydm_ra_registed(_adapter *adapter, struct sta_info *psta)
 		return;
 	}
 
-	phydm_ra_registed(&hal_data->odmpriv, psta->cmn.mac_id, psta->cmn.rssi_stat.rssi);
+//	phydm_ra_registed(&hal_data->odmpriv, psta->cmn.mac_id, psta->cmn.rssi_stat.rssi);
 	dump_sta_info(RTW_DBGDUMP, psta);
 }
 
@@ -1008,7 +999,6 @@ static void _lps_pg_state_update(_adapter *adapter)
 
 /*#define DBG_PHYDM_STATE_CHK*/
 
-
 static u8 _rtw_phydm_rfk_condition_check(_adapter *adapter)
 {
 	u8 rst = _FALSE;
@@ -1029,21 +1019,7 @@ static u8 _rtw_phydm_rfk_condition_check(_adapter *adapter)
 
 	return rst;
 }
-#if ((RTL8822B_SUPPORT == 1) || (RTL8821C_SUPPORT == 1) || (RTL8814B_SUPPORT == 1))
-static u8 _rtw_phydm_iqk_segment_chk(_adapter *adapter)
-{
-	u8 rst = _FALSE;
-	struct dvobj_priv *dvobj = adapter_to_dvobj(adapter);
 
-#if 0
-	if (dvobj->traffic_stat.cur_tx_tp > 2 || dvobj->traffic_stat.cur_rx_tp > 2)
-		rst = _TRUE;
-#else
-	rst = _TRUE;
-#endif
-	return rst;
-}
-#endif
 void rtw_phydm_watchdog(_adapter *adapter)
 {
 	u8	bLinked = _FALSE;
@@ -1116,4 +1092,3 @@ void rtw_phydm_watchdog(_adapter *adapter)
 _exit:
 	return;
 }
-

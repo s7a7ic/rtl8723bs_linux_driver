@@ -1,18 +1,9 @@
+// SPDX-License-Identifier: GPL-2.0
 /******************************************************************************
  *
- * Copyright(c) 2007 - 2017 Realtek Corporation.
+ * Copyright(c) 2007 - 2017 Realtek Corporation. All rights reserved.
  *
- * This program is free software; you can redistribute it and/or modify it
- * under the terms of version 2 of the GNU General Public License as
- * published by the Free Software Foundation.
- *
- * This program is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
- * more details.
- *
- *****************************************************************************/
-
+ ******************************************************************************/
 #ifndef	__PHYDMDIG_H__
 #define	__PHYDMDIG_H__
 
@@ -22,8 +13,6 @@
 #define DIG_VERSION	"2.2"		/* 2017.06.13  YuChen. Remove MP dig*/
 
 #define DIG_HW		0
-
-/*--------------------Define ---------------------------------------*/
 
 /*=== [DIG Boundary] ========================================*/
 /*DIG coverage mode*/
@@ -70,7 +59,6 @@
 #define	DIFF_RSSI_TO_IGI		10
 #define	ONE_SEC_MS				1000
 
-/*--------------------Enum-----------------------------------*/
 enum dig_goupcheck_level {
 	DIG_GOUPCHECK_LEVEL_0,
 	DIG_GOUPCHECK_LEVEL_1,

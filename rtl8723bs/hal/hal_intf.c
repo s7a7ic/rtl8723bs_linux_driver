@@ -1,18 +1,9 @@
+// SPDX-License-Identifier: GPL-2.0
 /******************************************************************************
  *
- * Copyright(c) 2007 - 2017 Realtek Corporation.
+ * Copyright(c) 2007 - 2017 Realtek Corporation. All rights reserved.
  *
- * This program is free software; you can redistribute it and/or modify it
- * under the terms of version 2 of the GNU General Public License as
- * published by the Free Software Foundation.
- *
- * This program is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
- * more details.
- *
- *****************************************************************************/
-
+ ******************************************************************************/
 #define _HAL_INTF_C_
 
 #include <drv_types.h>
@@ -237,9 +228,7 @@ uint	 rtw_hal_init(_adapter *padapter)
 		RTW_INFO("rtw_hal_init: hal_init fail\n");
 	}
 
-
 	return status;
-
 }
 
 uint rtw_hal_deinit(_adapter *padapter)
@@ -303,7 +292,6 @@ void rtw_hal_disable_interrupt(_adapter *padapter)
 	padapter->hal_func.disable_interrupt(padapter);
 #endif /* #if defined(CONFIG_PCI_HCI) || defined (CONFIG_SDIO_HCI) || defined (CONFIG_GSPI_HCI) */
 }
-
 
 u8 rtw_hal_check_ips_status(_adapter *padapter)
 {
@@ -1040,7 +1028,6 @@ void rtw_hal_fill_fake_txdesc(_adapter *padapter, u8 *pDesc, u32 BufferLen,
 u8 rtw_hal_get_txbuff_rsvd_page_num(_adapter *adapter, bool wowlan)
 {
 	u8 num = 0;
-
 
 	if (adapter->hal_func.hal_get_tx_buff_rsvd_page_num) {
 		num = adapter->hal_func.hal_get_tx_buff_rsvd_page_num(adapter, wowlan);

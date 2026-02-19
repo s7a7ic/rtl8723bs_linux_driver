@@ -1,17 +1,9 @@
+// SPDX-License-Identifier: GPL-2.0
 /******************************************************************************
  *
- * Copyright(c) 2007 - 2017 Realtek Corporation.
+ * Copyright(c) 2007 - 2017 Realtek Corporation. All rights reserved.
  *
- * This program is free software; you can redistribute it and/or modify it
- * under the terms of version 2 of the GNU General Public License as
- * published by the Free Software Foundation.
- *
- * This program is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
- * more details.
- *
- *****************************************************************************/
+ ******************************************************************************/
 #define _HAL_MP_C_
 
 #include <drv_types.h>
@@ -21,32 +13,10 @@
 #ifdef RTW_HALMAC
 	#include <hal_data.h>		/* struct HAL_DATA_TYPE, RF register definition and etc. */
 #else /* !RTW_HALMAC */
-	#ifdef CONFIG_RTL8188E
-		#include <rtl8188e_hal.h>
-	#endif
 	#ifdef CONFIG_RTL8723B
 		#include <rtl8723b_hal.h>
 	#endif
-	#ifdef CONFIG_RTL8192E
-		#include <rtl8192e_hal.h>
-	#endif
-	#ifdef CONFIG_RTL8814A
-		#include <rtl8814a_hal.h>
-	#endif
-	#if defined(CONFIG_RTL8812A) || defined(CONFIG_RTL8821A)
-		#include <rtl8812a_hal.h>
-	#endif
-	#ifdef CONFIG_RTL8703B
-		#include <rtl8703b_hal.h>
-	#endif
-	#ifdef CONFIG_RTL8723D
-		#include <rtl8723d_hal.h>
-	#endif
-	#ifdef CONFIG_RTL8188F
-		#include <rtl8188f_hal.h>
-	#endif
 #endif /* !RTW_HALMAC */
-
 
 u8 MgntQuery_NssTxRate(u16 Rate)
 {
@@ -107,7 +77,6 @@ s32 hal_mpt_SetPowerTracking(PADAPTER padapter, u8 enable)
 	HAL_DATA_TYPE	*pHalData = GET_HAL_DATA(padapter);
 	struct PHY_DM_STRUCT		*pDM_Odm = &(pHalData->odmpriv);
 
-
 	if (!netif_running(padapter->pnetdev)) {
 		return _FAIL;
 	}
@@ -128,10 +97,8 @@ void hal_mpt_GetPowerTracking(PADAPTER padapter, u8 *enable)
 	HAL_DATA_TYPE	*pHalData = GET_HAL_DATA(padapter);
 	struct PHY_DM_STRUCT		*pDM_Odm = &(pHalData->odmpriv);
 
-
 	*enable = pDM_Odm->rf_calibrate_info.txpowertrack_control;
 }
-
 
 void hal_mpt_CCKTxPowerAdjust(PADAPTER Adapter, BOOLEAN bInCH14)
 {
@@ -303,7 +270,6 @@ void hal_mpt_CCKTxPowerAdjust(PADAPTER Adapter, BOOLEAN bInCH14)
 		write_bbreg(Adapter, rCCK0_TxFilter2, bMaskDWord, TempVal2);
 		write_bbreg(Adapter, rCCK0_DebugPort, bMaskLWord, TempVal3);
 	}
-
 }
 
 void hal_mpt_SetChannel(PADAPTER pAdapter)
@@ -322,7 +288,6 @@ void hal_mpt_SetChannel(PADAPTER pAdapter)
 	rtw_hal_set_chnl_bw(pAdapter, channel, bandwidth, 0, 0);
 
 	hal_mpt_CCKTxPowerAdjust(pAdapter, pHalData->bCCKinCH14);
-
 }
 
 /*

@@ -1,26 +1,13 @@
+// SPDX-License-Identifier: GPL-2.0
 /******************************************************************************
  *
- * Copyright(c) 2007 - 2017 Realtek Corporation.
+ * Copyright(c) 2007 - 2017 Realtek Corporation. All rights reserved.
  *
- * This program is free software; you can redistribute it and/or modify it
- * under the terms of version 2 of the GNU General Public License as
- * published by the Free Software Foundation.
- *
- * This program is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
- * more details.
- *
- *****************************************************************************/
-
+ ******************************************************************************/
 #ifndef	__PHYDM_PRIMARYCCA_H__
 #define	__PHYDM_PRIMARYCCA_H__
 
 #define PRIMARYCCA_VERSION	"1.0"  /*2017.03.23, Dino*/
-
-/*============================================================*/
-/*Definition */
-/*============================================================*/
 
 #if (DM_ODM_SUPPORT_TYPE == ODM_CE)
 #define	SECOND_CH_AT_LSB	2	/*primary CH @ MSB,  SD4: HAL_PRIME_CHNL_OFFSET_UPPER*/
@@ -39,9 +26,6 @@
 
 #ifdef PHYDM_PRIMARY_CCA
 
-/*============================================================*/
-/*structure and define*/
-/*============================================================*/
 enum	primary_cca_ch_position {  /*N-series REG0xc6c[8:7]*/
 	MF_USC_LSC = 0,
 	MF_LSC = 1,

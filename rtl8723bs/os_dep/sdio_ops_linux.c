@@ -1,17 +1,9 @@
+// SPDX-License-Identifier: GPL-2.0
 /******************************************************************************
  *
- * Copyright(c) 2007 - 2017 Realtek Corporation.
+ * Copyright(c) 2007 - 2017 Realtek Corporation. All rights reserved.
  *
- * This program is free software; you can redistribute it and/or modify it
- * under the terms of version 2 of the GNU General Public License as
- * published by the Free Software Foundation.
- *
- * This program is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
- * more details.
- *
- *****************************************************************************/
+ ******************************************************************************/
 #define _SDIO_OPS_LINUX_C_
 
 #include <drv_types.h>
@@ -40,6 +32,7 @@ inline void rtw_sdio_set_irq_thd(struct dvobj_priv *dvobj, _thread_hdl_ thd_hdl)
 
 	sdio_data->sys_sdio_irq_thd = thd_hdl;
 }
+
 #ifndef RTW_HALMAC
 u8 sd_f0_read8(struct intf_hdl *pintfhdl, u32 addr, s32 *err)
 {
@@ -50,7 +43,6 @@ u8 sd_f0_read8(struct intf_hdl *pintfhdl, u32 addr, s32 *err)
 	u8 v = 0;
 	struct sdio_func *func;
 	bool claim_needed;
-
 
 	padapter = pintfhdl->padapter;
 	psdiodev = pintfhdl->pintf_dev;
@@ -177,7 +169,6 @@ s32 sd_cmd52_read(struct intf_hdl *pintfhdl, u32 addr, u32 cnt, u8 *pdata)
 	if (claim_needed)
 		sdio_release_host(func);
 
-
 	return err;
 }
 
@@ -213,7 +204,6 @@ s32 _sd_cmd52_write(struct intf_hdl *pintfhdl, u32 addr, u32 cnt, u8 *pdata)
 			break;
 		}
 	}
-
 
 	return err;
 }
@@ -251,7 +241,6 @@ s32 sd_cmd52_write(struct intf_hdl *pintfhdl, u32 addr, u32 cnt, u8 *pdata)
 	if (claim_needed)
 		sdio_release_host(func);
 
-
 	return err;
 }
 
@@ -279,7 +268,6 @@ u8 _sd_read8(struct intf_hdl *pintfhdl, u32 addr, s32 *err)
 
 	if (err && *err)
 		RTW_ERR("%s: FAIL!(%d) addr=0x%05x\n", __func__, *err, addr);
-
 
 	return v;
 }
@@ -314,7 +302,6 @@ u8 sd_read8(struct intf_hdl *pintfhdl, u32 addr, s32 *err)
 	if (err && *err)
 		RTW_ERR("%s: FAIL!(%d) addr=0x%05x\n", __func__, *err, addr);
 
-
 	return v;
 }
 
@@ -347,7 +334,6 @@ u16 sd_read16(struct intf_hdl *pintfhdl, u32 addr, s32 *err)
 		sdio_release_host(func);
 	if (err && *err)
 		RTW_ERR("%s: FAIL!(%d) addr=0x%05x\n", __func__, *err, addr);
-
 
 	return  v;
 }
@@ -404,10 +390,7 @@ u32 _sd_read32(struct intf_hdl *pintfhdl, u32 addr, s32 *err)
 			RTW_ERR("%s: FAIL!(%d) addr=0x%05x, val=0x%x, try_cnt=%d\n", __func__, *err, addr, v, i);
 		else
 			RTW_ERR("%s: (%d) addr=0x%05x, val=0x%x, try_cnt=%d\n", __func__, *err, addr, v, i);
-
 	}
-
-
 	return  v;
 }
 
@@ -471,10 +454,7 @@ u32 sd_read32(struct intf_hdl *pintfhdl, u32 addr, s32 *err)
 			RTW_ERR("%s: FAIL!(%d) addr=0x%05x, val=0x%x, try_cnt=%d\n", __func__, *err, addr, v, i);
 		else
 			RTW_ERR("%s: (%d) addr=0x%05x, val=0x%x, try_cnt=%d\n", __func__, *err, addr, v, i);
-
 	}
-
-
 	return  v;
 }
 
@@ -507,7 +487,6 @@ void sd_write8(struct intf_hdl *pintfhdl, u32 addr, u8 v, s32 *err)
 		sdio_release_host(func);
 	if (err && *err)
 		RTW_ERR("%s: FAIL!(%d) addr=0x%05x val=0x%02x\n", __func__, *err, addr, v);
-
 }
 
 void sd_write16(struct intf_hdl *pintfhdl, u32 addr, u16 v, s32 *err)
@@ -589,9 +568,7 @@ void _sd_write32(struct intf_hdl *pintfhdl, u32 addr, u32 v, s32 *err)
 			RTW_ERR("%s: FAIL!(%d) addr=0x%05x val=0x%08x, try_cnt=%d\n", __func__, *err, addr, v, i);
 		else
 			RTW_ERR("%s: (%d) addr=0x%05x val=0x%08x, try_cnt=%d\n", __func__, *err, addr, v, i);
-
 	}
-
 }
 
 void sd_write32(struct intf_hdl *pintfhdl, u32 addr, u32 v, s32 *err)
@@ -906,7 +883,6 @@ int __must_check rtw_sdio_raw_read(struct dvobj_priv *d, unsigned int addr,
 	bool claim_needed;
 	u32 offset, i;
 
-
 	func = dvobj_to_sdio_func(d);
 	claim_needed = rtw_sdio_claim_host_needed(func);
 	f0 = RTW_SDIO_ADDR_F0_CHK(addr);
@@ -1023,7 +999,6 @@ int __must_check rtw_sdio_raw_write(struct dvobj_priv *d, unsigned int addr,
 	struct sdio_func *func;
 	bool claim_needed;
 	u32 offset, i;
-
 
 	func = dvobj_to_sdio_func(d);
 	claim_needed = rtw_sdio_claim_host_needed(func);

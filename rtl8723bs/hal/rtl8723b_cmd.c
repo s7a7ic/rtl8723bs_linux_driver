@@ -1,17 +1,9 @@
+// SPDX-License-Identifier: GPL-2.0
 /******************************************************************************
  *
- * Copyright(c) 2007 - 2017 Realtek Corporation.
+ * Copyright(c) 2007 - 2017 Realtek Corporation. All rights reserved.
  *
- * This program is free software; you can redistribute it and/or modify it
- * under the terms of version 2 of the GNU General Public License as
- * published by the Free Software Foundation.
- *
- * This program is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
- * more details.
- *
- *****************************************************************************/
+ ******************************************************************************/
 #define _RTL8723B_CMD_C_
 
 #include <rtl8723b_hal.h>
@@ -43,7 +35,6 @@ static u8 _is_fw_read_cmd_down(_adapter *padapter, u8 msgbox_num)
 	return read_down;
 
 }
-
 
 /*****************************************
 * H2C Msg format :
@@ -130,7 +121,6 @@ exit:
 
 	_exit_critical_mutex(&(adapter_to_dvobj(padapter)->h2c_fwcmd_mutex), NULL);
 
-
 	return ret;
 }
 
@@ -143,7 +133,6 @@ static void ConstructBeacon(_adapter *padapter, u8 *pframe, u32 *pLength)
 	struct mlme_ext_info	*pmlmeinfo = &(pmlmeext->mlmext_info);
 	WLAN_BSSID_EX		*cur_network = &(pmlmeinfo->network);
 	u8	bc_addr[] = {0xff, 0xff, 0xff, 0xff, 0xff, 0xff};
-
 
 	/* RTW_INFO("%s\n", __FUNCTION__); */
 
@@ -207,14 +196,11 @@ static void ConstructBeacon(_adapter *padapter, u8 *pframe, u32 *pLength)
 		pframe = rtw_set_ie(pframe, _IBSS_PARA_IE_, 2, (unsigned char *)(&ATIMWindow), &pktlen);
 	}
 
-
 	/* todo: ERP IE */
-
 
 	/* EXTERNDED SUPPORTED RATE */
 	if (rate_len > 8)
 		pframe = rtw_set_ie(pframe, _EXT_SUPPORTEDRATES_IE_, (rate_len - 8), (cur_network->SupportedRates + 8), &pktlen);
-
 
 	/* todo:HT for adhoc */
 
@@ -228,7 +214,6 @@ _ConstructBeacon:
 	*pLength = pktlen;
 
 	/* RTW_INFO("%s bcn_sz=%d\n", __FUNCTION__, pktlen); */
-
 }
 
 static void ConstructPSPoll(_adapter *padapter, u8 *pframe, u32 *pLength)
@@ -278,7 +263,6 @@ static void ConstructNullFunctionData(
 	struct wlan_network		*cur_network = &pmlmepriv->cur_network;
 	struct mlme_ext_priv	*pmlmeext = &(padapter->mlmeextpriv);
 	struct mlme_ext_info	*pmlmeinfo = &(pmlmeext->mlmext_info);
-
 
 	/* RTW_INFO("%s:%d\n", __FUNCTION__, bForcePowerSave); */
 
@@ -510,7 +494,6 @@ void rtl8723b_set_FwPwrMode_cmd(PADAPTER padapter, u8 psmode)
 			awake_intvl = pwrpriv->dtim + 1; /* DTIM = (awake_intvl - 1) */
 		else
 			awake_intvl = 4;/* DTIM=3 */
-
 
 		rlbm = 2;
 		smart_ps = pwrpriv->smart_ps;
@@ -1185,7 +1168,5 @@ void rtl8723b_set_p2p_ps_offload_cmd(_adapter *padapter, u8 p2p_ps_state)
 	FillH2CCmd8723B(padapter, H2C_8723B_P2P_PS_OFFLOAD, 1, (u8 *)p2p_ps_offload);
 #endif
 
-
 }
 #endif /* CONFIG_P2P */
-

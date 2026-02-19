@@ -1,22 +1,10 @@
+// SPDX-License-Identifier: GPL-2.0
 /******************************************************************************
  *
- * Copyright(c) 2007 - 2017 Realtek Corporation.
+ * Copyright(c) 2007 - 2017 Realtek Corporation. All rights reserved.
  *
- * This program is free software; you can redistribute it and/or modify it
- * under the terms of version 2 of the GNU General Public License as
- * published by the Free Software Foundation.
- *
- * This program is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
- * more details.
- *
- *****************************************************************************/
-
-#include "mp_precomp.h"
+ ******************************************************************************/
 #include "../../phydm_precomp.h"
-
-
 
 /*---------------------------Define Local Constant---------------------------*/
 /* 2010/04/25 MH Define the max tx power tracking tx agc power.*/
@@ -39,10 +27,6 @@
 #define	idx_0xc4c						2
 #define	idx_0xc1c						0
 #define	idx_0xc78						1
-
-
-/*---------------------------Define Local Constant---------------------------*/
-
 
 /*============================================================*/
 /* Tx Power Tracking*/

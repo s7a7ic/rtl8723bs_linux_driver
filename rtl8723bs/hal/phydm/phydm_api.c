@@ -1,30 +1,12 @@
+// SPDX-License-Identifier: GPL-2.0
 /******************************************************************************
  *
- * Copyright(c) 2007 - 2017 Realtek Corporation.
+ * Copyright(c) 2007 - 2017 Realtek Corporation. All rights reserved.
  *
- * This program is free software; you can redistribute it and/or modify it
- * under the terms of version 2 of the GNU General Public License as
- * published by the Free Software Foundation.
- *
- * This program is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
- * more details.
- *
- *****************************************************************************/
-
-/* ************************************************************
- * include files
- * ************************************************************ */
-
-#include "mp_precomp.h"
+ ******************************************************************************/
 #include "phydm_precomp.h"
 
-
-void
-phydm_init_trx_antenna_setting(
-	void		*p_dm_void
-)
+void phydm_init_trx_antenna_setting(void *p_dm_void)
 {
 	struct PHY_DM_STRUCT	*p_dm = (struct PHY_DM_STRUCT *)p_dm_void;
 	
@@ -42,104 +24,18 @@ phydm_init_trx_antenna_setting(
 	}
 }
 
-void
-phydm_config_ofdm_tx_path(
-	void			*p_dm_void,
-	u32			path
-)
+void phydm_config_ofdm_tx_path(void *p_dm_void, u32 path)
 {
 	struct PHY_DM_STRUCT	*p_dm = (struct PHY_DM_STRUCT *)p_dm_void;
-#if ((RTL8192E_SUPPORT == 1) || (RTL8812A_SUPPORT == 1))
-	u8	ofdm_tx_path = 0x33;
-#endif
-
-#if (RTL8192E_SUPPORT == 1)
-	if (p_dm->support_ic_type & (ODM_RTL8192E)) {
-
-		if (path == BB_PATH_A) {
-			odm_set_bb_reg(p_dm, 0x90c, MASKDWORD, 0x81121111);
-			/**/
-		} else if (path == BB_PATH_B) {
-			odm_set_bb_reg(p_dm, 0x90c, MASKDWORD, 0x82221222);
-			/**/
-		} else  if (path == BB_PATH_AB) {
-			odm_set_bb_reg(p_dm, 0x90c, MASKDWORD, 0x83321333);
-			/**/
-		}
-
-
-	}
-#endif
-
-#if (RTL8812A_SUPPORT == 1)
-	if (p_dm->support_ic_type & (ODM_RTL8812)) {
-
-		if (path == BB_PATH_A) {
-			ofdm_tx_path = 0x11;
-			/**/
-		} else if (path == BB_PATH_B) {
-			ofdm_tx_path = 0x22;
-			/**/
-		} else  if (path == BB_PATH_AB) {
-			ofdm_tx_path = 0x33;
-			/**/
-		}
-
-		odm_set_bb_reg(p_dm, 0x80c, 0xff00, ofdm_tx_path);
-	}
-#endif
 }
 
-void
-phydm_config_ofdm_rx_path(
-	void			*p_dm_void,
-	u32			path
-)
+void phydm_config_ofdm_rx_path(void *p_dm_void, u32 path)
 {
 	struct PHY_DM_STRUCT	*p_dm = (struct PHY_DM_STRUCT *)p_dm_void;
 	u8	ofdm_rx_path = 0;
-
-
-	if (p_dm->support_ic_type & (ODM_RTL8192E)) {
-#if (RTL8192E_SUPPORT == 1)
-		if (path == BB_PATH_A) {
-			ofdm_rx_path = 1;
-			/**/
-		} else if (path == BB_PATH_B) {
-			ofdm_rx_path = 2;
-			/**/
-		} else  if (path == BB_PATH_AB) {
-			ofdm_rx_path = 3;
-			/**/
-		}
-
-		odm_set_bb_reg(p_dm, 0xC04, 0xff, (((ofdm_rx_path) << 4) | ofdm_rx_path));
-		odm_set_bb_reg(p_dm, 0xD04, 0xf, ofdm_rx_path);
-#endif
-	}
-#if (RTL8812A_SUPPORT || RTL8822B_SUPPORT)
-	else if (p_dm->support_ic_type & (ODM_RTL8812 | ODM_RTL8822B)) {
-
-		if (path == BB_PATH_A) {
-			ofdm_rx_path = 1;
-			/**/
-		} else if (path == BB_PATH_B) {
-			ofdm_rx_path = 2;
-			/**/
-		} else  if (path == BB_PATH_AB) {
-			ofdm_rx_path = 3;
-			/**/
-		}
-
-		odm_set_bb_reg(p_dm, 0x808, MASKBYTE0, ((ofdm_rx_path << 4) | ofdm_rx_path));
-	}
-#endif
 }
 
-void
-phydm_config_cck_rx_antenna_init(
-	void		*p_dm_void
-)
+void phydm_config_cck_rx_antenna_init(void *p_dm_void)
 {
 	struct PHY_DM_STRUCT	*p_dm = (struct PHY_DM_STRUCT *)p_dm_void;
 
@@ -161,11 +57,7 @@ phydm_config_cck_rx_antenna_init(
 #endif
 }
 
-void
-phydm_config_cck_rx_path(
-	void		*p_dm_void,
-	enum bb_path			path
-)
+void phydm_config_cck_rx_path(void *p_dm_void, enum bb_path path)
 {
 #if (defined(PHYDM_COMPILE_ABOVE_2SS))
 	struct PHY_DM_STRUCT	*p_dm = (struct PHY_DM_STRUCT *)p_dm_void;

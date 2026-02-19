@@ -1,7 +1,10 @@
-#include "mp_precomp.h"
+// SPDX-License-Identifier: GPL-2.0
+/******************************************************************************
+ *
+ * Copyright(c) 2007 - 2017 Realtek Corporation. All rights reserved.
+ *
+ ******************************************************************************/
 #include "phydm_precomp.h"
-
-
 
 void odm_bub_sort(pu4Byte data, u4Byte n)
 {
@@ -21,7 +24,6 @@ void odm_bub_sort(pu4Byte data, u4Byte n)
 			break;          
 	}
 }
-
 
 #if (RTL8197F_SUPPORT == 1)
 
