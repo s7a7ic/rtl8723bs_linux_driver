@@ -1,20 +1,11 @@
+// SPDX-License-Identifier: GPL-2.0
 /******************************************************************************
  *
- * Copyright(c) 2007 - 2017 Realtek Corporation.
+ * Copyright(c) 2007 - 2017 Realtek Corporation. All rights reserved.
  *
- * This program is free software; you can redistribute it and/or modify it
- * under the terms of version 2 of the GNU General Public License as
- * published by the Free Software Foundation.
- *
- * This program is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
- * more details.
- *
- *****************************************************************************/
+ ******************************************************************************/
 #ifndef __IEEE80211_H
 #define __IEEE80211_H
-
 
 #ifndef CONFIG_RTL8711FW
 
@@ -113,7 +104,6 @@ enum {
 #define IEEE_CRYPT_ERR_TX_KEY_SET_FAILED		6
 #define IEEE_CRYPT_ERR_CARD_CONF_FAILED		7
 
-
 #define	IEEE_CRYPT_ALG_NAME_LEN			16
 
 #define WPA_CIPHER_NONE	BIT(0)
@@ -121,8 +111,6 @@ enum {
 #define WPA_CIPHER_WEP104 BIT(2)
 #define WPA_CIPHER_TKIP	BIT(3)
 #define WPA_CIPHER_CCMP	BIT(4)
-
-
 
 #define WPA_SELECTOR_LEN 4
 extern u8 RTW_WPA_OUI_TYPE[] ;
@@ -137,7 +125,6 @@ extern u8 WPA_CIPHER_SUITE_WRAP[];
 extern u8 WPA_CIPHER_SUITE_CCMP[];
 extern u8 WPA_CIPHER_SUITE_WEP104[];
 
-
 #define RSN_HEADER_LEN 4
 #define RSN_SELECTOR_LEN 4
 
@@ -150,7 +137,6 @@ extern u8 RSN_CIPHER_SUITE_TKIP[];
 extern u8 RSN_CIPHER_SUITE_WRAP[];
 extern u8 RSN_CIPHER_SUITE_CCMP[];
 extern u8 RSN_CIPHER_SUITE_WEP104[];
-
 
 typedef enum _RATEID_IDX_ {
 	RATEID_IDX_BGN_40M_2SS = 0,
@@ -181,7 +167,6 @@ typedef enum _RATR_TABLE_MODE {
 	RATR_INX_WIRELESS_MC = 7,
 	RATR_INX_WIRELESS_AC_N = 8,
 } RATR_TABLE_MODE, *PRATR_TABLE_MODE;
-
 
 enum NETWORK_TYPE {
 	WIRELESS_INVALID = 0,
@@ -233,10 +218,6 @@ enum NETWORK_TYPE {
 #define is_supported_ht(NetType) ((NetType) & (WIRELESS_11_24N | WIRELESS_11_5N) ? _TRUE : _FALSE)
 
 #define is_supported_vht(NetType) ((NetType) & (WIRELESS_11AC) ? _TRUE : _FALSE)
-
-
-
-
 
 typedef struct ieee_param {
 	u32 cmd;
@@ -305,7 +286,6 @@ struct sta_data {
 };
 #endif
 
-
 #if WIRELESS_EXT < 17
 	#define IW_QUAL_QUAL_INVALID   0x10
 	#define IW_QUAL_LEVEL_INVALID  0x20
@@ -324,10 +304,8 @@ struct sta_data {
    represents the 2304 bytes of real data, plus a possible 8 bytes of
    WEP IV and ICV. (this interpretation suggested by Ramiro Barreiro) */
 
-
 #define IEEE80211_HLEN			30
 #define IEEE80211_FRAME_LEN		(IEEE80211_DATA_LEN + IEEE80211_HLEN)
-
 
 /* this is stolen from ipw2200 driver */
 #define IEEE_IBSS_MAC_HASH_SIZE 31
@@ -340,8 +318,6 @@ struct ieee_ibss_seq {
 	_list	list;
 };
 
-#if defined(PLATFORM_LINUX) || defined(CONFIG_RTL8711FW) || defined(PLATFORM_FREEBSD)
-
 struct rtw_ieee80211_hdr {
 	u16 frame_ctl;
 	u16 duration_id;
@@ -390,56 +366,6 @@ struct eapol {
 	u8 type;
 	u16 length;
 } __attribute__((packed));
-
-#endif
-
-
-
-#ifdef PLATFORM_WINDOWS
-
-#pragma pack(1)
-struct rtw_ieee80211_hdr {
-	u16 frame_ctl;
-	u16 duration_id;
-	u8 addr1[ETH_ALEN];
-	u8 addr2[ETH_ALEN];
-	u8 addr3[ETH_ALEN];
-	u16 seq_ctl;
-	u8 addr4[ETH_ALEN];
-};
-
-struct rtw_ieee80211_hdr_3addr {
-	u16 frame_ctl;
-	u16 duration_id;
-	u8 addr1[ETH_ALEN];
-	u8 addr2[ETH_ALEN];
-	u8 addr3[ETH_ALEN];
-	u16 seq_ctl;
-};
-
-
-struct rtw_ieee80211_hdr_qos {
-	struct rtw_ieee80211_hdr wlan_hdr;
-	u16	qc;
-};
-
-struct rtw_ieee80211_hdr_3addr_qos {
-	struct  rtw_ieee80211_hdr_3addr wlan_hdr;
-	u16     qc;
-};
-
-struct eapol {
-	u8 snap[6];
-	u16 ethertype;
-	u8 version;
-	u8 type;
-	u16 length;
-};
-#pragma pack()
-
-#endif
-
-
 
 enum eap_type {
 	EAP_PACKET = 0,
@@ -561,22 +487,6 @@ struct ieee80211_snap_hdr {
 } __attribute__((packed));
 
 #endif
-
-#ifdef PLATFORM_WINDOWS
-
-#pragma pack(1)
-struct ieee80211_snap_hdr {
-
-	u8    dsap;   /* always 0xAA */
-	u8    ssap;   /* always 0xAA */
-	u8    ctrl;   /* always 0x03 */
-	u8    oui[P80211_OUI_LEN];    /* organizational universal id */
-
-};
-#pragma pack()
-
-#endif
-
 
 #define SNAP_SIZE sizeof(struct ieee80211_snap_hdr)
 
@@ -1036,7 +946,6 @@ struct ieee80211_frag_entry {
 	u8 dst_addr[ETH_ALEN];
 };
 
-#ifndef PLATFORM_FREEBSD /* Baron BSD has already defined */
 struct ieee80211_stats {
 	uint tx_unicast_frames;
 	uint tx_multicast_frames;
@@ -1060,7 +969,7 @@ struct ieee80211_stats {
 	uint rx_message_in_msg_fragments;
 	uint rx_message_in_bad_msg_fragments;
 };
-#endif /* PLATFORM_FREEBSD */
+
 struct ieee80211_softmac_stats {
 	uint rx_ass_ok;
 	uint rx_ass_err;
@@ -1121,26 +1030,7 @@ struct ieee80211_security {
 
 #endif
 
-#ifdef PLATFORM_WINDOWS
-
-#pragma pack(1)
-struct ieee80211_security {
-	u16 active_key:2,
-	    enabled:1,
-	    auth_mode:2,
-	    auth_algo:4,
-	    unicast_uses_group:1;
-	u8 key_sizes[WEP_KEYS];
-	u8 keys[WEP_KEYS][WEP_KEY_LEN];
-	u8 level;
-	u16 flags;
-} ;
-#pragma pack()
-
-#endif
-
 /*
-
  802.11 data frame from AP
 
       ,-------------------------------------------------------------------.
@@ -1151,7 +1041,6 @@ Desc. | ctrl | dura |  DA/RA  |   TA    |    SA   | Sequ |  frame  |  fcs |
       `-------------------------------------------------------------------'
 
 Total: 28-2340 bytes
-
 */
 
 struct ieee80211_header_data {
@@ -1193,24 +1082,6 @@ struct ieee80211_info_element {
 } __attribute__((packed));
 #endif
 
-#ifdef PLATFORM_WINDOWS
-
-#pragma pack(1)
-struct ieee80211_info_element_hdr {
-	u8 id;
-	u8 len;
-} ;
-
-struct ieee80211_info_element {
-	u8 id;
-	u8 len;
-	u8 data[0];
-} ;
-#pragma pack()
-
-#endif
-
-
 /*
  * These are the data types that can make up management packets
  *
@@ -1231,10 +1102,7 @@ struct ieee80211_info_element {
 #define IEEE80211_DEFAULT_TX_ESSID "Penguin"
 #define IEEE80211_DEFAULT_BASIC_RATE 10
 
-
 #if defined(PLATFORM_LINUX) || defined(CONFIG_RTL8711FW)
-
-
 struct ieee80211_authentication {
 	struct ieee80211_header_data header;
 	u16 algorithm;
@@ -1242,7 +1110,6 @@ struct ieee80211_authentication {
 	u16 status;
 	/* struct ieee80211_info_element_hdr info_element; */
 } __attribute__((packed));
-
 
 struct ieee80211_probe_response {
 	struct ieee80211_header_data header;
@@ -1273,57 +1140,6 @@ struct ieee80211_assoc_response_frame {
 	/*	struct ieee80211_info_element info_element;  supported rates  */
 } __attribute__((packed));
 #endif
-
-
-
-#ifdef PLATFORM_WINDOWS
-
-#pragma pack(1)
-
-struct ieee80211_authentication {
-	struct ieee80211_header_data header;
-	u16 algorithm;
-	u16 transaction;
-	u16 status;
-	/* struct ieee80211_info_element_hdr info_element; */
-} ;
-
-
-struct ieee80211_probe_response {
-	struct ieee80211_header_data header;
-	u32 time_stamp[2];
-	u16 beacon_interval;
-	u16 capability;
-	struct ieee80211_info_element info_element;
-} ;
-
-struct ieee80211_probe_request {
-	struct ieee80211_header_data header;
-	/*struct ieee80211_info_element info_element;*/
-} ;
-
-struct ieee80211_assoc_request_frame {
-	struct rtw_ieee80211_hdr_3addr header;
-	u16 capability;
-	u16 listen_interval;
-	/* u8 current_ap[ETH_ALEN]; */
-	struct ieee80211_info_element_hdr info_element;
-} ;
-
-struct ieee80211_assoc_response_frame {
-	struct rtw_ieee80211_hdr_3addr header;
-	u16 capability;
-	u16 status;
-	u16 aid;
-	/*	struct ieee80211_info_element info_element;  supported rates  */
-};
-
-#pragma pack()
-
-#endif
-
-
-
 
 struct ieee80211_txb {
 	u8 nr_frags;
@@ -1333,7 +1149,6 @@ struct ieee80211_txb {
 	u16 payload_size;
 	struct sk_buff *fragments[0];
 };
-
 
 /* SWEEP TABLE ENTRIES NUMBER*/
 #define MAX_SWEEP_TAB_ENTRIES		  42
@@ -1419,8 +1234,6 @@ join_res:
 > 0: TID
 */
 
-#ifndef PLATFORM_FREEBSD /* Baron BSD has already defined */
-
 enum ieee80211_state {
 
 	/* the card is not linked at all */
@@ -1457,9 +1270,7 @@ enum ieee80211_state {
 	 * then it will be back to LINKED state.
 	 */
 	IEEE80211_LINKED_SCANNING,
-
 };
-#endif /* PLATFORM_FREEBSD */
 
 #define DEFAULT_MAX_SCAN_AGE (15 * HZ)
 #define DEFAULT_FTS 2346
@@ -1472,12 +1283,6 @@ enum ieee80211_state {
 #define PORT_FMT "%u"
 #define PORT_ARG(x) ntohs(*((u16 *)(x)))
 
-#ifdef PLATFORM_FREEBSD /* Baron change func to macro */
-#define is_multicast_mac_addr(Addr) ((((Addr[0]) & 0x01) == 0x01) && ((Addr[0]) != 0xff))
-#define is_broadcast_mac_addr(Addr) ((((Addr[0]) & 0xff) == 0xff) && (((Addr[1]) & 0xff) == 0xff) && \
-	(((Addr[2]) & 0xff) == 0xff) && (((Addr[3]) & 0xff) == 0xff) && (((Addr[4]) & 0xff) == 0xff) && \
-				     (((Addr[5]) & 0xff) == 0xff))
-#else
 static inline int is_multicast_mac_addr(const u8 *addr)
 {
 	return (addr[0] != 0xff) && (0x01 & addr[0]);
@@ -1494,7 +1299,6 @@ static inline int is_zero_mac_addr(const u8 *addr)
 	return ((addr[0] == 0x00) && (addr[1] == 0x00) && (addr[2] == 0x00) &&   \
 		(addr[3] == 0x00) && (addr[4] == 0x00) && (addr[5] == 0x00));
 }
-#endif /* PLATFORM_FREEBSD */
 
 #define CFG_IEEE80211_RESERVE_FCS (1<<0)
 #define CFG_IEEE80211_COMPUTE_FCS (1<<1)
@@ -1503,8 +1307,6 @@ typedef struct tx_pending_t {
 	int frag;
 	struct ieee80211_txb *txb;
 } tx_pending_t;
-
-
 
 #define TID_NUM	16
 
@@ -1528,7 +1330,6 @@ int ieee80211_get_hdrlen(u16 fc);
 	#define WLAN_ACTION_SA_QUERY 8
 	#define WLAN_ACTION_WMM 17
 #endif
-
 
 /* Action category code */
 enum rtw_ieee80211_category {
@@ -1673,7 +1474,6 @@ enum rtw_ieee80211_ft_actioncode {
 #define WME_TSPEC_DIRECTION_UPLINK 0
 #define WME_TSPEC_DIRECTION_DOWNLINK 1
 #define WME_TSPEC_DIRECTION_BI_DIRECTIONAL 3
-
 
 #define OUI_BROADCOM 0x00904c /* Broadcom (Epigram) */
 
@@ -1923,6 +1723,5 @@ u8 str_2char2num(u8 hch, u8 lch);
 void macstr2num(u8 *dst, u8 *src);
 u8 convert_ip_addr(u8 hch, u8 mch, u8 lch);
 int wifirate2_ratetbl_inx(unsigned char rate);
-
 
 #endif /* IEEE80211_H */

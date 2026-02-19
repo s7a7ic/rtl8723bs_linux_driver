@@ -1,18 +1,9 @@
+// SPDX-License-Identifier: GPL-2.0
 /******************************************************************************
  *
- * Copyright(c) 2007 - 2017 Realtek Corporation.
+ * Copyright(c) 2007 - 2017 Realtek Corporation. All rights reserved.
  *
- * This program is free software; you can redistribute it and/or modify it
- * under the terms of version 2 of the GNU General Public License as
- * published by the Free Software Foundation.
- *
- * This program is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
- * more details.
- *
- *****************************************************************************/
-
+ ******************************************************************************/
 #include "mp_precomp.h"
 
 #if RT_PLATFORM==PLATFORM_MACOSX
@@ -20,7 +11,6 @@
 #else
 #include "../phydm_precomp.h"
 #endif
-
 
 /*---------------------------Define Local Constant---------------------------*/
 /* 2010/04/25 MH Define the max tx power tracking tx agc power. */
@@ -44,10 +34,7 @@
 #define     idx_0xc1c                       0
 #define     idx_0xc78                       1
 
-
 /*---------------------------Define Local Constant---------------------------*/
-
-
 /* 3============================================================
  * 3 Tx Power Tracking
  * 3============================================================ */
@@ -84,7 +71,6 @@ void halrf_rf_lna_setting_8723b(
 		}
 }
 
-
 void set_iqk_matrix_8723b(
 	struct PHY_DM_STRUCT	*p_dm,
 	u8		OFDM_index,
@@ -112,7 +98,6 @@ void set_iqk_matrix_8723b(
 		    || ((p_dm->support_ability & ODM_BB_ANT_DIV) && (p_dm_fat_table->rx_idle_ant  == AUX_ANT)))
 			rf_path = RF_PATH_B;
 	}
-
 
 	if (OFDM_index >= OFDM_TABLE_SIZE)
 		OFDM_index = OFDM_TABLE_SIZE - 1;
@@ -142,7 +127,6 @@ void set_iqk_matrix_8723b(
 	value32 = ((((iqk_result_s1_x * ele_D) >> 7) & 0x01) << 28) | (ele_A_ext << 31) | (ele_C_ext << 29) ;
 	p_rf_calibrate_info->tx_iqc_8723b[PATH_S1][idx_0xc4c][VAL] =
 		(p_rf_calibrate_info->tx_iqc_8723b[PATH_S1][idx_0xc4c][VAL] & (~(BIT(31) | BIT(29) | BIT(28)))) | value32;
-
 
 	/* S0------------------------------------- */
 	if (*(p_dm->p_mp_mode) || (p_dm->support_ability & ODM_BB_ANT_DIV) || ((*p_dm->p_is_1_antenna == true) && (*p_dm->p_rf_default_path == 1))
@@ -210,7 +194,6 @@ void set_iqk_matrix_8723b(
 		odm_set_bb_reg(p_dm, REG_OFDM_0_ECCA_THRESHOLD, MASKDWORD, value32);
 	}
 }
-
 
 void
 set_cck_filter_coefficient(
@@ -567,7 +550,6 @@ get_delta_swing_table_8723b(
 	return;
 }
 
-
 void configure_txpower_track_8723b(
 	struct _TXPWRTRACK_CFG	*p_config
 )
@@ -662,7 +644,6 @@ phy_path_a_iqk_8723b(
 	/* monitor image power before & after IQK */
 	ODM_RT_TRACE(p_dm, ODM_COMP_CALIBRATION, ODM_DBG_LOUD, ("[IQK]0xe90(before IQK)= 0x%x, 0xe98(afer IQK) = 0x%x\n",
 		odm_get_bb_reg(p_dm, 0xe90, MASKDWORD), odm_get_bb_reg(p_dm, 0xe98, MASKDWORD)));
-
 
 	if (!(reg_eac & BIT(28)) &&
 	    (((reg_e94 & 0x03FF0000) >> 16) != 0x142) &&
@@ -776,8 +757,6 @@ phy_path_a_rx_iqk_8723b(
 		result |= 0x01;
 	else							/* if Tx not OK, ignore Rx */
 		return result;
-
-
 
 	u4tmp = 0x80007C00 | (reg_e94 & 0x3FF0000)  | ((reg_e9c & 0x3FF0000) >> 16);
 	odm_set_bb_reg(p_dm, REG_TX_IQK, MASKDWORD, u4tmp);
@@ -963,19 +942,14 @@ phy_path_b_iqk_8723b(
 #endif
 }
 
-
-
-u8			/* bit0 = 1 => Tx OK, bit1 = 1 => Rx OK */
-phy_path_b_rx_iqk_8723b(
-	struct PHY_DM_STRUCT		*p_dm
-)
+/* bit0 = 1 => Tx OK, bit1 = 1 => Rx OK */
+u8 phy_path_b_rx_iqk_8723b(struct PHY_DM_STRUCT *p_dm)
 {
 	u32 reg_e94, reg_e9c, reg_ea4, reg_eac, u4tmp, tmp, path_sel_bb;
 	u8 result = 0x00;
 
 	/* save RF path */
 	path_sel_bb = odm_get_bb_reg(p_dm, 0x948, MASKDWORD);
-
 
 	/* 1 Get TXIMR setting */
 	ODM_RT_TRACE(p_dm, ODM_COMP_CALIBRATION, ODM_DBG_LOUD, ("[IQK]S0 RX IQK:Get TXIMR setting!\n"));
@@ -1023,7 +997,6 @@ phy_path_b_rx_iqk_8723b(
 	/* set GNT_BT=0, pause BT traffic */
 	odm_set_bb_reg(p_dm, 0x764, BIT(12) | BIT(11), 0x1);
 
-
 	/* One shot, path B TXIQK @ RXIQK */
 	odm_set_bb_reg(p_dm, REG_IQK_AGC_PTS, MASKDWORD, 0xf9000000);
 	odm_set_bb_reg(p_dm, REG_IQK_AGC_PTS, MASKDWORD, 0xf8000000);
@@ -1064,7 +1037,6 @@ phy_path_b_rx_iqk_8723b(
 		result |= 0x01;
 	else							/* if Tx not OK, ignore Rx */
 		return result;
-
 
 	u4tmp = 0x80007C00 | (reg_e94 & 0x3FF0000)  | ((reg_e9c & 0x3FF0000) >> 16);
 	odm_set_bb_reg(p_dm, REG_TX_IQK, MASKDWORD, u4tmp);
@@ -1150,7 +1122,6 @@ phy_path_b_rx_iqk_8723b(
 		return result;
 #endif
 
-
 	/* Allen 20131125 */
 	tmp = (reg_eac & 0x03FF0000) >> 16;
 	if ((tmp & 0x200) > 0)
@@ -1170,9 +1141,7 @@ phy_path_b_rx_iqk_8723b(
 	return result;
 }
 
-
-void
-_phy_path_a_fill_iqk_matrix8723b(
+void _phy_path_a_fill_iqk_matrix8723b(
 	struct PHY_DM_STRUCT		*p_dm,
 	boolean	is_iqk_ok,
 	s32		result[][8],
@@ -1259,8 +1228,7 @@ _phy_path_a_fill_iqk_matrix8723b(
 	}
 }
 
-void
-_phy_path_b_fill_iqk_matrix8723b(
+void _phy_path_b_fill_iqk_matrix8723b(
 	struct PHY_DM_STRUCT		*p_dm,
 	boolean	is_iqk_ok,
 	s32		result[][8],
@@ -1279,7 +1247,6 @@ _phy_path_b_fill_iqk_matrix8723b(
 
 	else if (is_iqk_ok) {
 		oldval_1 = (odm_get_bb_reg(p_dm, REG_OFDM_0_XA_TX_IQ_IMBALANCE, MASKDWORD) >> 22) & 0x3FF;
-
 
 		X = result[final_candidate][4];
 		if ((X & 0x00000200) != 0)
@@ -1344,14 +1311,8 @@ _phy_path_b_fill_iqk_matrix8723b(
  * 2011/07/26 MH Add an API for testing IQK fail case.
  *
  * MP Already declare in odm.c */
-
-boolean
-odm_set_iqc_by_rfpath(
-	struct PHY_DM_STRUCT		*p_dm,
-	u32 rf_path
-)
+boolean odm_set_iqc_by_rfpath(struct PHY_DM_STRUCT *p_dm, u32 rf_path)
 {
-
 	struct odm_rf_calibration_structure	*p_rf_calibrate_info = &(p_dm->rf_calibrate_info);
 
 	if (rf_path) { /* S1: rf_path = 0, S0:rf_path = 1 */
@@ -1397,8 +1358,7 @@ odm_set_iqc_by_rfpath(
 	}
 }
 
-void
-_phy_save_adda_registers8723b(
+void _phy_save_adda_registers8723b(
 	struct PHY_DM_STRUCT		*p_dm,
 	u32		*adda_reg,
 	u32		*adda_backup,
@@ -1417,9 +1377,7 @@ _phy_save_adda_registers8723b(
 		adda_backup[i] = odm_get_bb_reg(p_dm, adda_reg[i], MASKDWORD);
 }
 
-
-void
-_phy_save_mac_registers8723b(
+void _phy_save_mac_registers8723b(
 	struct PHY_DM_STRUCT		*p_dm,
 	u32		*mac_reg,
 	u32		*mac_backup
@@ -1433,8 +1391,7 @@ _phy_save_mac_registers8723b(
 }
 
 
-void
-_phy_reload_adda_registers8723b(
+void _phy_reload_adda_registers8723b(
 	struct PHY_DM_STRUCT		*p_dm,
 	u32		*adda_reg,
 	u32		*adda_backup,
@@ -1448,8 +1405,7 @@ _phy_reload_adda_registers8723b(
 		odm_set_bb_reg(p_dm, adda_reg[i], MASKDWORD, adda_backup[i]);
 }
 
-void
-_phy_reload_mac_registers8723b(
+void _phy_reload_mac_registers8723b(
 	struct PHY_DM_STRUCT		*p_dm,
 	u32		*mac_reg,
 	u32		*mac_backup
@@ -1463,9 +1419,7 @@ _phy_reload_mac_registers8723b(
 	odm_write_4byte(p_dm, mac_reg[i], mac_backup[i]);
 }
 
-
-void
-_phy_path_adda_on8723b(
+void _phy_path_adda_on8723b(
 	struct PHY_DM_STRUCT		*p_dm,
 	u32		*adda_reg,
 	boolean		is_path_a_on
@@ -1487,8 +1441,7 @@ _phy_path_adda_on8723b(
 
 }
 
-void
-_phy_mac_setting_calibration8723b(
+void _phy_mac_setting_calibration8723b(
 	struct PHY_DM_STRUCT		*p_dm,
 	u32		*mac_reg,
 	u32		*mac_backup
@@ -1503,11 +1456,7 @@ _phy_mac_setting_calibration8723b(
 	odm_write_1byte(p_dm, mac_reg[i], (u8)(mac_backup[i] & (~BIT(5))));
 }
 
-void
-_phy_path_a_stand_by8723b(
-
-	struct PHY_DM_STRUCT		*p_dm
-)
+void _phy_path_a_stand_by8723b(struct PHY_DM_STRUCT *p_dm)
 {
 	/*	ODM_RT_TRACE(p_dm,ODM_COMP_CALIBRATION, ODM_DBG_LOUD,  ("path-A standby mode!\n")); */
 	odm_set_bb_reg(p_dm, REG_FPGA0_IQK, 0xffffff00, 0x000000);
@@ -1517,12 +1466,7 @@ _phy_path_a_stand_by8723b(
 	odm_set_bb_reg(p_dm, REG_FPGA0_IQK, 0xffffff00, 0x808000);
 }
 
-
-void
-_phy_pi_mode_switch8723b(
-	struct PHY_DM_STRUCT		*p_dm,
-	boolean		pi_mode
-)
+void _phy_pi_mode_switch8723b(struct PHY_DM_STRUCT *p_dm, boolean pi_mode)
 {
 	u32	mode;
 	/*	ODM_RT_TRACE(p_dm,ODM_COMP_CALIBRATION, ODM_DBG_LOUD, ("BB Switch to %s mode!\n", (pi_mode ? "PI" : "SI"))); */
@@ -1531,13 +1475,7 @@ _phy_pi_mode_switch8723b(
 	odm_set_bb_reg(p_dm, REG_FPGA0_XB_HSSI_PARAMETER1, MASKDWORD, mode);
 }
 
-boolean
-phy_simularity_compare_8723b(
-	struct PHY_DM_STRUCT		*p_dm,
-	s32		result[][8],
-	u8		 c1,
-	u8		 c2
-)
+boolean phy_simularity_compare_8723b(struct PHY_DM_STRUCT *p_dm, s32 result[][8], u8 c1, u8 c2)
 {
 	u32		i, j, diff, simularity_bit_map, bound = 0;
 	u8		final_candidate[2] = {0xFF, 0xFF};	/* for path A and path B */
@@ -1556,7 +1494,6 @@ phy_simularity_compare_8723b(
 		bound = 4;
 
 	/*	ODM_RT_TRACE(p_dm,ODM_COMP_CALIBRATION, ODM_DBG_LOUD, ("===> IQK:phy_simularity_compare_8192e c1 %d c2 %d!!!\n", c1, c2)); */
-
 
 	simularity_bit_map = 0;
 
@@ -1631,11 +1568,7 @@ phy_simularity_compare_8723b(
 	}
 }
 
-void
-_phy_check_coex_status_8723b(
-	struct PHY_DM_STRUCT	*p_dm,
-	boolean		beforek
-)
+void _phy_check_coex_status_8723b(struct PHY_DM_STRUCT *p_dm, boolean beforek)
 {
 	u8		u1b_tmp;
 	u16		count = 0;
@@ -1685,9 +1618,7 @@ _phy_check_coex_status_8723b(
 #endif
 }
 
-
-void
-_phy_iq_calibrate_8723b(
+void _phy_iq_calibrate_8723b(
 	struct PHY_DM_STRUCT		*p_dm,
 	s32		result[][8],
 	u8		t
@@ -1795,7 +1726,6 @@ _phy_iq_calibrate_8723b(
 		odm_set_rf_reg(p_dm, RF_PATH_B, RF_AC, MASKDWORD, 0x10000);
 #endif
 
-
 	/* no APK */
 #if 0
 	/* Page B init */
@@ -1821,7 +1751,6 @@ _phy_iq_calibrate_8723b(
 	odm_set_rf_reg(p_dm, RF_PATH_A, 0x56, RFREGOFFSETMASK, 0x00032);
 	odm_set_rf_reg(p_dm, RF_PATH_A, 0x76, RFREGOFFSETMASK, 0x00032);
 #endif
-
 
 	/* path A TX IQK */
 #if 1
@@ -1957,12 +1886,7 @@ _phy_iq_calibrate_8723b(
 	ODM_RT_TRACE(p_dm, ODM_COMP_CALIBRATION, ODM_DBG_LOUD, ("[IQK]_phy_iq_calibrate_8723b() <==\n"));
 }
 
-
-void
-_phy_lc_calibrate_8723b(
-	struct PHY_DM_STRUCT		*p_dm,
-	boolean		is2T
-)
+void _phy_lc_calibrate_8723b(struct PHY_DM_STRUCT *p_dm, boolean is2T)
 {
 	u8	tmp_reg;
 	u32	rf_amode = 0, rf_bmode = 0, lc_cal;
@@ -2018,11 +1942,7 @@ _phy_lc_calibrate_8723b(
 
 /* IQK version:0x1d    20141201
  * 1. modify the boundary of IQK result for 8723B F-cut */
-void
-phy_iq_calibrate_8723b(
-	void		*p_dm_void,
-	boolean	is_recovery
-)
+void phy_iq_calibrate_8723b(void *p_dm_void, boolean is_recovery)
 {
 	struct PHY_DM_STRUCT	*p_dm = (struct PHY_DM_STRUCT *)p_dm_void;
 	struct odm_rf_calibration_structure	*p_rf_calibrate_info = &(p_dm->rf_calibrate_info);
@@ -2214,14 +2134,9 @@ phy_iq_calibrate_8723b(
 	ODM_RT_TRACE(p_dm, ODM_COMP_CALIBRATION, ODM_DBG_LOUD, ("[IQK]IQK finished\n"));
 }
 
-
-void
-phy_lc_calibrate_8723b(
-	void		*p_dm_void
-)
+void phy_lc_calibrate_8723b(void *p_dm_void)
 {
 	struct PHY_DM_STRUCT		*p_dm = (struct PHY_DM_STRUCT *)p_dm_void;
-
 	_phy_lc_calibrate_8723b(p_dm, false);
 }
 
@@ -2734,8 +2649,8 @@ phy_ap_calibrate_8723b(
 #endif
 	}
 }
-
 #endif
+
 void _phy_set_rf_path_switch_8723b(
 #if (DM_ODM_SUPPORT_TYPE & ODM_AP)
 	struct PHY_DM_STRUCT		*p_dm,
@@ -2755,6 +2670,7 @@ void _phy_set_rf_path_switch_8723b(
 	else
 		odm_set_bb_reg(p_dm, 0x92C, MASKDWORD, 0x2);
 }
+
 void phy_set_rf_path_switch_8723b(
 #if (DM_ODM_SUPPORT_TYPE & ODM_AP)
 	struct PHY_DM_STRUCT		*p_dm,
@@ -2764,7 +2680,6 @@ void phy_set_rf_path_switch_8723b(
 	boolean		is_main
 )
 {
-
 #if DISABLE_BB_RF
 	return;
 #endif
@@ -2772,7 +2687,6 @@ void phy_set_rf_path_switch_8723b(
 #if !(DM_ODM_SUPPORT_TYPE & ODM_AP)
 	_phy_set_rf_path_switch_8723b(p_adapter, is_main, true);
 #endif
-
 }
 
 #if (DM_ODM_SUPPORT_TYPE == ODM_WIN)
@@ -3238,7 +3152,6 @@ phy_digital_predistortion_8723b(
 }
 #endif
 
-
 /* return value true => Main; false => Aux */
 
 boolean _phy_query_rf_path_switch_8723b(
@@ -3259,7 +3172,6 @@ boolean _phy_query_rf_path_switch_8723b(
 	struct PHY_DM_STRUCT		*p_dm = &p_hal_data->DM_OutSrc;
 #endif
 #endif
-
 
 	if (odm_get_bb_reg(p_dm, 0x92C, MASKDWORD) == 0x01)
 		return true;
@@ -3285,6 +3197,5 @@ boolean phy_query_rf_path_switch_8723b(
 #else
 	return _phy_query_rf_path_switch_8723b(p_dm, false);
 #endif
-
 }
 #endif

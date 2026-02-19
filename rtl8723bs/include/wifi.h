@@ -1,20 +1,11 @@
+// SPDX-License-Identifier: GPL-2.0
 /******************************************************************************
  *
- * Copyright(c) 2007 - 2017 Realtek Corporation.
+ * Copyright(c) 2007 - 2017 Realtek Corporation. All rights reserved.
  *
- * This program is free software; you can redistribute it and/or modify it
- * under the terms of version 2 of the GNU General Public License as
- * published by the Free Software Foundation.
- *
- * This program is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
- * more details.
- *
- *****************************************************************************/
+ ******************************************************************************/
 #ifndef _WIFI_H_
 #define _WIFI_H_
-
 
 #ifndef BIT
 /* #error	"BIT define occurred earlier elsewhere!\n" */
@@ -241,7 +232,6 @@ enum WIFI_STATUS_CODE {
 #define WLAN_STATUS_INVALID_MDIE 54
 #define WLAN_STATUS_INVALID_FTIE 55
 
-
 enum WIFI_REG_DOMAIN {
 	DOMAIN_FCC		= 1,
 	DOMAIN_IC		= 2,
@@ -352,7 +342,6 @@ enum WIFI_REG_DOMAIN {
 		*(unsigned short *)(pbuf) &= (~cpu_to_le16(_PRIVACY_)); \
 	} while (0)
 
-
 #define GetOrder(pbuf)	(((*(unsigned short *)(pbuf)) & le16_to_cpu(_ORDER_)) != 0)
 
 #define GetFrameType(pbuf)	(le16_to_cpu(*(unsigned short *)(pbuf)) & (BIT(3) | BIT(2)))
@@ -364,7 +353,6 @@ enum WIFI_REG_DOMAIN {
 	} while (0)
 
 #define get_frame_sub_type(pbuf)	(cpu_to_le16(*(unsigned short *)(pbuf)) & (BIT(7) | BIT(6) | BIT(5) | BIT(4) | BIT(3) | BIT(2)))
-
 
 #define set_frame_sub_type(pbuf, type) \
 	do {    \
@@ -397,7 +385,6 @@ enum WIFI_REG_DOMAIN {
 	do {    \
 		*(unsigned short *)((SIZE_PTR)(pbuf) + 2) = cpu_to_le16(0xffff & (dur)); \
 	} while (0)
-
 
 #define SetPriority(pbuf, tid)	\
 	do	{	\
@@ -436,7 +423,6 @@ enum WIFI_REG_DOMAIN {
 #define GetAddr3Ptr(pbuf)	((unsigned char *)((SIZE_PTR)(pbuf) + 16))
 
 #define GetAddr4Ptr(pbuf)	((unsigned char *)((SIZE_PTR)(pbuf) + 24))
-
 
 #define MacAddr_isBcst(addr) \
 	(\
@@ -489,7 +475,6 @@ __inline static unsigned char *get_da(unsigned char *pframe)
 	return da;
 }
 
-
 __inline static unsigned char *get_sa(unsigned char *pframe)
 {
 	unsigned char	*sa;
@@ -536,7 +521,6 @@ __inline static unsigned char *get_hdr_bssid(unsigned char *pframe)
 	return sa;
 }
 
-
 __inline static int IsFrameTypeCtrl(unsigned char *pframe)
 {
 	if (WIFI_CTRL_TYPE == GetFrameType(pframe))
@@ -558,7 +542,6 @@ static inline int IsFrameTypeData(unsigned char *pframe)
 	else
 		return _FALSE;
 }
-
 
 /*-----------------------------------------------------------------------------
 			Below is for the security related definition
@@ -770,8 +753,6 @@ typedef	enum _ELEMENT_ID {
 			*(unsigned short *)(pbuf) |= cpu_to_le16(_ORDER_); \
 		} while (0)
 
-
-
 #define GetOrderBit(pbuf)	(((*(unsigned short *)(pbuf)) & le16_to_cpu(_ORDER_)) != 0)
 
 #define ACT_CAT_VENDOR				0x7F/* 127 */
@@ -799,8 +780,6 @@ struct rtw_ieee80211_bar {
 
 
 #if defined(PLATFORM_LINUX) || defined(CONFIG_RTL8712FW) || defined(PLATFORM_FREEBSD)
-
-
 
 /**
 * struct rtw_ieee80211_ht_cap - HT capabilities
@@ -872,76 +851,6 @@ struct ADDBA_request {
 	unsigned short	BA_timeout_value;
 	unsigned short	BA_starting_seqctrl;
 }  __attribute__((packed));
-
-
-
-#endif
-
-
-#ifdef PLATFORM_WINDOWS
-
-#pragma pack(1)
-
-struct rtw_ieee80211_ht_cap {
-	unsigned short	cap_info;
-	unsigned char	ampdu_params_info;
-	unsigned char	supp_mcs_set[16];
-	unsigned short	extended_ht_cap_info;
-	unsigned int		tx_BF_cap_info;
-	unsigned char	       antenna_selection_info;
-};
-
-
-struct ieee80211_ht_addt_info {
-	unsigned char	control_chan;
-	unsigned char		ht_param;
-	unsigned short	operation_mode;
-	unsigned short	stbc_param;
-	unsigned char		basic_set[16];
-};
-
-struct HT_caps_element {
-	union {
-		struct {
-			unsigned short	HT_caps_info;
-			unsigned char	AMPDU_para;
-			unsigned char	MCS_rate[16];
-			unsigned short	HT_ext_caps;
-			unsigned int	Beamforming_caps;
-			unsigned char	ASEL_caps;
-		} HT_cap_element;
-		unsigned char HT_cap[26];
-	};
-};
-
-struct HT_info_element {
-	unsigned char	primary_channel;
-	unsigned char	infos[5];
-	unsigned char	MCS_rate[16];
-};
-
-struct AC_param {
-	unsigned char		ACI_AIFSN;
-	unsigned char		CW;
-	unsigned short	TXOP_limit;
-};
-
-struct WMM_para_element {
-	unsigned char		QoS_info;
-	unsigned char		reserved;
-	struct AC_param	ac_param[4];
-};
-
-struct ADDBA_request {
-	unsigned char		dialog_token;
-	unsigned short	BA_para_set;
-	unsigned short	BA_timeout_value;
-	unsigned short	BA_starting_seqctrl;
-};
-
-
-#pragma pack()
-
 #endif
 
 typedef enum _HT_CAP_AMPDU_FACTOR {
@@ -1028,7 +937,6 @@ typedef enum _HT_CAP_AMPDU_DENSITY {
 #define IEEE80211_MAX_AMPDU_BUF 0x40
 #endif
 
-
 /* Spatial Multiplexing Power Save Modes */
 #define WLAN_HT_CAP_SM_PS_STATIC		0
 #define WLAN_HT_CAP_SM_PS_DYNAMIC	1
@@ -1062,9 +970,6 @@ typedef enum _HT_CAP_AMPDU_DENSITY {
 #define HT_INFO_STBC_PARAM_LSIG_TXOP_PROTECT_ALLOWED	((u16) BIT(9))
 #define HT_INFO_STBC_PARAM_PCO_ACTIVE			((u16) BIT(10))
 #define HT_INFO_STBC_PARAM_PCO_PHASE			((u16) BIT(11))
-
-
-
 /* #endif */
 
 /*	===============WPS Section=============== */
@@ -1241,7 +1146,6 @@ typedef enum _HT_CAP_AMPDU_DENSITY {
 #define	P2P_PRESENCE_REQUEST		1
 #define	P2P_PRESENCE_RESPONSE	2
 #define	P2P_GO_DISC_REQUEST		3
-
 
 #define	P2P_MAX_PERSISTENT_GROUP_NUM		10
 

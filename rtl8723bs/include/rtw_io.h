@@ -1,29 +1,15 @@
+// SPDX-License-Identifier: GPL-2.0
 /******************************************************************************
  *
- * Copyright(c) 2007 - 2017 Realtek Corporation.
+ * Copyright(c) 2007 - 2017 Realtek Corporation. All rights reserved.
  *
- * This program is free software; you can redistribute it and/or modify it
- * under the terms of version 2 of the GNU General Public License as
- * published by the Free Software Foundation.
- *
- * This program is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
- * more details.
- *
- *****************************************************************************/
-
+ ******************************************************************************/
 #ifndef _RTW_IO_H_
 #define _RTW_IO_H_
 
 #define NUM_IOREQ		8
 
-#ifdef PLATFORM_WINDOWS
-	#define MAX_PROT_SZ	64
-#endif
-#ifdef PLATFORM_LINUX
-	#define MAX_PROT_SZ	(64-16)
-#endif
+#define MAX_PROT_SZ	(64-16)
 
 #define _IOREADY			0
 #define _IO_WAIT_COMPLETE   1
@@ -40,13 +26,10 @@
 #define _IO_SYNC_		BIT(13)
 #define _IO_CMDMASK_	(0x1F80)
 
-
 /*
 	For prompt mode accessing, caller shall free io_req
 	Otherwise, io_handler will free io_req
 */
-
-
 
 /* IO STATUS TYPE */
 #define _IO_ERR_		BIT(2)
@@ -319,15 +302,10 @@ struct reg_protocol_wt {
 #define MAX_CONTINUAL_IO_ERR SD_IO_TRY_CNT
 #endif
 
-
 int rtw_inc_and_chk_continual_io_error(struct dvobj_priv *dvobj);
 void rtw_reset_continual_io_error(struct dvobj_priv *dvobj);
 
-/*
-Below is the data structure used by _io_handler
-
-*/
-
+/* Below is the data structure used by _io_handler */
 struct io_queue {
 	_lock	lock;
 	_list	free_ioreqs;
@@ -339,17 +317,13 @@ struct io_queue {
 };
 
 struct io_priv {
-
 	_adapter *padapter;
-
 	struct intf_hdl intf;
-
 };
 
 extern uint ioreq_flush(_adapter *adapter, struct io_queue *ioqueue);
 extern void sync_ioreq_enqueue(struct io_req *preq, struct io_queue *ioqueue);
 extern uint sync_ioreq_flush(_adapter *adapter, struct io_queue *ioqueue);
-
 
 extern uint free_ioreq(struct io_req *preq, struct io_queue *pio_queue);
 extern struct io_req *alloc_ioreq(struct io_queue *pio_q);
@@ -366,7 +340,6 @@ extern u32 _rtw_read32(_adapter *adapter, u32 addr);
 extern void _rtw_read_mem(_adapter *adapter, u32 addr, u32 cnt, u8 *pmem);
 extern void _rtw_read_port(_adapter *adapter, u32 addr, u32 cnt, u8 *pmem);
 extern void _rtw_read_port_cancel(_adapter *adapter);
-
 
 extern int _rtw_write8(_adapter *adapter, u32 addr, u8 val);
 extern int _rtw_write16(_adapter *adapter, u32 addr, u16 val);
@@ -504,7 +477,6 @@ extern void ioreq_write8(_adapter *adapter, u32 addr, u8 val);
 extern void ioreq_write16(_adapter *adapter, u32 addr, u16 val);
 extern void ioreq_write32(_adapter *adapter, u32 addr, u32 val);
 
-
 extern uint async_read8(_adapter *adapter, u32 addr, u8 *pbuff,
 	void (*_async_io_callback)(_adapter *padater, struct io_req *pio_req, u8 *cnxt), u8 *cnxt);
 extern uint async_read16(_adapter *adapter, u32 addr,  u8 *pbuff,
@@ -525,9 +497,7 @@ extern void async_write32(_adapter *adapter, u32 addr, u32 val,
 extern void async_write_mem(_adapter *adapter, u32 addr, u32 cnt, u8 *pmem);
 extern void async_write_port(_adapter *adapter, u32 addr, u32 cnt, u8 *pmem);
 
-
 int rtw_init_io_priv(_adapter *padapter, void (*set_intf_ops)(_adapter *padapter, struct _io_ops *pops));
-
 
 extern uint alloc_io_queue(_adapter *adapter);
 extern void free_io_queue(_adapter *adapter);

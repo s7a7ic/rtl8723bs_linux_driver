@@ -1,17 +1,9 @@
+// SPDX-License-Identifier: GPL-2.0
 /******************************************************************************
  *
- * Copyright(c) 2007 - 2017 Realtek Corporation.
+ * Copyright(c) 2007 - 2017 Realtek Corporation. All rights reserved.
  *
- * This program is free software; you can redistribute it and/or modify it
- * under the terms of version 2 of the GNU General Public License as
- * published by the Free Software Foundation.
- *
- * This program is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
- * more details.
- *
- *****************************************************************************/
+ ******************************************************************************/
 #ifndef __RTW_DEBUG_H__
 #define __RTW_DEBUG_H__
 
@@ -32,33 +24,18 @@ enum {
 extern void rtl871x_cedbg(const char *fmt, ...);
 #endif
 
-#ifdef PLATFORM_WINDOWS
-	#define RTW_PRINT do {} while (0)
-	#define RTW_ERR do {} while (0)
-	#define RTW_WARN do {} while (0)
-	#define RTW_INFO do {} while (0)
-	#define RTW_DBG do {} while (0)
-	#define RTW_PRINT_SEL do {} while (0)
-	#define _RTW_PRINT do {} while (0)
-	#define _RTW_ERR do {} while (0)
-	#define _RTW_WARN do {} while (0)
-	#define _RTW_INFO do {} while (0)
-	#define _RTW_DBG do {} while (0)
-	#define _RTW_PRINT_SEL do {} while (0)
-#else
-	#define RTW_PRINT(x, ...) do {} while (0)
-	#define RTW_ERR(x, ...) do {} while (0)
-	#define RTW_WARN(x,...) do {} while (0)
-	#define RTW_INFO(x,...) do {} while (0)
-	#define RTW_DBG(x,...) do {} while (0)
-	#define RTW_PRINT_SEL(x,...) do {} while (0)
-	#define _RTW_PRINT(x, ...) do {} while (0)
-	#define _RTW_ERR(x, ...) do {} while (0)
-	#define _RTW_WARN(x,...) do {} while (0)
-	#define _RTW_INFO(x,...) do {} while (0)
-	#define _RTW_DBG(x,...) do {} while (0)
-	#define _RTW_PRINT_SEL(x,...) do {} while (0)
-#endif
+#define RTW_PRINT(x, ...) do {} while (0)
+#define RTW_ERR(x, ...) do {} while (0)
+#define RTW_WARN(x,...) do {} while (0)
+#define RTW_INFO(x,...) do {} while (0)
+#define RTW_DBG(x,...) do {} while (0)
+#define RTW_PRINT_SEL(x,...) do {} while (0)
+#define _RTW_PRINT(x, ...) do {} while (0)
+#define _RTW_ERR(x, ...) do {} while (0)
+#define _RTW_WARN(x,...) do {} while (0)
+#define _RTW_INFO(x,...) do {} while (0)
+#define _RTW_DBG(x,...) do {} while (0)
+#define _RTW_PRINT_SEL(x,...) do {} while (0)
 
 #define RTW_INFO_DUMP(_TitleString, _HexData, _HexDataLen) do {} while (0)
 #define RTW_DBG_DUMP(_TitleString, _HexData, _HexDataLen) do {} while (0)
@@ -77,19 +54,8 @@ extern void rtl871x_cedbg(const char *fmt, ...);
 #undef _dbgdump
 #undef _seqdump
 
-#if defined(PLATFORM_WINDOWS) && defined(PLATFORM_OS_XP)
-	#define _dbgdump DbgPrint
-	#define _seqdump(sel, fmt, arg...) _dbgdump(fmt, ##arg)
-#elif defined(PLATFORM_WINDOWS) && defined(PLATFORM_OS_CE)
-	#define _dbgdump rtl871x_cedbg
-	#define _seqdump(sel, fmt, arg...) _dbgdump(fmt, ##arg)
-#elif defined PLATFORM_LINUX
-	#define _dbgdump printk
-	#define _seqdump seq_printf
-#elif defined PLATFORM_FREEBSD
-	#define _dbgdump printf
-	#define _seqdump(sel, fmt, arg...) _dbgdump(fmt, ##arg)
-#endif
+#define _dbgdump printk
+#define _seqdump seq_printf
 
 #ifdef CONFIG_RTW_DEBUG
 
@@ -116,7 +82,6 @@ extern uint rtw_drv_log_level;
 		} \
 	} while (0)
 
-
 #undef RTW_WARN
 #define RTW_WARN(fmt, arg...)     \
 	do {\
@@ -133,7 +98,6 @@ extern uint rtw_drv_log_level;
 		} \
 	} while (0)
 
-
 #undef RTW_DBG
 #define RTW_DBG(fmt, arg...)     \
 	do {\
@@ -141,7 +105,6 @@ extern uint rtw_drv_log_level;
 			_dbgdump(DRIVER_PREFIX fmt, ##arg);\
 		} \
 	} while (0)
-
 
 #undef RTW_INFO_DUMP
 #define RTW_INFO_DUMP(_TitleString, _HexData, _HexDataLen)			\
@@ -177,7 +140,6 @@ extern uint rtw_drv_log_level;
 		} \
 	} while (0)
 
-
 #undef RTW_PRINT_DUMP
 #define RTW_PRINT_DUMP(_TitleString, _HexData, _HexDataLen)			\
 	do {\
@@ -212,7 +174,6 @@ extern uint rtw_drv_log_level;
 		} \
 	} while (0)
 
-
 #undef _RTW_WARN
 #define _RTW_WARN(fmt, arg...)     \
 	do {\
@@ -236,7 +197,6 @@ extern uint rtw_drv_log_level;
 			_dbgdump(fmt, ##arg);\
 		} \
 	} while (0)
-
 
 #undef _RTW_INFO_DUMP
 #define _RTW_INFO_DUMP(_TitleString, _HexData, _HexDataLen)			\
@@ -272,7 +232,6 @@ extern uint rtw_drv_log_level;
 
 #endif /* defined(_dbgdump) */
 #endif /* CONFIG_RTW_DEBUG */
-
 
 #if defined(_seqdump)
 /* dump message to selected 'stream' with driver-defined prefix */
@@ -322,9 +281,7 @@ extern uint rtw_drv_log_level;
 			_seqdump(sel, "\n");							\
 		} \
 	} while (0)
-
 #endif /* defined(_seqdump) */
-
 
 #ifdef CONFIG_DBG_COUNTER
 	#define DBG_COUNTER(counter) counter++

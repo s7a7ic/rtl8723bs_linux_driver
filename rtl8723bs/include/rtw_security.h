@@ -1,20 +1,11 @@
+// SPDX-License-Identifier: GPL-2.0
 /******************************************************************************
  *
- * Copyright(c) 2007 - 2017 Realtek Corporation.
+ * Copyright(c) 2007 - 2017 Realtek Corporation. All rights reserved.
  *
- * This program is free software; you can redistribute it and/or modify it
- * under the terms of version 2 of the GNU General Public License as
- * published by the Free Software Foundation.
- *
- * This program is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
- * more details.
- *
- *****************************************************************************/
+ ******************************************************************************/
 #ifndef __RTW_SECURITY_H_
 #define __RTW_SECURITY_H_
-
 
 #define _NO_PRIVACY_		0x0
 #define _WEP40_				0x1
@@ -75,7 +66,6 @@ union pn48	{
 	u64	val;
 
 #ifdef CONFIG_LITTLE_ENDIAN
-
 struct {
 	u8 TSC0;
 	u8 TSC1;
@@ -101,14 +91,12 @@ struct {
 } _byte_;
 
 #endif
-
 };
 
 union Keytype {
 	u8   skey[16];
 	u32    lkey[4];
 };
-
 
 typedef struct _RT_PMKID_LIST {
 	u8						bUsed;
@@ -118,7 +106,6 @@ typedef struct _RT_PMKID_LIST {
 	u8						*ssid_octet;
 	u16						ssid_length;
 } RT_PMKID_LIST, *PRT_PMKID_LIST;
-
 
 struct security_priv {
 	u32	  dot11AuthAlgrthm;		/* 802.11 auth, could be open, shared, 8021x and authswitch */
@@ -163,7 +150,6 @@ struct security_priv {
 	u8 wps_ie[MAX_WPS_IE_LEN];/* added in assoc req */
 	int wps_ie_len;
 
-
 	u8	binstallGrpkey;
 #ifdef CONFIG_GTK_OL
 	u8	binstallKCK_KEK;
@@ -182,15 +168,11 @@ struct security_priv {
 
 	s32 	hw_decrypted;/* if the rx packets is hw_decrypted==_FALSE, it means the hw has not been ready. */
 
-
 	/* keeps the auth_type & enc_status from upper layer ioctl(wpa_supplicant or wzc) */
 	u32 ndisauthtype;	/* NDIS_802_11_AUTHENTICATION_MODE */
 	u32 ndisencryptstatus;	/* NDIS_802_11_ENCRYPTION_STATUS */
 
 	NDIS_802_11_WEP ndiswep;
-#ifdef PLATFORM_WINDOWS
-	u8 KeyMaterial[16];/* variable length depending on above field. */
-#endif
 
 	u8 assoc_info[600];
 	u8 szofcapability[256]; /* for wpa2 usage */
@@ -294,7 +276,6 @@ struct sha256_state_rtk {
 		} \
 	} while (0)
 
-
 #define GET_TKIP_PN(iv, dot11txpn)\
 	do {\
 		dot11txpn._byte_.TSC0 = iv[2];\
@@ -304,7 +285,6 @@ struct sha256_state_rtk {
 		dot11txpn._byte_.TSC4 = iv[6];\
 		dot11txpn._byte_.TSC5 = iv[7];\
 	} while (0)
-
 
 #define ROL32(A, n)	(((A) << (n)) | (((A)>>(32-(n)))  & ((1UL << (n)) - 1)))
 #define ROR32(A, n)	ROL32((A), 32-(n))

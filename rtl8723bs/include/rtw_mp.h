@@ -1,17 +1,9 @@
+// SPDX-License-Identifier: GPL-2.0
 /******************************************************************************
  *
- * Copyright(c) 2007 - 2017 Realtek Corporation.
+ * Copyright(c) 2007 - 2017 Realtek Corporation. All rights reserved.
  *
- * This program is free software; you can redistribute it and/or modify it
- * under the terms of version 2 of the GNU General Public License as
- * published by the Free Software Foundation.
- *
- * This program is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
- * more details.
- *
- *****************************************************************************/
+ ******************************************************************************/
 #ifndef _RTW_MP_H_
 #define _RTW_MP_H_
 
@@ -22,38 +14,10 @@
 
 struct mp_xmit_frame {
 	_list	list;
-
 	struct pkt_attrib attrib;
-
 	_pkt *pkt;
-
 	int frame_tag;
-
 	_adapter *padapter;
-
-#ifdef CONFIG_USB_HCI
-
-	/* insert urb, irp, and irpcnt info below... */
-	/* max frag_cnt = 8 */
-
-	u8 *mem_addr;
-	u32 sz[8];
-
-#if defined(PLATFORM_OS_XP) || defined(PLATFORM_LINUX)
-	PURB pxmit_urb[8];
-#endif
-
-#ifdef PLATFORM_OS_XP
-	PIRP pxmit_irp[8];
-#endif
-
-	u8 bpending[8];
-	sint ac_tag[8];
-	sint last[8];
-	uint irpcnt;
-	uint fragcnt;
-#endif /* CONFIG_USB_HCI */
-
 	uint mem[(MAX_MP_XMITBUF_SZ >> 2)];
 };
 
@@ -65,21 +29,6 @@ struct mp_wiparam {
 };
 
 typedef void(*wi_act_func)(void *padapter);
-
-#ifdef PLATFORM_WINDOWS
-struct mp_wi_cntx {
-	u8 bmpdrv_unload;
-
-	/* Work Item */
-	NDIS_WORK_ITEM mp_wi;
-	NDIS_EVENT mp_wi_evt;
-	_lock mp_wi_lock;
-	u8 bmp_wi_progress;
-	wi_act_func curractfunc;
-	/* Variable needed in each implementation of CurrActFunc. */
-	struct mp_wiparam param;
-};
-#endif
 
 struct mp_tx {
 	u8 stop;
@@ -97,7 +46,6 @@ struct mp_tx {
 
 #define MP_MAX_LINES		1000
 #define MP_MAX_LINES_BYTES	256
-
 
 typedef struct _RT_PMAC_PKT_INFO {
 	UCHAR			MCS;
@@ -183,7 +131,6 @@ typedef struct _MPT_CONTEXT {
 
 	ULONG			mpt_rf_path;
 
-
 	WIRELESS_MODE		MptWirelessModeToSw;	/* Wireless mode to switch. */
 	u8			MptChannelToSw;	/* Channel to switch. */
 	u8			MptInitGainToSet;	/* Initial gain to set. */
@@ -223,7 +170,6 @@ typedef struct _MPT_CONTEXT {
 
 	BOOLEAN			is_single_tone;
 
-
 	/* ACK counter asked by K.Y.. */
 	BOOLEAN			bMptEnableAckCounter;
 	ULONG			MptAckCounter;
@@ -259,7 +205,6 @@ typedef struct _MPT_CONTEXT {
 	BOOLEAN			bstbc;
 } MPT_CONTEXT, *PMPT_CONTEXT;
 /* #endif */
-
 
 /* #define RTPRIV_IOCTL_MP					( SIOCIWFIRSTPRIV + 0x17) */
 enum {
@@ -377,31 +322,6 @@ struct mp_priv {
 	struct wlan_network mp_network;
 	NDIS_802_11_MAC_ADDRESS network_macaddr;
 
-#ifdef PLATFORM_WINDOWS
-	u32 rx_testcnt;
-	u32 rx_testcnt1;
-	u32 rx_testcnt2;
-	u32 tx_testcnt;
-	u32 tx_testcnt1;
-
-	struct mp_wi_cntx wi_cntx;
-
-	u8 h2c_result;
-	u8 h2c_seqnum;
-	u16 h2c_cmdcode;
-	u8 h2c_resp_parambuf[512];
-	_lock h2c_lock;
-	_lock wkitm_lock;
-	u32 h2c_cmdcnt;
-	NDIS_EVENT h2c_cmd_evt;
-	NDIS_EVENT c2h_set;
-	NDIS_EVENT h2c_clr;
-	NDIS_EVENT cpwm_int;
-
-	NDIS_EVENT scsir_full_evt;
-	NDIS_EVENT scsiw_empty_evt;
-#endif
-
 	u8 *pallocated_mp_xmitframe_buf;
 	u8 *pmp_xmtframe_buf;
 	_queue free_mp_xmitqueue;
@@ -414,7 +334,6 @@ struct mp_priv {
 	BOOLEAN bloadBTefusemap;
 
 	MPT_CONTEXT	mpt_ctx;
-
 
 	u8		*TXradomBuffer;
 };
@@ -445,9 +364,6 @@ typedef struct _MP_FIRMWARE {
 #endif
 	u32		ulFwLength;
 } RT_MP_FIRMWARE, *PRT_MP_FIRMWARE;
-
-
-
 
 /* *********************************************************************** */
 
@@ -500,7 +416,6 @@ typedef enum _TEST_MODE {
 	CCK_Carrier_Suppression_TX
 } TEST_MODE;
 
-
 typedef enum _MPT_BANDWIDTH {
 	MPT_BW_20MHZ = 0,
 	MPT_BW_40MHZ_DUPLICATE = 1,
@@ -517,7 +432,6 @@ typedef enum _MPT_BANDWIDTH {
 } MPT_BANDWIDTHE, *PMPT_BANDWIDTH;
 
 #define MAX_RF_PATH_NUMS	RF_PATH_MAX
-
 
 extern u8 mpdatarate[NumRates];
 
@@ -652,7 +566,6 @@ typedef enum _OFDM_TX_MODE {
 	OFDM_SingleTone	= 4,
 } OFDM_TX_MODE;
 
-
 #define RX_PKT_BROADCAST	1
 #define RX_PKT_DEST_ADDR	2
 #define RX_PKT_PHY_MATCH	3
@@ -671,7 +584,6 @@ typedef enum	_MPT_TXPWR_DEF {
 	MPT_HT,
 	MPT_VHT
 } MPT_TXPWR_DEF;
-
 
 #define IS_MPT_HT_RATE(_rate)			(_rate >= MPT_RATE_MCS0 && _rate <= MPT_RATE_MCS31)
 #define IS_MPT_VHT_RATE(_rate)			(_rate >= MPT_RATE_VHT1SS_MCS0 && _rate <= MPT_RATE_VHT4SS_MCS9)
@@ -727,7 +639,6 @@ u32	mp_query_psd(PADAPTER pAdapter, u8 *data);
 void	rtw_mp_trigger_iqk(PADAPTER padapter);
 void	rtw_mp_trigger_lck(PADAPTER padapter);
 u8 rtw_mp_mode_check(PADAPTER padapter);
-
 
 void hal_mpt_SwitchRfSetting(PADAPTER pAdapter);
 s32 hal_mpt_SetPowerTracking(PADAPTER padapter, u8 enable);
@@ -791,7 +702,6 @@ void VHT_SIG_B_generator(
 
 void VHT_Delimiter_generator(
 	PRT_PMAC_TX_INFO	pPMacTxInfo);
-
 
 int rtw_mp_write_reg(struct net_device *dev,
 		struct iw_request_info *info,

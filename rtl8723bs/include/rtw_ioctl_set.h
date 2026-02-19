@@ -1,20 +1,11 @@
+// SPDX-License-Identifier: GPL-2.0
 /******************************************************************************
  *
- * Copyright(c) 2007 - 2017 Realtek Corporation.
+ * Copyright(c) 2007 - 2017 Realtek Corporation. All rights reserved.
  *
- * This program is free software; you can redistribute it and/or modify it
- * under the terms of version 2 of the GNU General Public License as
- * published by the Free Software Foundation.
- *
- * This program is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
- * more details.
- *
- *****************************************************************************/
+ ******************************************************************************/
 #ifndef __RTW_IOCTL_SET_H_
 #define __RTW_IOCTL_SET_H_
-
 
 typedef u8 NDIS_802_11_PMKID_VALUE[16];
 
@@ -22,29 +13,6 @@ typedef struct _BSSIDInfo {
 	NDIS_802_11_MAC_ADDRESS  BSSID;
 	NDIS_802_11_PMKID_VALUE  PMKID;
 } BSSIDInfo, *PBSSIDInfo;
-
-
-#ifdef PLATFORM_OS_XP
-typedef struct _NDIS_802_11_PMKID {
-	u32	Length;
-	u32	BSSIDInfoCount;
-	BSSIDInfo BSSIDInfo[1];
-} NDIS_802_11_PMKID, *PNDIS_802_11_PMKID;
-#endif
-
-
-#ifdef PLATFORM_WINDOWS
-u8 rtw_set_802_11_reload_defaults(_adapter *padapter, NDIS_802_11_RELOAD_DEFAULTS reloadDefaults);
-u8 rtw_set_802_11_test(_adapter *padapter, NDIS_802_11_TEST *test);
-u8 rtw_set_802_11_pmkid(_adapter *pdapter, NDIS_802_11_PMKID *pmkid);
-
-u8 rtw_pnp_set_power_sleep(_adapter *padapter);
-u8 rtw_pnp_set_power_wakeup(_adapter *padapter);
-
-void rtw_pnp_resume_wk(void *context);
-void rtw_pnp_sleep_wk(void *context);
-
-#endif
 
 u8 rtw_set_802_11_add_key(_adapter *padapter, NDIS_802_11_KEY *key);
 u8 rtw_set_802_11_authentication_mode(_adapter *pdapter, NDIS_802_11_AUTHENTICATION_MODE authmode);

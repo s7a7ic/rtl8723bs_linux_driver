@@ -1,19 +1,10 @@
+// SPDX-License-Identifier: GPL-2.0
 /******************************************************************************
  *
- * Copyright(c) 2007 - 2017 Realtek Corporation.
+ * Copyright(c) 2007 - 2017 Realtek Corporation. All rights reserved.
  *
- * This program is free software; you can redistribute it and/or modify it
- * under the terms of version 2 of the GNU General Public License as
- * published by the Free Software Foundation.
- *
- * This program is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
- * more details.
- *
- *****************************************************************************/
+ ******************************************************************************/
 /*
-
 The purpose of rtw_io.c
 
 a. provides the API
@@ -21,7 +12,6 @@ a. provides the API
 b. provides the protocol engine
 
 c. provides the software interface between caller and the hardware interface
-
 
 Compiler Flag Option:
 
@@ -35,11 +25,9 @@ Compiler Flag Option:
 3. CONFIG_CFIO_HCI:
    b. USE_SYNC_IRP: Only sync operations are provided.
 
-
 Only sync read/rtw_write_mem operations are provided.
 
 jackson@realtek.com.tw
-
 */
 
 #define _RTW_IO_C_
@@ -47,11 +35,7 @@ jackson@realtek.com.tw
 #include <drv_types.h>
 #include <hal_data.h>
 
-#if defined(PLATFORM_LINUX) && defined (PLATFORM_WINDOWS)
-	#error "Shall be Linux or Windows, but not both!\n"
-#endif
-
-#if defined(CONFIG_SDIO_HCI) || defined(CONFIG_PLATFORM_RTL8197D)
+#if defined(CONFIG_SDIO_HCI)
 	#define rtw_le16_to_cpu(val)		val
 	#define rtw_le32_to_cpu(val)		val
 	#define rtw_cpu_to_le16(val)		val
@@ -62,7 +46,6 @@ jackson@realtek.com.tw
 	#define rtw_cpu_to_le16(val)		cpu_to_le16(val)
 	#define rtw_cpu_to_le32(val)		cpu_to_le32(val)
 #endif
-
 
 u8 _rtw_read8(_adapter *adapter, u32 addr)
 {
@@ -339,8 +322,6 @@ void _rtw_read_mem(_adapter *adapter, u32 addr, u32 cnt, u8 *pmem)
 	_read_mem = pintfhdl->io_ops._read_mem;
 
 	_read_mem(pintfhdl, addr, cnt, pmem);
-
-
 }
 
 void _rtw_write_mem(_adapter *adapter, u32 addr, u32 cnt, u8 *pmem)
@@ -350,12 +331,9 @@ void _rtw_write_mem(_adapter *adapter, u32 addr, u32 cnt, u8 *pmem)
 	struct io_priv *pio_priv = &adapter->iopriv;
 	struct	intf_hdl		*pintfhdl = &(pio_priv->intf);
 
-
 	_write_mem = pintfhdl->io_ops._write_mem;
 
 	_write_mem(pintfhdl, addr, cnt, pmem);
-
-
 }
 
 void _rtw_read_port(_adapter *adapter, u32 addr, u32 cnt, u8 *pmem)
@@ -365,7 +343,6 @@ void _rtw_read_port(_adapter *adapter, u32 addr, u32 cnt, u8 *pmem)
 	struct io_priv *pio_priv = &adapter->iopriv;
 	struct	intf_hdl		*pintfhdl = &(pio_priv->intf);
 
-
 	if (RTW_CANNOT_RUN(adapter)) {
 		return;
 	}
@@ -373,8 +350,6 @@ void _rtw_read_port(_adapter *adapter, u32 addr, u32 cnt, u8 *pmem)
 	_read_port = pintfhdl->io_ops._read_port;
 
 	_read_port(pintfhdl, addr, cnt, pmem);
-
-
 }
 
 void _rtw_read_port_cancel(_adapter *adapter)
@@ -403,7 +378,6 @@ u32 _rtw_write_port(_adapter *adapter, u32 addr, u32 cnt, u8 *pmem)
 	_write_port = pintfhdl->io_ops._write_port;
 
 	ret = _write_port(pintfhdl, addr, cnt, pmem);
-
 
 	return ret;
 }
@@ -438,6 +412,7 @@ void _rtw_write_port_cancel(_adapter *adapter)
 	if (_write_port_cancel)
 		_write_port_cancel(pintfhdl);
 }
+
 int rtw_init_io_priv(_adapter *padapter, void (*set_intf_ops)(_adapter *padapter, struct _io_ops *pops))
 {
 	struct io_priv	*piopriv = &padapter->iopriv;

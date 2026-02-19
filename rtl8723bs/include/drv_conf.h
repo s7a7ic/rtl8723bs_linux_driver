@@ -1,27 +1,13 @@
+// SPDX-License-Identifier: GPL-2.0
 /******************************************************************************
  *
- * Copyright(c) 2007 - 2017 Realtek Corporation.
+ * Copyright(c) 2007 - 2017 Realtek Corporation. All rights reserved.
  *
- * This program is free software; you can redistribute it and/or modify it
- * under the terms of version 2 of the GNU General Public License as
- * published by the Free Software Foundation.
- *
- * This program is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
- * more details.
- *
- *****************************************************************************/
+ ******************************************************************************/
 #ifndef __DRV_CONF_H__
 #define __DRV_CONF_H__
 #include "autoconf.h"
 #include "hal_ic_cfg.h"
-
-#if defined(PLATFORM_LINUX) && defined (PLATFORM_WINDOWS)
-
-	#error "Shall be Linux or Windows, but not both!\n"
-
-#endif
 
 #ifdef CONFIG_RTW_REPEATER_SON
 	#ifndef CONFIG_AP
@@ -44,27 +30,19 @@
 #endif
 
 #if defined(CONFIG_MCC_MODE) && (!defined(CONFIG_CONCURRENT_MODE))
-
 	#error "Enable CONCURRENT_MODE before enable MCC MODE\n"
-
 #endif
 
 #if defined(CONFIG_MCC_MODE) && defined(CONFIG_BT_COEXIST)
-
 	#error "Disable BT COEXIST before enable MCC MODE\n"
-
 #endif
 
 #if defined(CONFIG_MCC_MODE) && defined(CONFIG_TDLS)
-
 	#error "Disable TDLS before enable MCC MODE\n"
-
 #endif
 
 #if defined(CONFIG_RTW_80211R) && !defined(CONFIG_LAYER2_ROAMING)
-
 	#error "Enable CONFIG_LAYER2_ROAMING before enable CONFIG_RTW_80211R\n"
-
 #endif
 
 /* Older Android kernel doesn't has CONFIG_ANDROID defined,

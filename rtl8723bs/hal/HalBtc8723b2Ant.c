@@ -1,19 +1,9 @@
-/* SPDX-License-Identifier: GPL-2.0 */
+// SPDX-License-Identifier: GPL-2.0
 /******************************************************************************
  *
- * Copyright(c) 2016 - 2017 Realtek Corporation.
+ * Copyright(c) 2007 - 2017 Realtek Corporation. All rights reserved.
  *
- * This program is free software; you can redistribute it and/or modify it
- * under the terms of version 2 of the GNU General Public License as
- * published by the Free Software Foundation.
- *
- * This program is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
- * more details.
- *
- *****************************************************************************/
-
+ ******************************************************************************/
 /* ************************************************************
  * Description:
  *
@@ -114,8 +104,7 @@ u8 halbtc8723b2ant_bt_rssi_state(u8 *ppre_bt_rssi_state, u8 level_num,
 	return bt_rssi_state;
 }
 
-static
-u8 halbtc8723b2ant_wifi_rssi_state(IN struct btc_coexist *btcoexist,
+static u8 halbtc8723b2ant_wifi_rssi_state(IN struct btc_coexist *btcoexist,
 	   IN u8 *pprewifi_rssi_state, IN u8 level_num, IN u8 rssi_thresh,
 				   IN u8 rssi_thresh1)
 {
@@ -175,8 +164,7 @@ u8 halbtc8723b2ant_wifi_rssi_state(IN struct btc_coexist *btcoexist,
 	return wifi_rssi_state;
 }
 
-static
-void halbtc8723b2ant_monitor_bt_enable_disable(IN struct btc_coexist *btcoexist)
+static void halbtc8723b2ant_monitor_bt_enable_disable(IN struct btc_coexist *btcoexist)
 {
 	static u32		bt_disable_cnt = 0;
 	boolean		bt_active = true, bt_disabled = false;
@@ -224,8 +212,7 @@ void halbtc8723b2ant_monitor_bt_enable_disable(IN struct btc_coexist *btcoexist)
 	}
 }
 
-static
-void halbtc8723b2ant_limited_rx(IN struct btc_coexist *btcoexist,
+static void halbtc8723b2ant_limited_rx(IN struct btc_coexist *btcoexist,
 			IN boolean force_exec, IN boolean rej_ap_agg_pkt,
 			IN boolean bt_ctrl_agg_buf_size, IN u8 agg_buf_size)
 {
@@ -247,8 +234,7 @@ void halbtc8723b2ant_limited_rx(IN struct btc_coexist *btcoexist,
 	btcoexist->btc_set(btcoexist, BTC_SET_ACT_AGGREGATE_CTRL, NULL);
 }
 
-static
-void halbtc8723b2ant_monitor_bt_ctr(IN struct btc_coexist *btcoexist)
+static void halbtc8723b2ant_monitor_bt_ctr(IN struct btc_coexist *btcoexist)
 {
 	u32			reg_hp_txrx, reg_lp_txrx, u32tmp;
 	u32			reg_hp_tx = 0, reg_hp_rx = 0, reg_lp_tx = 0, reg_lp_rx = 0;
@@ -295,8 +281,7 @@ void halbtc8723b2ant_monitor_bt_ctr(IN struct btc_coexist *btcoexist)
 	btcoexist->btc_write_1byte(btcoexist, 0x76e, 0xc);
 }
 
-static
-void halbtc8723b2ant_monitor_wifi_ctr(IN struct btc_coexist *btcoexist)
+static void halbtc8723b2ant_monitor_wifi_ctr(IN struct btc_coexist *btcoexist)
 {
 #if 1
 
@@ -327,12 +312,10 @@ void halbtc8723b2ant_monitor_wifi_ctr(IN struct btc_coexist *btcoexist)
 		btcoexist->btc_phydm_query_PHY_counter(
 			btcoexist,
 			PHYDM_INFO_CRC32_ERROR_VHT);
-
 #endif
 }
 
-static
-void halbtc8723b2ant_query_bt_info(IN struct btc_coexist *btcoexist)
+static void halbtc8723b2ant_query_bt_info(IN struct btc_coexist *btcoexist)
 {
 	u8			h2c_parameter[1] = {0};
 
@@ -343,8 +326,7 @@ void halbtc8723b2ant_query_bt_info(IN struct btc_coexist *btcoexist)
 	btcoexist->btc_fill_h2c(btcoexist, 0x61, 1, h2c_parameter);
 }
 
-static
-boolean halbtc8723b2ant_is_wifi_status_changed(IN struct btc_coexist *btcoexist)
+static boolean halbtc8723b2ant_is_wifi_status_changed(IN struct btc_coexist *btcoexist)
 {
 	static boolean	pre_wifi_busy = false, pre_under_4way = false,
 			pre_bt_hs_on = false;
@@ -352,7 +334,6 @@ boolean halbtc8723b2ant_is_wifi_status_changed(IN struct btc_coexist *btcoexist)
 	boolean			wifi_busy = false, under_4way = false, bt_hs_on = false;
 	boolean			wifi_connected = false;
 	u8			wifi_rssi_state = BTC_RSSI_STATE_HIGH;
-
 
 	btcoexist->btc_get(btcoexist, BTC_GET_BL_WIFI_CONNECTED,
 			   &wifi_connected);
@@ -375,7 +356,6 @@ boolean halbtc8723b2ant_is_wifi_status_changed(IN struct btc_coexist *btcoexist)
 			return true;
 		}
 
-
 		wifi_rssi_state = halbtc8723b2ant_wifi_rssi_state(btcoexist,
 				  &prewifi_rssi_state, 2,
 				  BT_8723B_2ANT_WIFI_RSSI_COEXSWITCH_THRES -
@@ -384,14 +364,11 @@ boolean halbtc8723b2ant_is_wifi_status_changed(IN struct btc_coexist *btcoexist)
 		if ((BTC_RSSI_STATE_HIGH == wifi_rssi_state) ||
 		    (BTC_RSSI_STATE_LOW == wifi_rssi_state))
 			return true;
-
 	}
-
 	return false;
 }
 
-static
-void halbtc8723b2ant_update_bt_link_info(IN struct btc_coexist *btcoexist)
+static void halbtc8723b2ant_update_bt_link_info(IN struct btc_coexist *btcoexist)
 {
 	struct  btc_bt_link_info	*bt_link_info = &btcoexist->bt_link_info;
 	boolean				bt_hs_on = false;
@@ -447,8 +424,7 @@ void halbtc8723b2ant_update_bt_link_info(IN struct btc_coexist *btcoexist)
 		bt_link_info->hid_only = false;
 }
 
-static
-u8 halbtc8723b2ant_action_algorithm(IN struct btc_coexist *btcoexist)
+static u8 halbtc8723b2ant_action_algorithm(IN struct btc_coexist *btcoexist)
 {
 	struct  btc_bt_link_info	*bt_link_info = &btcoexist->bt_link_info;
 	boolean				bt_hs_on = false;
@@ -655,8 +631,7 @@ u8 halbtc8723b2ant_action_algorithm(IN struct btc_coexist *btcoexist)
 	return algorithm;
 }
 
-static
-void halbtc8723b2ant_set_fw_dac_swing_level(IN struct btc_coexist *btcoexist,
+static void halbtc8723b2ant_set_fw_dac_swing_level(IN struct btc_coexist *btcoexist,
 		IN u8 dac_swing_lvl)
 {
 	u8			h2c_parameter[1] = {0};
@@ -668,8 +643,7 @@ void halbtc8723b2ant_set_fw_dac_swing_level(IN struct btc_coexist *btcoexist,
 	btcoexist->btc_fill_h2c(btcoexist, 0x64, 1, h2c_parameter);
 }
 
-static
-void halbtc8723b2ant_set_fw_dec_bt_pwr(IN struct btc_coexist *btcoexist,
+static void halbtc8723b2ant_set_fw_dec_bt_pwr(IN struct btc_coexist *btcoexist,
 				       IN u8 dec_bt_pwr_lvl)
 {
 	return; /*BT no longer support this feature*/
@@ -682,8 +656,7 @@ void halbtc8723b2ant_set_fw_dec_bt_pwr(IN struct btc_coexist *btcoexist,
 */
 }
 
-static
-void halbtc8723b2ant_dec_bt_pwr(IN struct btc_coexist *btcoexist,
+static void halbtc8723b2ant_dec_bt_pwr(IN struct btc_coexist *btcoexist,
 				IN boolean force_exec, IN u8 dec_bt_pwr_lvl)
 {
 	return; /*BT no longer support this feature*/
@@ -701,8 +674,7 @@ void halbtc8723b2ant_dec_bt_pwr(IN struct btc_coexist *btcoexist,
 */
 }
 
-static
-void halbtc8723b2ant_set_bt_auto_report(IN struct btc_coexist *btcoexist,
+static void halbtc8723b2ant_set_bt_auto_report(IN struct btc_coexist *btcoexist,
 					IN boolean enable_auto_report)
 {
 	u8			h2c_parameter[1] = {0};
@@ -715,8 +687,7 @@ void halbtc8723b2ant_set_bt_auto_report(IN struct btc_coexist *btcoexist,
 	btcoexist->btc_fill_h2c(btcoexist, 0x68, 1, h2c_parameter);
 }
 
-static
-void halbtc8723b2ant_bt_auto_report(IN struct btc_coexist *btcoexist,
+static void halbtc8723b2ant_bt_auto_report(IN struct btc_coexist *btcoexist,
 		    IN boolean force_exec, IN boolean enable_auto_report)
 {
 	coex_dm->cur_bt_auto_report = enable_auto_report;
@@ -731,8 +702,7 @@ void halbtc8723b2ant_bt_auto_report(IN struct btc_coexist *btcoexist,
 	coex_dm->pre_bt_auto_report = coex_dm->cur_bt_auto_report;
 }
 
-static
-void halbtc8723b2ant_fw_dac_swing_lvl(IN struct btc_coexist *btcoexist,
+static void halbtc8723b2ant_fw_dac_swing_lvl(IN struct btc_coexist *btcoexist,
 			      IN boolean force_exec, IN u8 fw_dac_swing_lvl)
 {
 	coex_dm->cur_fw_dac_swing_lvl = fw_dac_swing_lvl;
@@ -773,8 +743,7 @@ void halbtc8723b2ant_set_sw_rf_rx_lpf_corner(IN struct btc_coexist *btcoexist,
 	}
 }
 
-static
-void halbtc8723b2ant_rf_shrink(IN struct btc_coexist *btcoexist,
+static void halbtc8723b2ant_rf_shrink(IN struct btc_coexist *btcoexist,
 		       IN boolean force_exec, IN boolean rx_rf_shrink_on)
 {
 	coex_dm->cur_rf_rx_lpf_shrink = rx_rf_shrink_on;
@@ -790,8 +759,7 @@ void halbtc8723b2ant_rf_shrink(IN struct btc_coexist *btcoexist,
 	coex_dm->pre_rf_rx_lpf_shrink = coex_dm->cur_rf_rx_lpf_shrink;
 }
 
-static
-void halbtc8723b2ant_set_sw_penalty_tx_rate_adaptive(IN struct btc_coexist
+static void halbtc8723b2ant_set_sw_penalty_tx_rate_adaptive(IN struct btc_coexist
 		*btcoexist, IN boolean low_penalty_ra)
 {
 	u8			h2c_parameter[6] = {0};
@@ -810,8 +778,7 @@ void halbtc8723b2ant_set_sw_penalty_tx_rate_adaptive(IN struct btc_coexist
 	btcoexist->btc_fill_h2c(btcoexist, 0x69, 6, h2c_parameter);
 }
 
-static
-void halbtc8723b2ant_low_penalty_ra(IN struct btc_coexist *btcoexist,
+static void halbtc8723b2ant_low_penalty_ra(IN struct btc_coexist *btcoexist,
 			    IN boolean force_exec, IN boolean low_penalty_ra)
 {
 	coex_dm->cur_low_penalty_ra = low_penalty_ra;
@@ -826,8 +793,7 @@ void halbtc8723b2ant_low_penalty_ra(IN struct btc_coexist *btcoexist,
 	coex_dm->pre_low_penalty_ra = coex_dm->cur_low_penalty_ra;
 }
 
-static
-void halbtc8723b2ant_set_dac_swing_reg(IN struct btc_coexist *btcoexist,
+static void halbtc8723b2ant_set_dac_swing_reg(IN struct btc_coexist *btcoexist,
 				       IN u32 level)
 {
 	u8	val = (u8)level;
@@ -838,8 +804,7 @@ void halbtc8723b2ant_set_dac_swing_reg(IN struct btc_coexist *btcoexist,
 	btcoexist->btc_write_1byte_bitmask(btcoexist, 0x883, 0x3e, val);
 }
 
-static
-void halbtc8723b2ant_set_sw_full_time_dac_swing(IN struct btc_coexist
+static void halbtc8723b2ant_set_sw_full_time_dac_swing(IN struct btc_coexist
 		*btcoexist, IN boolean sw_dac_swing_on, IN u32 sw_dac_swing_lvl)
 {
 	if (sw_dac_swing_on)
@@ -848,8 +813,7 @@ void halbtc8723b2ant_set_sw_full_time_dac_swing(IN struct btc_coexist
 		halbtc8723b2ant_set_dac_swing_reg(btcoexist, 0x18);
 }
 
-static
-void halbtc8723b2ant_dac_swing(IN struct btc_coexist *btcoexist,
+static void halbtc8723b2ant_dac_swing(IN struct btc_coexist *btcoexist,
 	IN boolean force_exec, IN boolean dac_swing_on, IN u32 dac_swing_lvl)
 {
 	coex_dm->cur_dac_swing_on = dac_swing_on;
@@ -869,8 +833,7 @@ void halbtc8723b2ant_dac_swing(IN struct btc_coexist *btcoexist,
 	coex_dm->pre_dac_swing_lvl = coex_dm->cur_dac_swing_lvl;
 }
 
-static
-void halbtc8723b2ant_set_adc_back_off(IN struct btc_coexist *btcoexist,
+static void halbtc8723b2ant_set_adc_back_off(IN struct btc_coexist *btcoexist,
 				      IN boolean adc_back_off)
 {
 	if (adc_back_off) {
@@ -886,8 +849,7 @@ void halbtc8723b2ant_set_adc_back_off(IN struct btc_coexist *btcoexist,
 	}
 }
 
-static
-void halbtc8723b2ant_adc_back_off(IN struct btc_coexist *btcoexist,
+static void halbtc8723b2ant_adc_back_off(IN struct btc_coexist *btcoexist,
 			  IN boolean force_exec, IN boolean adc_back_off)
 {
 	coex_dm->cur_adc_back_off = adc_back_off;
@@ -901,8 +863,7 @@ void halbtc8723b2ant_adc_back_off(IN struct btc_coexist *btcoexist,
 	coex_dm->pre_adc_back_off = coex_dm->cur_adc_back_off;
 }
 
-static
-void halbtc8723b2ant_set_agc_table(IN struct btc_coexist *btcoexist,
+static void halbtc8723b2ant_set_agc_table(IN struct btc_coexist *btcoexist,
 				   IN boolean agc_table_en)
 {
 	u8		rssi_adjust_val = 0;
@@ -931,7 +892,6 @@ void halbtc8723b2ant_set_agc_table(IN struct btc_coexist *btcoexist,
 		btcoexist->btc_write_4byte(btcoexist, 0xc78, 0xa51F0001);
 		btcoexist->btc_write_4byte(btcoexist, 0xc78, 0xa4200001);
 	}
-
 
 	/* =================RF Gain */
 	btcoexist->btc_set_rf_reg(btcoexist, BTC_RF_A, 0xef, 0xfffff, 0x02000);
@@ -981,8 +941,7 @@ void halbtc8723b2ant_set_agc_table(IN struct btc_coexist *btcoexist,
 			   &rssi_adjust_val);
 }
 
-static
-void halbtc8723b2ant_agc_table(IN struct btc_coexist *btcoexist,
+static void halbtc8723b2ant_agc_table(IN struct btc_coexist *btcoexist,
 			       IN boolean force_exec, IN boolean agc_table_en)
 {
 	coex_dm->cur_agc_table_en = agc_table_en;
@@ -996,8 +955,7 @@ void halbtc8723b2ant_agc_table(IN struct btc_coexist *btcoexist,
 	coex_dm->pre_agc_table_en = coex_dm->cur_agc_table_en;
 }
 
-static
-void halbtc8723b2ant_sw_mechanism1(IN struct btc_coexist *btcoexist,
+static void halbtc8723b2ant_sw_mechanism1(IN struct btc_coexist *btcoexist,
 			   IN boolean shrink_rx_lpf, IN boolean low_penalty_ra,
 			   IN boolean limited_dig, IN boolean bt_lna_constrain)
 {
@@ -1017,8 +975,7 @@ void halbtc8723b2ant_sw_mechanism1(IN struct btc_coexist *btcoexist,
 	halbtc8723b2ant_low_penalty_ra(btcoexist, NORMAL_EXEC, low_penalty_ra);
 }
 
-static
-void halbtc8723b2ant_sw_mechanism2(IN struct btc_coexist *btcoexist,
+static void halbtc8723b2ant_sw_mechanism2(IN struct btc_coexist *btcoexist,
 			   IN boolean agc_table_shift, IN boolean adc_back_off,
 			   IN boolean sw_dac_swing, IN u32 dac_swing_lvl)
 {
@@ -1027,8 +984,7 @@ void halbtc8723b2ant_sw_mechanism2(IN struct btc_coexist *btcoexist,
 	/* halbtc8723b2ant_dac_swing(btcoexist, NORMAL_EXEC, sw_dac_swing, dac_swing_lvl); */
 }
 
-static
-void halbtc8723b2ant_coex_table(IN struct btc_coexist *btcoexist,
+static void halbtc8723b2ant_coex_table(IN struct btc_coexist *btcoexist,
 			IN boolean force_exec, IN u32 val0x6c0, IN u32 val0x6c4,
 				IN u32 val0x6c8, IN u8 val0x6cc)
 {
@@ -1053,8 +1009,7 @@ void halbtc8723b2ant_coex_table(IN struct btc_coexist *btcoexist,
 
 }
 
-static
-void halbtc8723b2ant_coex_table_with_type(IN struct btc_coexist *btcoexist,
+static void halbtc8723b2ant_coex_table_with_type(IN struct btc_coexist *btcoexist,
 		IN boolean force_exec, IN u8 type)
 {
 	coex_sta->coex_table_type = type;
@@ -1137,8 +1092,7 @@ void halbtc8723b2ant_coex_table_with_type(IN struct btc_coexist *btcoexist,
 	}
 }
 
-static
-void halbtc8723b2ant_set_fw_ignore_wlan_act(IN struct btc_coexist *btcoexist,
+static void halbtc8723b2ant_set_fw_ignore_wlan_act(IN struct btc_coexist *btcoexist,
 		IN boolean enable)
 {
 	u8			h2c_parameter[1] = {0};
@@ -1149,8 +1103,7 @@ void halbtc8723b2ant_set_fw_ignore_wlan_act(IN struct btc_coexist *btcoexist,
 	btcoexist->btc_fill_h2c(btcoexist, 0x63, 1, h2c_parameter);
 }
 
-static
-void halbtc8723b2ant_ignore_wlan_act(IN struct btc_coexist *btcoexist,
+static void halbtc8723b2ant_ignore_wlan_act(IN struct btc_coexist *btcoexist,
 				     IN boolean force_exec, IN boolean enable)
 {
 	coex_dm->cur_ignore_wlan_act = enable;
@@ -1165,8 +1118,7 @@ void halbtc8723b2ant_ignore_wlan_act(IN struct btc_coexist *btcoexist,
 	coex_dm->pre_ignore_wlan_act = coex_dm->cur_ignore_wlan_act;
 }
 
-static
-void halbtc8723b2ant_set_lps_rpwm(IN struct btc_coexist *btcoexist,
+static void halbtc8723b2ant_set_lps_rpwm(IN struct btc_coexist *btcoexist,
 				  IN u8 lps_val, IN u8 rpwm_val)
 {
 	u8	lps = lps_val;
@@ -1176,8 +1128,7 @@ void halbtc8723b2ant_set_lps_rpwm(IN struct btc_coexist *btcoexist,
 	btcoexist->btc_set(btcoexist, BTC_SET_U1_RPWM_VAL, &rpwm);
 }
 
-static
-void halbtc8723b2ant_lps_rpwm(IN struct btc_coexist *btcoexist,
+static void halbtc8723b2ant_lps_rpwm(IN struct btc_coexist *btcoexist,
 		      IN boolean force_exec, IN u8 lps_val, IN u8 rpwm_val)
 {
 	coex_dm->cur_lps = lps_val;
@@ -1194,8 +1145,7 @@ void halbtc8723b2ant_lps_rpwm(IN struct btc_coexist *btcoexist,
 	coex_dm->pre_rpwm = coex_dm->cur_rpwm;
 }
 
-static
-void halbtc8723b2ant_ps_tdma_check_for_power_save_state(
+static void halbtc8723b2ant_ps_tdma_check_for_power_save_state(
 	IN struct btc_coexist *btcoexist, IN boolean new_ps_state)
 {
 	u8	lps_mode = 0x0;
@@ -1226,8 +1176,7 @@ void halbtc8723b2ant_ps_tdma_check_for_power_save_state(
 	}
 }
 
-static
-void halbtc8723b2ant_power_save_state(IN struct btc_coexist *btcoexist,
+static void halbtc8723b2ant_power_save_state(IN struct btc_coexist *btcoexist,
 			      IN u8 ps_type, IN u8 lps_val, IN u8 rpwm_val)
 {
 	boolean		low_pwr_disable = false;
@@ -1270,8 +1219,7 @@ void halbtc8723b2ant_power_save_state(IN struct btc_coexist *btcoexist,
 	}
 }
 
-static
-void halbtc8723b2ant_set_fw_pstdma(IN struct btc_coexist *btcoexist,
+static void halbtc8723b2ant_set_fw_pstdma(IN struct btc_coexist *btcoexist,
 	   IN u8 byte1, IN u8 byte2, IN u8 byte3, IN u8 byte4, IN u8 byte5)
 {
 	u8			h2c_parameter[5] = {0};
@@ -1321,8 +1269,7 @@ void halbtc8723b2ant_set_fw_pstdma(IN struct btc_coexist *btcoexist,
 	btcoexist->btc_fill_h2c(btcoexist, 0x60, 5, h2c_parameter);
 }
 
-static
-void halbtc8723b2ant_ps_tdma(IN struct btc_coexist *btcoexist,
+static void halbtc8723b2ant_ps_tdma(IN struct btc_coexist *btcoexist,
 		     IN boolean force_exec, IN boolean turn_on, IN u8 type)
 {
 	static u8	prewifi_rssi_state = BTC_RSSI_STATE_LOW;
@@ -1344,29 +1291,6 @@ void halbtc8723b2ant_ps_tdma(IN struct btc_coexist *btcoexist,
 		(force_exec ? "force to" : ""), (turn_on ? "ON" : "OFF"), type);
 	BTC_TRACE(trace_buf);
 
-#ifdef PLATFORM_WINDOWS
-	u32 wait_counter = 0;
-#endif
-
-#ifdef PLATFORM_WINDOWS
-	while (PlatformAtomicExchange((pu4Byte)&coex_dm->setting_tdma, TRUE) == TRUE) {
-		/*wait setting*/
-		wait_counter++;
-		PlatformStallExecution(50); /*100 us*/
-		if (wait_counter > 3000) {
-			BTC_SPRINTF(trace_buf, BT_TMP_BUF_SIZE,
-			"[BTCoex], Wait fail for setting TDMA\n");
-			BTC_TRACE(trace_buf);
-			return;
-		}
-	}
-	if (wait_counter != 0) {
-		BTC_SPRINTF(trace_buf, BT_TMP_BUF_SIZE,
-		"[BTCoex], Wait setting for TDMA(%d)\n", wait_counter);
-		BTC_TRACE(trace_buf);
-	}
-#endif
-
 	if (!(BTC_RSSI_HIGH(wifi_rssi_state1) &&
 	      BTC_RSSI_HIGH(bt_rssi_state)) && turn_on)
 		/* if (halbtc8723b2ant_CoexSwitchThresCheck(btcoexist) &&  turn_on) */
@@ -1385,13 +1309,9 @@ void halbtc8723b2ant_ps_tdma(IN struct btc_coexist *btcoexist,
 			(coex_dm->cur_ps_tdma_on ? "on" : "off"), coex_dm->cur_ps_tdma);
 			BTC_TRACE(trace_buf);
 
-#ifdef PLATFORM_WINDOWS
-			PlatformAtomicExchange((pu4Byte)&coex_dm->setting_tdma, FALSE);
-#endif
 			return;
 		}
 	}
-
 
 	if (coex_sta->scan_ap_num <= 5) {
 		if (coex_sta->a2dp_bit_pool >= 45)
@@ -1426,7 +1346,6 @@ void halbtc8723b2ant_ps_tdma(IN struct btc_coexist *btcoexist,
 	if ((bt_link_info->slave_role == true)	&& (bt_link_info->a2dp_exist))
 		psTdmaByte4Modify =
 			0x1;  /* 0x778 = 0x1 at wifi slot (no blocking BT Low-Pri pkts) */
-
 
 	if (turn_on) {
 		switch (type) {
@@ -1695,15 +1614,9 @@ void halbtc8723b2ant_ps_tdma(IN struct btc_coexist *btcoexist,
 	/* update pre state */
 	coex_dm->cur_ps_tdma_on = turn_on;
 	coex_dm->cur_ps_tdma = type;
-
-#ifdef PLATFORM_WINDOWS
-	PlatformAtomicExchange((pu4Byte)&coex_dm->setting_tdma, FALSE);
-#endif
-
 }
 
-static
-void halbtc8723b2ant_set_ant_path(IN struct btc_coexist *btcoexist,
+static void halbtc8723b2ant_set_ant_path(IN struct btc_coexist *btcoexist,
 	  IN u8 ant_pos_type, IN boolean init_hwcfg, IN boolean wifi_off)
 {
 	struct  btc_board_info *board_info = &btcoexist->board_info;
@@ -1894,8 +1807,7 @@ boolean halbtc8723b2ant_CoexSwitchThresCheck(IN struct btc_coexist *btcoexist)
 }
 #endif
 
-static
-void halbtc8723b2ant_coex_all_off(IN struct btc_coexist *btcoexist)
+static void halbtc8723b2ant_coex_all_off(IN struct btc_coexist *btcoexist)
 {
 	/* fw all off */
 	halbtc8723b2ant_ps_tdma(btcoexist, NORMAL_EXEC, false, 1);
@@ -1911,8 +1823,7 @@ void halbtc8723b2ant_coex_all_off(IN struct btc_coexist *btcoexist)
 	halbtc8723b2ant_coex_table_with_type(btcoexist, NORMAL_EXEC, 0);
 }
 
-static
-void halbtc8723b2ant_init_coex_dm(IN struct btc_coexist *btcoexist)
+static void halbtc8723b2ant_init_coex_dm(IN struct btc_coexist *btcoexist)
 {
 	/* force to reset coex mechanism */
 	halbtc8723b2ant_coex_table_with_type(btcoexist, NORMAL_EXEC, 0);
@@ -1928,8 +1839,7 @@ void halbtc8723b2ant_init_coex_dm(IN struct btc_coexist *btcoexist)
 
 }
 
-static
-void halbtc8723b2ant_action_bt_inquiry(IN struct btc_coexist *btcoexist)
+static void halbtc8723b2ant_action_bt_inquiry(IN struct btc_coexist *btcoexist)
 {
 	static u8	prewifi_rssi_state = BTC_RSSI_STATE_LOW,
 			prewifi_rssi_state1 = BTC_RSSI_STATE_LOW;
@@ -1939,7 +1849,6 @@ void halbtc8723b2ant_action_bt_inquiry(IN struct btc_coexist *btcoexist)
 	boolean	low_pwr_disable = true;
 	boolean		scan = false, link = false, roam = false;
 	boolean wifi_busy = false;
-
 
 	wifi_rssi_state = halbtc8723b2ant_wifi_rssi_state(btcoexist,
 			  &prewifi_rssi_state, 2, 15, 0);
@@ -1960,7 +1869,6 @@ void halbtc8723b2ant_action_bt_inquiry(IN struct btc_coexist *btcoexist)
 	btcoexist->btc_get(btcoexist, BTC_GET_BL_WIFI_LINK, &link);
 	btcoexist->btc_get(btcoexist, BTC_GET_BL_WIFI_ROAM, &roam);
 	btcoexist->btc_get(btcoexist, BTC_GET_BL_WIFI_BUSY, &wifi_busy);
-
 
 	if (coex_sta->bt_abnormal_scan) {
 		halbtc8723b2ant_ps_tdma(btcoexist, NORMAL_EXEC, true,
@@ -2006,8 +1914,7 @@ void halbtc8723b2ant_action_bt_inquiry(IN struct btc_coexist *btcoexist)
 	*/
 }
 
-static
-void halbtc8723b2ant_action_wifi_link_process(IN struct btc_coexist *btcoexist)
+static void halbtc8723b2ant_action_wifi_link_process(IN struct btc_coexist *btcoexist)
 {
 	u32	u32tmp;
 	u8	u8tmpa, u8tmpb;
@@ -2025,7 +1932,6 @@ void halbtc8723b2ant_action_wifi_link_process(IN struct btc_coexist *btcoexist)
 	halbtc8723b2ant_sw_mechanism1(btcoexist, false, false, false, false);
 	halbtc8723b2ant_sw_mechanism2(btcoexist, false, false, false, 0x18);
 
-
 	u32tmp = btcoexist->btc_read_4byte(btcoexist, 0x948);
 	u8tmpa = btcoexist->btc_read_1byte(btcoexist, 0x765);
 	u8tmpb = btcoexist->btc_read_1byte(btcoexist, 0x76e);
@@ -2036,8 +1942,7 @@ void halbtc8723b2ant_action_wifi_link_process(IN struct btc_coexist *btcoexist)
 	BTC_TRACE(trace_buf);
 }
 
-static
-boolean halbtc8723b2ant_action_wifi_idle_process(IN struct btc_coexist
+static boolean halbtc8723b2ant_action_wifi_idle_process(IN struct btc_coexist
 		*btcoexist)
 {
 	static u8	prewifi_rssi_state = BTC_RSSI_STATE_LOW,
@@ -2088,8 +1993,7 @@ boolean halbtc8723b2ant_action_wifi_idle_process(IN struct btc_coexist
 	return false;
 }
 
-static
-boolean halbtc8723b2ant_is_common_action(IN struct btc_coexist *btcoexist)
+static boolean halbtc8723b2ant_is_common_action(IN struct btc_coexist *btcoexist)
 {
 	boolean			common = false, wifi_connected = false, wifi_busy = false;
 	boolean			bt_hs_on = false, low_pwr_disable = false;
@@ -2220,8 +2124,7 @@ boolean halbtc8723b2ant_is_common_action(IN struct btc_coexist *btcoexist)
 	return common;
 }
 
-static
-void halbtc8723b2ant_tdma_duration_adjust(IN struct btc_coexist *btcoexist,
+static void halbtc8723b2ant_tdma_duration_adjust(IN struct btc_coexist *btcoexist,
 		IN boolean sco_hid, IN boolean tx_pause, IN u8 max_interval)
 {
 	static s32		up, dn, m, n, wait_count;
@@ -3358,7 +3261,6 @@ void halbtc8723b2ant_action_a2dp(IN struct btc_coexist *btcoexist)
 						     13);
 	}
 
-
 	if ((bt_rssi_state == BTC_RSSI_STATE_HIGH) ||
 	    (bt_rssi_state == BTC_RSSI_STATE_STAY_HIGH))
 		halbtc8723b2ant_tdma_duration_adjust(btcoexist, false, false,
@@ -3469,8 +3371,7 @@ void halbtc8723b2ant_action_a2dp_pan_hs(IN struct btc_coexist *btcoexist)
 	}
 }
 
-static
-void halbtc8723b2ant_action_pan_edr(IN struct btc_coexist *btcoexist)
+static void halbtc8723b2ant_action_pan_edr(IN struct btc_coexist *btcoexist)
 {
 	static u8	prewifi_rssi_state = BTC_RSSI_STATE_LOW,
 			prewifi_rssi_state1 = BTC_RSSI_STATE_LOW;
@@ -3544,10 +3445,8 @@ void halbtc8723b2ant_action_pan_edr(IN struct btc_coexist *btcoexist)
 	}
 }
 
-
 /* PAN(HS) only */
-static
-void halbtc8723b2ant_action_pan_hs(IN struct btc_coexist *btcoexist)
+static void halbtc8723b2ant_action_pan_hs(IN struct btc_coexist *btcoexist)
 {
 	static u8	prewifi_rssi_state = BTC_RSSI_STATE_LOW,
 			prewifi_rssi_state1 = BTC_RSSI_STATE_LOW;
@@ -3611,8 +3510,7 @@ void halbtc8723b2ant_action_pan_hs(IN struct btc_coexist *btcoexist)
 }
 
 /* PAN(EDR)+A2DP */
-static
-void halbtc8723b2ant_action_pan_edr_a2dp(IN struct btc_coexist *btcoexist)
+static void halbtc8723b2ant_action_pan_edr_a2dp(IN struct btc_coexist *btcoexist)
 {
 	static u8	prewifi_rssi_state = BTC_RSSI_STATE_LOW,
 			prewifi_rssi_state1 = BTC_RSSI_STATE_LOW;
@@ -3711,8 +3609,7 @@ void halbtc8723b2ant_action_pan_edr_a2dp(IN struct btc_coexist *btcoexist)
 	}
 }
 
-static
-void halbtc8723b2ant_action_pan_edr_hid(IN struct btc_coexist *btcoexist)
+static void halbtc8723b2ant_action_pan_edr_hid(IN struct btc_coexist *btcoexist)
 {
 	static u8	prewifi_rssi_state = BTC_RSSI_STATE_LOW,
 			prewifi_rssi_state1 = BTC_RSSI_STATE_LOW;
@@ -3802,8 +3699,7 @@ void halbtc8723b2ant_action_pan_edr_hid(IN struct btc_coexist *btcoexist)
 }
 
 /* HID+A2DP+PAN(EDR) */
-static
-void halbtc8723b2ant_action_hid_a2dp_pan_edr(IN struct btc_coexist *btcoexist)
+static void halbtc8723b2ant_action_hid_a2dp_pan_edr(IN struct btc_coexist *btcoexist)
 {
 	static u8	prewifi_rssi_state = BTC_RSSI_STATE_LOW,
 			prewifi_rssi_state1 = BTC_RSSI_STATE_LOW;
@@ -3884,8 +3780,7 @@ void halbtc8723b2ant_action_hid_a2dp_pan_edr(IN struct btc_coexist *btcoexist)
 	}
 }
 
-static
-void halbtc8723b2ant_action_hid_a2dp(IN struct btc_coexist *btcoexist)
+static void halbtc8723b2ant_action_hid_a2dp(IN struct btc_coexist *btcoexist)
 {
 	static u8	prewifi_rssi_state = BTC_RSSI_STATE_LOW,
 			prewifi_rssi_state1 = BTC_RSSI_STATE_LOW;
@@ -3895,7 +3790,6 @@ void halbtc8723b2ant_action_hid_a2dp(IN struct btc_coexist *btcoexist)
 	u8		ap_num = 0;
 
 	btcoexist->btc_phydm_modify_RA_PCR_threshold(btcoexist, 0, 35);
-
 
 	wifi_rssi_state = halbtc8723b2ant_wifi_rssi_state(btcoexist,
 			  &prewifi_rssi_state, 2, 15, 0);
@@ -4008,8 +3902,7 @@ void halbtc8723b2ant_action_hid_a2dp(IN struct btc_coexist *btcoexist)
 	}
 }
 
-static
-void halbtc8723b2ant_action_bt_whck_test(IN struct btc_coexist *btcoexist)
+static void halbtc8723b2ant_action_bt_whck_test(IN struct btc_coexist *btcoexist)
 {
 	halbtc8723b2ant_dec_bt_pwr(btcoexist, NORMAL_EXEC, 0);
 
@@ -4021,8 +3914,7 @@ void halbtc8723b2ant_action_bt_whck_test(IN struct btc_coexist *btcoexist)
 	halbtc8723b2ant_coex_table_with_type(btcoexist, NORMAL_EXEC, 0);
 }
 
-static
-void halbtc8723b2ant_action_wifi_multi_port(IN struct btc_coexist *btcoexist)
+static void halbtc8723b2ant_action_wifi_multi_port(IN struct btc_coexist *btcoexist)
 {
 	halbtc8723b2ant_fw_dac_swing_lvl(btcoexist, NORMAL_EXEC, 6);
 	halbtc8723b2ant_dec_bt_pwr(btcoexist, NORMAL_EXEC, 0);
@@ -4038,8 +3930,7 @@ void halbtc8723b2ant_action_wifi_multi_port(IN struct btc_coexist *btcoexist)
 	halbtc8723b2ant_ps_tdma(btcoexist, NORMAL_EXEC, false, 1);
 }
 
-static
-void halbtc8723b2ant_run_coexist_mechanism(IN struct btc_coexist *btcoexist)
+static void halbtc8723b2ant_run_coexist_mechanism(IN struct btc_coexist *btcoexist)
 {
 	u8				algorithm = 0;
 	u32				num_of_wifi_link = 0;
@@ -4224,8 +4115,7 @@ void halbtc8723b2ant_run_coexist_mechanism(IN struct btc_coexist *btcoexist)
 	}
 }
 
-static
-void halbtc8723b2ant_wifi_off_hw_cfg(IN struct btc_coexist *btcoexist)
+static void halbtc8723b2ant_wifi_off_hw_cfg(IN struct btc_coexist *btcoexist)
 {
 	boolean	is_in_mp_mode = false;
 	u8 h2c_parameter[2] = {0};
@@ -4254,13 +4144,11 @@ void halbtc8723b2ant_wifi_off_hw_cfg(IN struct btc_coexist *btcoexist)
 			   0x1); /* BT select s0/s1 is controlled by WiFi */
 }
 
-static
-void halbtc8723b2ant_init_hw_config(IN struct btc_coexist *btcoexist,
+static void halbtc8723b2ant_init_hw_config(IN struct btc_coexist *btcoexist,
 				    IN boolean back_up)
 {
 	u8	u8tmp = 0;
 	u32	 vendor;
-
 
 	BTC_SPRINTF(trace_buf, BT_TMP_BUF_SIZE,
 		    "[BTCoex], 2Ant Init HW Config!!\n");
@@ -4303,7 +4191,6 @@ void halbtc8723b2ant_init_hw_config(IN struct btc_coexist *btcoexist,
 
 	/* Give bt_coex_supported_version the default value */
 	coex_sta->bt_coex_supported_version = 0;
-
 }
 
 /* ************************************************************
@@ -4489,7 +4376,6 @@ void ex_halbtc8723b2ant_display_coex_info(IN struct btc_coexist *btcoexist)
 		pop_report_in_10s = 0;
 	}
 
-
 	CL_SPRINTF(cli_buf, BT_TMP_BUF_SIZE,
 		   "\r\n %-35s = %d / %d / %d / %d / %d / %d",
 		   "SCO/HID/PAN/A2DP/NameReq/WHQL",
@@ -4498,7 +4384,6 @@ void ex_halbtc8723b2ant_display_coex_info(IN struct btc_coexist *btcoexist)
 		   coex_sta->c2h_bt_remote_name_req,
 		   coex_sta->bt_whck_test);
 	CL_PRINTF(cli_buf);
-
 
 	if (bt_link_info->hid_exist) {
 		CL_SPRINTF(cli_buf, BT_TMP_BUF_SIZE, "\r\n %-35s = %s", "HID ratio info",
@@ -4697,7 +4582,6 @@ void ex_halbtc8723b2ant_display_coex_info(IN struct btc_coexist *btcoexist)
 #endif
 	btcoexist->btc_disp_dbg_msg(btcoexist, BTC_DBG_DISP_COEX_STATISTICS);
 }
-
 
 void ex_halbtc8723b2ant_ips_notify(IN struct btc_coexist *btcoexist, IN u8 type)
 {
@@ -4936,7 +4820,6 @@ void ex_halbtc8723b2ant_bt_info_notify(IN struct btc_coexist *btcoexist,
 		coex_sta->bt_info_ext2 = coex_sta->bt_info_c2h[rsp_source][5];
 		coex_sta->hid_busy_num = (coex_sta->bt_info_ext2 & 0x30) >> 4;
 
-
 		/* Here we need to resend some wifi info to BT */
 		/* because bt is reset and loss of the info. */
 		if ((coex_sta->bt_info_ext & BIT(1))) {
@@ -5133,7 +5016,6 @@ void ex_halbtc8723b2ant_periodical(IN struct btc_coexist *btcoexist)
 	     (coex_sta->bt_coex_supported_version == 0xffff)) && (!coex_sta->bt_disabled))
 		btcoexist->btc_get(btcoexist, BTC_GET_U4_SUPPORTED_VERSION, &coex_sta->bt_coex_supported_version);
 
-
 	/*btcoexist->btc_get(btcoexist, BTC_GET_U4_BT_PATCH_VER, &bt_patch_ver);*/
 	/*btcoexist->bt_info.bt_get_fw_ver = bt_patch_ver;*/
 
@@ -5162,5 +5044,3 @@ void ex_halbtc8723b2ant_periodical(IN struct btc_coexist *btcoexist)
 #endif
 
 #endif	/* #if (BT_SUPPORT == 1 && COEX_SUPPORT == 1) */
-
-
