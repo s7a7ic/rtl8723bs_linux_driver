@@ -1,20 +1,41 @@
 # SPDX-License-Identifier: GPL-2.0
 ccflags-y += $(USER_EXTRA_CFLAGS)
-ccflags-y += -O1
-#EXTRA_CFLAGS += -O3
-#EXTRA_CFLAGS += -Wall
-#EXTRA_CFLAGS += -Wextra
-#EXTRA_CFLAGS += -Werror
-#EXTRA_CFLAGS += -pedantic
-#EXTRA_CFLAGS += -Wshadow -Wpointer-arith -Wcast-qual -Wstrict-prototypes -Wmissing-prototypes
+#ccflags-y += -O1
+#ccflags-y += -Wall
+#ccflags-y += -Wextra
+#ccflags-y += -Werror
+#ccflags-y += -pedantic
+#ccflags-y += -Wshadow -Wpointer-arith -Wcast-qual -Wstrict-prototypes -Wmissing-prototypes
 
 ccflags-y += -Wno-unused-variable
-ccflags-y += -Wno-unused-value
+#ccflags-y += -Wno-unused-value
 ccflags-y += -Wno-unused-label
 ccflags-y += -Wno-unused-parameter
-ccflags-y += -Wno-unused-function
+#ccflags-y += -Wno-unused-function
 ccflags-y += -Wno-unused
-#EXTRA_CFLAGS += -Wno-uninitialized
+#ccflags-y += -Wno-uninitialized
+
+ccflags-y += -Wno-implicit-fallthrough
+ccflags-y += -Wno-sizeof-array-div
+
+ccflags-y += -Wno-address
+ccflags-y += -Wframe-larger-than=1648
+ccflags-y += -Wno-missing-prototypes
+ccflags-y += -Wno-missing-declarations
+#ccflags-y += -Wno-cast-function-type
+
+ccflags-y += -Wno-enum-int-mismatch
+#ccflags-y += -Wno-stringop-overread
+ccflags-y += -Wno-enum-conversion
+#ccflags-y += -Wno-int-in-bool-context
+ccflags-y += -Wno-missing-prototypes
+#ccflags-y += -Wno-missing-declarations
+
+ccflags-y += -Wno-empty-body
+ccflags-y += -Wno-old-style-declaration
+ccflags-y += -Wno-restrict
+ccflags-y += -Wno-discarded-qualifiers
+ccflags-y += -Wno-incompatible-pointer-types
 
 GCC_VER_49 := $(shell echo `$(CC) -dumpversion | cut -f1-2 -d.` \>= 4.9 | bc )
 ifeq ($(GCC_VER_49),1)
