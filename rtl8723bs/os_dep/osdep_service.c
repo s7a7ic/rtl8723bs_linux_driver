@@ -100,7 +100,6 @@ inline void _rtw_vmfree(u8 *pbuf, u32 sz)
 
 u8 *_rtw_malloc(u32 sz)
 {
-
 	u8	*pbuf = NULL;
 
 #ifdef PLATFORM_LINUX
@@ -1628,7 +1627,7 @@ keep_ori:
 		rtw_mfree(ori, ori_len);
 }
 
-/**
+/*
  * rtw_cbuf_full - test if cbuf is full
  * @cbuf: pointer of struct rtw_cbuf
  *
@@ -1650,7 +1649,7 @@ inline bool rtw_cbuf_empty(struct rtw_cbuf *cbuf)
 	return (cbuf->write == cbuf->read) ? _TRUE : _FALSE;
 }
 
-/**
+/*
  * rtw_cbuf_push - push a pointer into cbuf
  * @cbuf: pointer of struct rtw_cbuf
  * @buf: pointer to push in
@@ -1671,7 +1670,7 @@ bool rtw_cbuf_push(struct rtw_cbuf *cbuf, void *buf)
 	return _SUCCESS;
 }
 
-/**
+/*
  * rtw_cbuf_pop - pop a pointer from cbuf
  * @cbuf: pointer of struct rtw_cbuf
  *
@@ -1692,7 +1691,7 @@ void *rtw_cbuf_pop(struct rtw_cbuf *cbuf)
 	return buf;
 }
 
-/**
+/*
  * rtw_cbuf_alloc - allocte a rtw_cbuf with given size and do initialization
  * @size: size of pointer
  *
@@ -1712,7 +1711,7 @@ struct rtw_cbuf *rtw_cbuf_alloc(u32 size)
 	return cbuf;
 }
 
-/**
+/*
  * rtw_cbuf_free - free the given rtw_cbuf
  * @cbuf: pointer of struct rtw_cbuf to free
  */
@@ -1721,7 +1720,7 @@ void rtw_cbuf_free(struct rtw_cbuf *cbuf)
 	rtw_mfree((u8 *)cbuf, sizeof(*cbuf) + sizeof(void *) * cbuf->size);
 }
 
-/**
+/*
  * map_readN - read a range of map data
  * @map: map to read
  * @offset: start address to read
@@ -1779,7 +1778,7 @@ exit:
 	return ret;
 }
 
-/**
+/*
  * map_read8 - read 1 byte of map data
  * @map: map to read
  * @offset: address to read
@@ -1810,10 +1809,7 @@ exit:
 	return val;
 }
 
-/**
-* is_null -
-* Return	TRUE if c is null character FALSE otherwise.
-*/
+/* is_null - Return: TRUE if c is null character FALSE otherwise. */
 inline BOOLEAN is_null(char c)
 {
 	if (c == '\0')
@@ -1831,10 +1827,7 @@ inline BOOLEAN is_all_null(char *c, int len)
 	return _TRUE;
 }
 
-/**
-* is_eol -
-* Return	TRUE if c is represent for EOL (end of line) FALSE otherwise.
-*/
+/* is_eol - Return: TRUE if c is represent for EOL (end of line) FALSE otherwise. */
 inline BOOLEAN is_eol(char c)
 {
 	if (c == '\r' || c == '\n')
@@ -1843,10 +1836,7 @@ inline BOOLEAN is_eol(char c)
 		return _FALSE;
 }
 
-/**
-* is_space -
-* Return	TRUE if c is represent for space FALSE otherwise.
-*/
+/* is_space - Return: TRUE if c is represent for space FALSE otherwise. */
 inline BOOLEAN is_space(char c)
 {
 	if (c == ' ' || c == '\t')
@@ -1855,10 +1845,7 @@ inline BOOLEAN is_space(char c)
 		return _FALSE;
 }
 
-/**
-* IsHexDigit -
-* Return	TRUE if chTmp is represent for hex digit FALSE otherwise.
-*/
+/* IsHexDigit - Return: TRUE if chTmp is represent for hex digit FALSE otherwise. */
 inline BOOLEAN IsHexDigit(char chTmp)
 {
 	if ((chTmp >= '0' && chTmp <= '9') ||
@@ -1869,10 +1856,7 @@ inline BOOLEAN IsHexDigit(char chTmp)
 		return _FALSE;
 }
 
-/**
-* is_alpha -
-* Return	TRUE if chTmp is represent for alphabet FALSE otherwise.
-*/
+/* is_alpha - Return: TRUE if chTmp is represent for alphabet FALSE otherwise. */
 inline BOOLEAN is_alpha(char chTmp)
 {
 	if ((chTmp >= 'a' && chTmp <= 'z') ||

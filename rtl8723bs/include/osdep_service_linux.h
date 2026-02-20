@@ -1,17 +1,9 @@
+// SPDX-License-Identifier: GPL-2.0
 /******************************************************************************
  *
- * Copyright(c) 2007 - 2017 Realtek Corporation.
+ * Copyright(c) 2007 - 2017 Realtek Corporation. All rights reserved.
  *
- * This program is free software; you can redistribute it and/or modify it
- * under the terms of version 2 of the GNU General Public License as
- * published by the Free Software Foundation.
- *
- * This program is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
- * more details.
- *
- *****************************************************************************/
+ ******************************************************************************/
 #ifndef __OSDEP_LINUX_SERVICE_H_
 #define __OSDEP_LINUX_SERVICE_H_
 
@@ -123,34 +115,18 @@
 	#include <linux/netlink.h>
 #endif /* CONFIG_BT_COEXIST_SOCKET_TRX */
 
-#ifdef CONFIG_USB_HCI
-	typedef struct urb   *PURB;
-	#if (LINUX_VERSION_CODE >= KERNEL_VERSION(2, 6, 22))
-		#ifdef CONFIG_USB_SUSPEND
-			#define CONFIG_AUTOSUSPEND	1
-		#endif
-	#endif
-#endif
-
 #if defined(CONFIG_RTW_GRO) && (!defined(CONFIG_RTW_NAPI))
-
 	#error "Enable NAPI before enable GRO\n"
-
 #endif
-
 
 #if (KERNEL_VERSION(2, 6, 29) > LINUX_VERSION_CODE && defined(CONFIG_RTW_NAPI))
-
 	#undef CONFIG_RTW_NAPI
 	/*#warning "Linux Kernel version too old to support NAPI (should newer than 2.6.29)\n"*/
-
 #endif
 
 #if (KERNEL_VERSION(2, 6, 33) > LINUX_VERSION_CODE && defined(CONFIG_RTW_GRO))
-
 	#undef CONFIG_RTW_GRO
 	/*#warning "Linux Kernel version too old to support GRO(should newer than 2.6.33)\n"*/
-
 #endif
 
 typedef struct	semaphore _sema;
@@ -160,6 +136,7 @@ typedef	spinlock_t	_lock;
 #else
 	typedef struct semaphore	_mutex;
 #endif
+
 #if (LINUX_VERSION_CODE >= KERNEL_VERSION(4, 15, 0))
 typedef struct legacy_timer_emu {
   struct timer_list t;
@@ -169,6 +146,7 @@ typedef struct legacy_timer_emu {
 #else
 typedef struct timer_list _timer;
 #endif //(LINUX_VERSION_CODE >= KERNEL_VERSION(4, 15, 0))
+
 typedef struct completion _completion;
 
 struct	__queue	{
@@ -238,10 +216,8 @@ __inline static _list	*get_list_head(_queue	*queue)
 	return &(queue->queue);
 }
 
-
 #define LIST_CONTAINOR(ptr, type, member) \
 	((type *)((char *)(ptr)-(SIZE_T)(&((type *)0)->member)))
-
 
 __inline static void _enter_critical(_lock *plock, _irqL *pirqL)
 {
@@ -284,7 +260,6 @@ __inline static int _enter_critical_mutex(_mutex *pmutex, _irqL *pirqL)
 #endif
 	return ret;
 }
-
 
 __inline static void _exit_critical_mutex(_mutex *pmutex, _irqL *pirqL)
 {
@@ -374,10 +349,8 @@ __inline static void _cancel_workitem_sync(_workitem *pwork)
 	flush_scheduled_tasks();
 #endif
 }
-/*
- * Global Mutex: can only be used at PASSIVE level.
- *   */
 
+/* Global Mutex: can only be used at PASSIVE level. */
 #define ACQUIRE_GLOBAL_MUTEX(_MutexCounter)                              \
 	{                                                               \
 		while (atomic_inc_return((atomic_t *)&(_MutexCounter)) != 1) { \
@@ -429,11 +402,13 @@ static inline void rtw_netif_stop_queue(struct net_device *pnetdev)
 	netif_stop_queue(pnetdev);
 #endif
 }
+
 static inline void rtw_netif_carrier_on(struct net_device *pnetdev)
 {
 	netif_device_attach(pnetdev);
 	netif_carrier_on(pnetdev);
 }
+
 static inline int rtw_merge_string(char *dst, int dst_len, const char *src1, const char *src2)
 {
 	int	len = 0;
@@ -448,7 +423,6 @@ static inline int rtw_merge_string(char *dst, int dst_len, const char *src1, con
 #else /* (LINUX_VERSION_CODE >= KERNEL_VERSION(2, 6, 27)) */
 	#define rtw_signal_process(pid, sig) kill_proc((pid), (sig), 1)
 #endif /* (LINUX_VERSION_CODE >= KERNEL_VERSION(2, 6, 27)) */
-
 
 /* Suspend lock prevent system from going suspend */
 #ifdef CONFIG_WAKELOCK
@@ -482,6 +456,5 @@ struct net_device *rtw_alloc_etherdev_with_old_priv(int sizeof_priv, void *old_p
 extern struct net_device *rtw_alloc_etherdev(int sizeof_priv);
 
 #define STRUCT_PACKED __attribute__ ((packed))
-
 
 #endif
