@@ -4699,7 +4699,6 @@ void rtw_survey_cmd_callback(_adapter	*padapter ,  struct cmd_obj *pcmd)
 {
 	struct	mlme_priv *pmlmepriv = &padapter->mlmepriv;
 
-
 	if (pcmd->res == H2C_DROPPED) {
 		/* TODO: cancel timer and do timeout handler directly... */
 		/* need to make timeout handlerOS independent */
@@ -4712,6 +4711,7 @@ void rtw_survey_cmd_callback(_adapter	*padapter ,  struct cmd_obj *pcmd)
 	rtw_free_cmd_obj(pcmd);
 
 }
+
 void rtw_disassoc_cmd_callback(_adapter	*padapter,  struct cmd_obj *pcmd)
 {
 	_irqL	irqL;
@@ -4724,10 +4724,6 @@ void rtw_disassoc_cmd_callback(_adapter	*padapter,  struct cmd_obj *pcmd)
 		_exit_critical_bh(&pmlmepriv->lock, &irqL);
 		goto exit;
 	}
-#ifdef CONFIG_BR_EXT
-	else /* clear bridge database */
-		nat25_db_cleanup(padapter);
-#endif /* CONFIG_BR_EXT */
 
 	/* free cmd */
 	rtw_free_cmd_obj(pcmd);
@@ -4736,19 +4732,14 @@ exit:
 	return;
 }
 
-
 void rtw_getmacreg_cmdrsp_callback(_adapter *padapter,  struct cmd_obj *pcmd)
 {
-
-
 	rtw_free_cmd_obj(pcmd);
-
 }
 
 void rtw_joinbss_cmd_callback(_adapter	*padapter,  struct cmd_obj *pcmd)
 {
 	struct	mlme_priv *pmlmepriv = &padapter->mlmepriv;
-
 
 	if (pcmd->res == H2C_DROPPED) {
 		/* TODO: cancel timer and do timeout handler directly... */
@@ -4758,7 +4749,6 @@ void rtw_joinbss_cmd_callback(_adapter	*padapter,  struct cmd_obj *pcmd)
 		_set_timer(&pmlmepriv->assoc_timer, 1);
 
 	rtw_free_cmd_obj(pcmd);
-
 }
 
 void rtw_create_ibss_post_hdl(_adapter *padapter, int status)
@@ -4821,7 +4811,6 @@ void rtw_setstaKey_cmdrsp_callback(_adapter	*padapter ,  struct cmd_obj *pcmd)
 	struct sta_priv *pstapriv = &padapter->stapriv;
 	struct set_stakey_rsp *psetstakey_rsp = (struct set_stakey_rsp *)(pcmd->rsp);
 	struct sta_info	*psta = rtw_get_stainfo(pstapriv, psetstakey_rsp->addr);
-
 
 	if (psta == NULL) {
 		goto exit;

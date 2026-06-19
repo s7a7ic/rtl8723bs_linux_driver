@@ -71,7 +71,6 @@ CONFIG_RTW_ADAPTIVITY_MODE = normal
 CONFIG_SIGNAL_SCALE_MAPPING = n
 CONFIG_80211W = n
 CONFIG_REDUCE_TX_CPU_LOADING = n
-CONFIG_BR_EXT = y
 CONFIG_TDLS = n
 CONFIG_WIFI_MONITOR = n
 CONFIG_APPEND_VENDOR_IE_ENABLE = n
@@ -350,12 +349,6 @@ ifeq ($(CONFIG_REDUCE_TX_CPU_LOADING), y)
 ccflags-y += -DCONFIG_REDUCE_TX_CPU_LOADING
 endif
 
-ifeq ($(CONFIG_BR_EXT), y)
-BR_NAME = br0
-ccflags-y += -DCONFIG_BR_EXT
-ccflags-y += '-DCONFIG_BR_EXT_BRNAME="'$(BR_NAME)'"'
-endif
-
 ifeq ($(CONFIG_TDLS), y)
 ccflags-y += -DCONFIG_TDLS
 endif
@@ -450,7 +443,6 @@ rtk_core :=	core/rtw_cmd.o \
 		core/rtw_p2p.o \
 		core/rtw_rson.o \
 		core/rtw_tdls.o \
-		core/rtw_br_ext.o \
 		core/rtw_iol.o \
 		core/rtw_sreset.o \
 		core/rtw_btcoex_wifionly.o \
