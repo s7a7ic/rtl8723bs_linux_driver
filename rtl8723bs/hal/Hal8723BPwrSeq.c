@@ -4,7 +4,7 @@
  * Copyright(c) 2007 - 2017 Realtek Corporation. All rights reserved.
  *
  ******************************************************************************/
-#include "hal_pwr_seq.h"
+#include "Hal8723BPwrSeq.h"
 
 /*
     drivers should parse below arrays and do the corresponding actions

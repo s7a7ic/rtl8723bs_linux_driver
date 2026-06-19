@@ -161,7 +161,7 @@ MODULE_NAME = 8723bs
 ccflags-y += -DCONFIG_RTL8723B
 
 _HAL_INTFS_FILES += hal/HalPwrSeqCmd.o \
-					hal/hal_pwr_seq.o\
+					hal/Hal8723BPwrSeq.o\
 					hal/$(RTL871X)_sreset.o
 
 _HAL_INTFS_FILES +=	hal/$(RTL871X)_hal_init.o \
