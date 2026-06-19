@@ -1,21 +1,21 @@
 // SPDX-License-Identifier: GPL-2.0
 /******************************************************************************
  *
- * Copyright(c) 2007 - 2012 Realtek Corporation. All rights reserved.
+ * Copyright(c) 2007 - 2017 Realtek Corporation. All rights reserved.
  *
  ******************************************************************************/
 
 /*
-*
-This file includes all kinds of Power Action event for RTL8723B
-and corresponding hardware configurations which are released from HW SD.
-
-Major Change History:
-	When       Who               What
-	---------- ---------------   -------------------------------
-	2011-08-08 Roger            Create.
-
-*/
+ *
+ * This file includes all kinds of Power Action event for RTL8723B
+ * and corresponding hardware configurations which are released from HW SD.
+ *
+ * Major Change History:
+ *	When       Who               What
+ *	---------- ---------------   -------------------------------
+ *	2011-08-08 Roger            Create.
+ *
+ */
 
 #include "hal_pwr_seq.h"
 
@@ -95,7 +95,8 @@ struct wlan_pwr_cfg rtl8723B_hwpdn_flow[
 
 /* 3 Enter LPS */
 struct wlan_pwr_cfg rtl8723B_enter_lps_flow[
-	RTL8723B_TRANS_ACT_TO_LPS_STEPS+RTL8723B_TRANS_END_STEPS
+	RTL8723B_TRANS_ACT_TO_LPS_STEPS+
+	RTL8723B_TRANS_END_STEPS
 ] = {
 	/* FW behavior */
 	RTL8723B_TRANS_ACT_TO_LPS
@@ -104,7 +105,8 @@ struct wlan_pwr_cfg rtl8723B_enter_lps_flow[
 
 /* 3 Leave LPS */
 struct wlan_pwr_cfg rtl8723B_leave_lps_flow[
-	RTL8723B_TRANS_LPS_TO_ACT_STEPS+RTL8723B_TRANS_END_STEPS
+	RTL8723B_TRANS_LPS_TO_ACT_STEPS+
+	RTL8723B_TRANS_END_STEPS
 ] = {
 	/* FW behavior */
 	RTL8723B_TRANS_LPS_TO_ACT
@@ -113,7 +115,8 @@ struct wlan_pwr_cfg rtl8723B_leave_lps_flow[
 
 /* 3 Enter SW LPS */
 struct wlan_pwr_cfg rtl8723B_enter_swlps_flow[
-	RTL8723B_TRANS_ACT_TO_SWLPS_STEPS+RTL8723B_TRANS_END_STEPS
+	RTL8723B_TRANS_ACT_TO_SWLPS_STEPS+
+	RTL8723B_TRANS_END_STEPS
 ] = {
 	/* SW behavior */
 	RTL8723B_TRANS_ACT_TO_SWLPS
@@ -122,7 +125,8 @@ struct wlan_pwr_cfg rtl8723B_enter_swlps_flow[
 
 /* 3 Leave SW LPS */
 struct wlan_pwr_cfg rtl8723B_leave_swlps_flow[
-	RTL8723B_TRANS_SWLPS_TO_ACT_STEPS+RTL8723B_TRANS_END_STEPS
+	RTL8723B_TRANS_SWLPS_TO_ACT_STEPS+
+	RTL8723B_TRANS_END_STEPS
 ] = {
 	/* SW behavior */
 	RTL8723B_TRANS_SWLPS_TO_ACT
