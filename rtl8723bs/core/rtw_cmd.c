@@ -550,7 +550,7 @@ _next:
 			goto post_process;
 		}
 
-		if (pcmd->cmdcode >= (sizeof(wlancmds) / sizeof(struct cmd_hdl))) {
+		if (pcmd->cmdcode >= ARRAY_SIZE(wlancmds)) {
 			RTW_ERR("%s undefined cmdcode:%d\n", __func__, pcmd->cmdcode);
 			pcmd->res = H2C_PARAMETERS_ERROR;
 			goto post_process;
@@ -627,7 +627,7 @@ post_process:
 		}
 
 		/* call callback function for post-processed */
-		if (pcmd->cmdcode < (sizeof(rtw_cmd_callback) / sizeof(struct _cmd_callback))) {
+		if (pcmd->cmdcode < ARRAY_SIZE(rtw_cmd_callback)) {
 			pcmd_callback = rtw_cmd_callback[pcmd->cmdcode].callback;
 			if (pcmd_callback == NULL) {
 				rtw_free_cmd_obj(pcmd);
@@ -786,8 +786,6 @@ u8 rtw_setstandby_cmd(_adapter *padapter, uint action)
 	ret = rtw_enqueue_cmd(pcmdpriv, ph2c);
 
 exit:
-
-
 	return ret;
 }
 
