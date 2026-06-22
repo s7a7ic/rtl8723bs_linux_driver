@@ -29,13 +29,8 @@
 #endif /* CONFIG_BT_COEXIST */
 
 #ifdef CONFIG_WOWLAN
-	#ifdef CONFIG_PLATFORM_ANDROID_INTEL_X86
-		/* TCP/ICMP/UDP multicast with specific IP addr */
-		#define DEFAULT_PATTERN_NUM 4
-	#else
-		/* TCP/ICMP */
-		#define DEFAULT_PATTERN_NUM 3
-	#endif
+/* TCP/ICMP */
+#define DEFAULT_PATTERN_NUM 3
 
 #ifdef CONFIG_WOW_PATTERN_HW_CAM	/* Frame Mask Cam number for pattern match */
 #define MAX_WKFM_CAM_NUM	12
@@ -432,11 +427,6 @@ struct pwrctrl_priv {
 	u8 do_late_resume;
 #endif /* CONFIG_HAS_EARLYSUSPEND */
 
-#ifdef CONFIG_ANDROID_POWER
-	android_early_suspend_t early_suspend;
-	u8 do_late_resume;
-#endif
-
 #ifdef CONFIG_INTEL_PROXIM
 	u8	stored_power_mgnt;
 #endif
@@ -534,7 +524,7 @@ void rtw_wow_lps_level_decide(_adapter *adapter, u8 wow_en);
 void rtw_resume_in_workqueue(struct pwrctrl_priv *pwrpriv);
 #endif /* CONFIG_RESUME_IN_WORKQUEUE */
 
-#if defined(CONFIG_HAS_EARLYSUSPEND) || defined(CONFIG_ANDROID_POWER)
+#if defined(CONFIG_HAS_EARLYSUSPEND)
 bool rtw_is_earlysuspend_registered(struct pwrctrl_priv *pwrpriv);
 bool rtw_is_do_late_resume(struct pwrctrl_priv *pwrpriv);
 void rtw_set_do_late_resume(struct pwrctrl_priv *pwrpriv, bool enable);
@@ -546,7 +536,7 @@ void rtw_unregister_early_suspend(struct pwrctrl_priv *pwrpriv);
 #define rtw_set_do_late_resume(pwrpriv, enable) do {} while (0)
 #define rtw_register_early_suspend(pwrpriv) do {} while (0)
 #define rtw_unregister_early_suspend(pwrpriv) do {} while (0)
-#endif /* CONFIG_HAS_EARLYSUSPEND || CONFIG_ANDROID_POWER */
+#endif /* CONFIG_HAS_EARLYSUSPEND */
 
 u8 rtw_interface_ps_func(_adapter *padapter, HAL_INTF_PS_FUNC efunc_id, u8 *val);
 void rtw_set_ips_deny(_adapter *padapter, u32 ms);

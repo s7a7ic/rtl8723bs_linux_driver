@@ -1105,11 +1105,7 @@ void rtw_join_done_chk_ch(_adapter *padapter, int join_res);
 
 int rtw_chk_start_clnt_join(_adapter *padapter, u8 *ch, u8 *bw, u8 *offset);
 
-#ifdef CONFIG_PLATFORM_ARM_SUN8I
-	#define BUSY_TRAFFIC_SCAN_DENY_PERIOD	8000
-#else
-	#define BUSY_TRAFFIC_SCAN_DENY_PERIOD	12000
-#endif
+#define BUSY_TRAFFIC_SCAN_DENY_PERIOD	12000
 
 struct cmd_hdl {
 	uint	parmsize;

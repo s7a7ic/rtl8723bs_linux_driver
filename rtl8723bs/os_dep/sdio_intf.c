@@ -160,11 +160,7 @@ static irqreturn_t gpio_hostwakeup_irq_thread(int irq, void *data)
 	RTW_PRINT("gpio_hostwakeup_irq_thread\n");
 	/* Disable interrupt before calling handler */
 	/* disable_irq_nosync(oob_irq); */
-#ifdef CONFIG_PLATFORM_ARM_SUN6I
-	return 0;
-#else
 	return IRQ_HANDLED;
-#endif
 }
 
 static u8 gpio_hostwakeup_alloc_irq(PADAPTER padapter)
@@ -196,10 +192,7 @@ static u8 gpio_hostwakeup_alloc_irq(PADAPTER padapter)
 		return _FALSE;
 	} else
 		RTW_INFO("allocate gpio irq %d ok\n", oob_irq);
-
-#ifndef CONFIG_PLATFORM_ARM_SUN8I
 	enable_irq_wake(oob_irq);
-#endif
 	return _SUCCESS;
 }
 
@@ -210,9 +203,7 @@ static void gpio_hostwakeup_free_irq(PADAPTER padapter)
 	if (oob_irq == 0)
 		return;
 
-#ifndef CONFIG_PLATFORM_ARM_SUN8I
 	disable_irq_wake(oob_irq);
-#endif
 	free_irq(oob_irq, padapter);
 }
 #endif
@@ -591,12 +582,7 @@ static void rtw_sdio_primary_adapter_deinit(_adapter *padapter)
 #endif
 
 #ifdef CONFIG_GPIO_WAKEUP
-#ifdef CONFIG_PLATFORM_ARM_SUN6I
-	sw_gpio_eint_set_enable(gpio_eint_wlan, 0);
-	sw_gpio_irq_free(eint_wlan_handle);
-#else
 	gpio_hostwakeup_free_irq(padapter);
-#endif
 #endif
 
 	/*rtw_cancel_all_timer(if1);*/
@@ -722,15 +708,7 @@ static int rtw_drv_init(
 		goto os_ndevs_deinit;
 
 #ifdef CONFIG_GPIO_WAKEUP
-#ifdef CONFIG_PLATFORM_ARM_SUN6I
-	eint_wlan_handle = sw_gpio_irq_request(gpio_eint_wlan, TRIG_EDGE_NEGATIVE, (peint_handle)gpio_hostwakeup_irq_thread, NULL);
-	if (!eint_wlan_handle) {
-		RTW_INFO("%s: request irq failed\n", __func__);
-		return -1;
-	}
-#else
 	gpio_hostwakeup_alloc_irq(padapter);
-#endif
 #endif
 
 #ifdef CONFIG_GLOBAL_UI_PID
@@ -787,7 +765,7 @@ static void rtw_dev_remove(struct sdio_func *func)
 		}
 	}
 
-#if defined(CONFIG_HAS_EARLYSUSPEND) || defined(CONFIG_ANDROID_POWER)
+#if defined(CONFIG_HAS_EARLYSUSPEND)
 	rtw_unregister_early_suspend(pwrctl);
 #endif
 

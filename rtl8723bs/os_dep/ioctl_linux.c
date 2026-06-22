@@ -671,9 +671,6 @@ static inline char   *iwe_stream_rssi_process(_adapter *padapter,
 
 	iwe->u.qual.qual = (u8)sq;   /* signal quality */
 
-#ifdef CONFIG_PLATFORM_ROCKCHIPS
-	iwe->u.qual.noise = -100; /* noise level suggest by zhf@rockchips */
-#else
 #ifdef CONFIG_BACKGROUND_NOISE_MONITOR
 	if (IS_NM_ENABLE(padapter)) {
 		noise = rtw_noise_query_by_chan_num(padapter, pnetwork->network.Configuration.DSConfig);
@@ -685,7 +682,6 @@ static inline char   *iwe_stream_rssi_process(_adapter *padapter,
 #else
 	iwe->u.qual.noise = 0; /* noise level */
 #endif
-#endif /* CONFIG_PLATFORM_ROCKCHIPS */
 
 	/* RTW_INFO("iqual=%d, ilevel=%d, inoise=%d, iupdated=%d\n", iwe.u.qual.qual, iwe.u.qual.level , iwe.u.qual.noise, iwe.u.qual.updated); */
 
@@ -1483,21 +1479,6 @@ static int rtw_wx_get_sens(struct net_device *dev,
 			   struct iw_request_info *info,
 			   union iwreq_data *wrqu, char *extra)
 {
-#ifdef CONFIG_PLATFORM_ROCKCHIPS
-	_adapter *padapter = (_adapter *)rtw_netdev_priv(dev);
-	struct mlme_priv *pmlmepriv = &(padapter->mlmepriv);
-
-	/*
-	*  20110311 Commented by Jeff
-	*  For rockchip platform's wpa_driver_wext_get_rssi
-	*/
-	if (check_fwstate(pmlmepriv, _FW_LINKED) == _TRUE) {
-		/* wrqu->sens.value=-padapter->recvpriv.signal_strength; */
-		wrqu->sens.value = -padapter->recvpriv.rssi;
-		/* RTW_INFO("%s: %d\n", __FUNCTION__, wrqu->sens.value); */
-		wrqu->sens.fixed = 0; /* no auto select */
-	} else
-#endif
 	{
 		wrqu->sens.value = 0;
 		wrqu->sens.fixed = 0;	/* no auto select */
@@ -2111,18 +2092,12 @@ static int rtw_wx_get_scan(struct net_device *dev, struct iw_request_info *a,
 
 #if 1 /* Wireless Extension use EAGAIN to try */
 	wait_status = _FW_UNDER_SURVEY
-#ifndef CONFIG_ANDROID
-		      | _FW_UNDER_LINKING
-#endif
 		      ;
 
 	while (check_fwstate(pmlmepriv, wait_status) == _TRUE)
 		return -EAGAIN;
 #else
 	wait_status = _FW_UNDER_SURVEY
-#ifndef CONFIG_ANDROID
-		      | _FW_UNDER_LINKING
-#endif
 		      ;
 
 	while (check_fwstate(pmlmepriv, wait_status) == _TRUE) {
@@ -2894,7 +2869,6 @@ static int rtw_wx_set_auth(struct net_device *dev,
 
 	case IW_AUTH_80211_AUTH_ALG:
 
-#if defined(CONFIG_ANDROID) || 1
 		/*
 		 *  It's the starting point of a link layer connection using wpa_supplicant
 		*/
@@ -2905,8 +2879,6 @@ static int rtw_wx_set_auth(struct net_device *dev,
 			rtw_indicate_disconnect(padapter, 0, _FALSE);
 			rtw_free_assoc_resources(padapter, 1);
 		}
-#endif
-
 
 		ret = wpa_set_auth_algs(dev, (u32)param->value);
 
@@ -7980,74 +7952,6 @@ static int rtw_wx_set_priv(struct net_device *dev,
 		ret = rtw_wx_set_scan(dev, info, awrq, ext);
 		goto FREE_EXT;
 	}
-
-#ifdef CONFIG_ANDROID
-	/* RTW_INFO("rtw_wx_set_priv: %s req=%s\n", dev->name, ext); */
-
-	i = rtw_android_cmdstr_to_num(ext);
-
-	switch (i) {
-	case ANDROID_WIFI_CMD_START:
-		indicate_wx_custom_event(padapter, "START");
-		break;
-	case ANDROID_WIFI_CMD_STOP:
-		indicate_wx_custom_event(padapter, "STOP");
-		break;
-	case ANDROID_WIFI_CMD_RSSI: {
-		struct	mlme_priv	*pmlmepriv = &(padapter->mlmepriv);
-		struct	wlan_network	*pcur_network = &pmlmepriv->cur_network;
-
-		if (check_fwstate(pmlmepriv, _FW_LINKED) == _TRUE)
-			sprintf(ext, "%s rssi %d", pcur_network->network.Ssid.Ssid, padapter->recvpriv.rssi);
-		else
-			sprintf(ext, "OK");
-	}
-		break;
-	case ANDROID_WIFI_CMD_LINKSPEED: {
-		u16 mbps = rtw_get_cur_max_rate(padapter) / 10;
-		sprintf(ext, "LINKSPEED %d", mbps);
-	}
-		break;
-	case ANDROID_WIFI_CMD_MACADDR:
-		sprintf(ext, "MACADDR = " MAC_FMT, MAC_ARG(dev->dev_addr));
-		break;
-	case ANDROID_WIFI_CMD_SCAN_ACTIVE: {
-		/* rtw_set_scan_mode(padapter, SCAN_ACTIVE); */
-		sprintf(ext, "OK");
-	}
-		break;
-	case ANDROID_WIFI_CMD_SCAN_PASSIVE: {
-		/* rtw_set_scan_mode(padapter, SCAN_PASSIVE); */
-		sprintf(ext, "OK");
-	}
-		break;
-
-	case ANDROID_WIFI_CMD_COUNTRY: {
-		char country_code[10];
-		sscanf(ext, "%*s %s", country_code);
-		rtw_set_country(padapter, country_code);
-		sprintf(ext, "OK");
-	}
-		break;
-	default:
-		#ifdef CONFIG_DEBUG_RTW_WX_SET_PRIV
-		RTW_INFO("%s: %s unknowned req=%s\n", __FUNCTION__,
-			dev->name, ext_dbg);
-		#endif
-
-		sprintf(ext, "OK");
-
-	}
-
-	if (copy_to_user(dwrq->pointer, ext, min(dwrq->length, (u16)(strlen(ext) + 1))))
-		ret = -EFAULT;
-
-#ifdef CONFIG_DEBUG_RTW_WX_SET_PRIV
-	RTW_INFO("%s: %s req=%s rep=%s dwrq->length=%d, strlen(ext)+1=%d\n", __FUNCTION__,
-		dev->name, ext_dbg , ext, dwrq->length, (u16)(strlen(ext) + 1));
-#endif
-#endif /* end of CONFIG_ANDROID */
-
 
 FREE_EXT:
 

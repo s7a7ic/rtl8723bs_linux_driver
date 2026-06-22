@@ -466,7 +466,7 @@ enum eap_type {
 
 #define P80211_OUI_LEN 3
 
-#if defined(PLATFORM_LINUX) || defined(CONFIG_RTL8711FW) || defined(PLATFORM_FREEBSD)
+#if defined(PLATFORM_LINUX) || defined(CONFIG_RTL8711FW)
 
 struct ieee80211_snap_hdr {
 
@@ -1384,9 +1384,7 @@ enum rtw_ieee80211_ft_actioncode {
 #endif
 
 #define OUI_MICROSOFT 0x0050f2 /* Microsoft (also used in Wi-Fi specs) 00:50:F2 */
-#ifndef PLATFORM_FREEBSD /* Baron BSD has defined */
-	#define WME_OUI_TYPE 2
-#endif /* PLATFORM_FREEBSD */
+#define WME_OUI_TYPE 2
 #define WME_OUI_SUBTYPE_INFORMATION_ELEMENT 0
 #define WME_OUI_SUBTYPE_PARAMETER_ELEMENT 1
 #define WME_OUI_SUBTYPE_TSPEC_ELEMENT 2
