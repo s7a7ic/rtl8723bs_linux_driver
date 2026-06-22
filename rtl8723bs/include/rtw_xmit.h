@@ -115,19 +115,6 @@
 		dot11txpn.val = dot11txpn.val == 0xffffffffffffULL ? 0 : (dot11txpn.val+1);\
 	} while (0)
 
-/* Check if AMPDU Tx is supported or not. If it is supported,
-* it need to check "amsdu in ampdu" is supported or not.
-* (ampdu_en, amsdu_ampdu_en) =
-* (0, x) : AMPDU is not enable, but AMSDU is valid to send.
-* (1, 0) : AMPDU is enable, AMSDU in AMPDU is not enable. So, AMSDU is not valid to send.
-* (1, 1) : AMPDU and AMSDU in AMPDU are enable. So, AMSDU is valid to send.
-*/
-#define IS_AMSDU_AMPDU_NOT_VALID(pattrib)\
-	 ((pattrib->ampdu_en == _TRUE) && (pattrib->amsdu_ampdu_en == _FALSE))
-
-#define IS_AMSDU_AMPDU_VALID(pattrib)\
-	 !((pattrib->ampdu_en == _TRUE) && (pattrib->amsdu_ampdu_en == _FALSE))
-
 #define HWXMIT_ENTRY	4
 
 /* For Buffer Descriptor ring architecture */

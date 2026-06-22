@@ -367,9 +367,6 @@ typedef struct _MP_FIRMWARE {
 
 /* *********************************************************************** */
 
-#define LOWER	_TRUE
-#define RAISE	_FALSE
-
 /* Hardware Registers */
 #if 0
 #if 0

@@ -1788,14 +1788,9 @@ s32 rtw_make_wlanhdr(_adapter *padapter , u8 *hdr, struct pkt_attrib *pattrib)
 #endif /* CONFIG_80211N_HT */
 			}
 		}
-
-	} else {
-
 	}
 
 exit:
-
-
 	return res;
 }
 
@@ -2192,9 +2187,6 @@ s32 check_amsdu(struct xmit_frame *pxmitframe)
 		ret = false;
 
 	if (!pattrib->qos_en)
-		ret = false;
-
-	if (IS_AMSDU_AMPDU_NOT_VALID(pattrib))
 		ret = false;
 
 	return ret;
