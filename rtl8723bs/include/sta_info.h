@@ -372,10 +372,8 @@ struct sta_info {
 
 #endif /* CONFIG_AP_MODE	 */
 
-#ifdef CONFIG_IOCTL_CFG80211
 	u8 *passoc_req;
 	u32 assoc_req_len;
-#endif
 
 	u8		IOTPeer;			/* Enum value.	HT_IOT_PEER_E */
 #ifdef CONFIG_LPS_PG

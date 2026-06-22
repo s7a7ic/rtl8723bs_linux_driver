@@ -7,9 +7,7 @@
 #define _RTW_MLME_EXT_C_
 
 #include <drv_types.h>
-#ifdef CONFIG_IOCTL_CFG80211
-	#include <rtw_wifi_regd.h>
-#endif /* CONFIG_IOCTL_CFG80211 */
+#include <rtw_wifi_regd.h>
 #include <hal_data.h>
 
 struct mlme_handler mlme_sta_tbl[] = {
@@ -2742,7 +2740,6 @@ unsigned int OnAssocReq(_adapter *padapter, union recv_frame *precv_frame)
 		else
 			issue_asocrsp(padapter, status, pstat, WIFI_REASSOCRSP);
 
-#ifdef CONFIG_IOCTL_CFG80211
 		_enter_critical_bh(&pstat->lock, &irqL);
 		if (pstat->passoc_req) {
 			rtw_mfree(pstat->passoc_req, pstat->assoc_req_len);
@@ -2756,7 +2753,6 @@ unsigned int OnAssocReq(_adapter *padapter, union recv_frame *precv_frame)
 			pstat->assoc_req_len = pkt_len;
 		}
 		_exit_critical_bh(&pstat->lock, &irqL);
-#endif /* CONFIG_IOCTL_CFG80211 */
 #ifdef CONFIG_IEEE80211W
 		if (pstat->bpairwise_key_installed != _TRUE)
 #endif /* CONFIG_IEEE80211W */
@@ -3184,10 +3180,8 @@ unsigned int on_action_wnm(_adapter *adapter, union recv_frame *rframe)
 
 	switch (action) {
 	default:
-		#ifdef CONFIG_IOCTL_CFG80211
 		cnt += sprintf((msg + cnt), "ACT_WNM %u", action);
 		rtw_cfg80211_rx_action(adapter, rframe, msg);
-		#endif
 		ret = _SUCCESS;
 		break;
 	}
@@ -3720,10 +3714,8 @@ unsigned int on_action_public_default(union recv_frame *precv_frame, u8 action)
 	if (rtw_action_public_decache(precv_frame, 2) == _FAIL)
 		goto exit;
 
-#ifdef CONFIG_IOCTL_CFG80211
 	cnt += sprintf((msg + cnt), "%s(token:%u)", action_public_str(action), token);
 	rtw_cfg80211_rx_action(adapter, precv_frame, msg);
-#endif
 
 	ret = _SUCCESS;
 
@@ -8312,11 +8304,6 @@ void mlmeext_joinbss_event_callback(_adapter *padapter, int join_res)
 		rtw_hal_macid_wakeup(padapter, psta->cmn.mac_id);
 	}
 
-#ifndef CONFIG_IOCTL_CFG80211
-	if (is_wep_enc(psecuritypriv->dot11PrivacyAlgrthm))
-		rtw_sec_restore_wep_key(padapter);
-#endif /* CONFIG_IOCTL_CFG80211 */
-
 	if (rtw_port_switch_chk(padapter) == _TRUE)
 		rtw_hal_set_hwreg(padapter, HW_VAR_PORT_SWITCH, NULL);
 
@@ -11451,9 +11438,7 @@ u8 set_chplan_hdl(_adapter *padapter, unsigned char *pbuf)
 
 	rtw_hal_set_odm_var(padapter, HAL_ODM_REGULATION, NULL, _TRUE);
 
-#ifdef CONFIG_IOCTL_CFG80211
 	rtw_reg_notify_by_driver(padapter);
-#endif /* CONFIG_IOCTL_CFG80211 */
 
 	return	H2C_SUCCESS;
 }

@@ -166,7 +166,7 @@ void rtw_free_mlme_priv_ie_data(struct mlme_priv *pmlmepriv)
 	rtw_free_mlme_ie_data(&pmlmepriv->p2p_assoc_resp_ie, &pmlmepriv->p2p_assoc_resp_ie_len);
 #endif
 
-#if defined(CONFIG_WFD) && defined(CONFIG_IOCTL_CFG80211)
+#if defined(CONFIG_WFD)
 	rtw_free_mlme_ie_data(&pmlmepriv->wfd_beacon_ie, &pmlmepriv->wfd_beacon_ie_len);
 	rtw_free_mlme_ie_data(&pmlmepriv->wfd_probe_req_ie, &pmlmepriv->wfd_probe_req_ie_len);
 	rtw_free_mlme_ie_data(&pmlmepriv->wfd_probe_resp_ie, &pmlmepriv->wfd_probe_resp_ie_len);
@@ -180,7 +180,7 @@ void rtw_free_mlme_priv_ie_data(struct mlme_priv *pmlmepriv)
 #endif
 }
 
-#if defined(CONFIG_WFD) && defined(CONFIG_IOCTL_CFG80211)
+#if defined(CONFIG_WFD)
 int rtw_mlme_update_wfd_ie_data(struct mlme_priv *mlme, u8 type, u8 *ie, u32 ie_len)
 {
 	_adapter *adapter = mlme_to_adapter(mlme);
@@ -275,7 +275,7 @@ success:
 exit:
 	return ret;
 }
-#endif /* defined(CONFIG_WFD) && defined(CONFIG_IOCTL_CFG80211) */
+#endif /* defined(CONFIG_WFD) */
 
 void _rtw_free_mlme_priv(struct mlme_priv *pmlmepriv)
 {
@@ -621,11 +621,8 @@ void rtw_free_network_nolock(_adapter *padapter, struct wlan_network *pnetwork);
 void rtw_free_network_nolock(_adapter *padapter, struct wlan_network *pnetwork)
 {
 	_rtw_free_network_nolock(&(padapter->mlmepriv), pnetwork);
-#ifdef CONFIG_IOCTL_CFG80211
 	rtw_cfg80211_unlink_bss(padapter, pnetwork);
-#endif /* CONFIG_IOCTL_CFG80211 */
 }
-
 
 void rtw_free_network_queue(_adapter *dev, u8 isfreeall)
 {
@@ -1340,13 +1337,11 @@ void rtw_surveydone_event_callback(_adapter	*adapter, u8 *pbuf)
 	}
 #endif
 
-#ifdef CONFIG_IOCTL_CFG80211
 	rtw_cfg80211_surveydone_event_callback(adapter);
-#endif /* CONFIG_IOCTL_CFG80211 */
 
 	rtw_indicate_scan_done(adapter, _FALSE);
 
-#if defined(CONFIG_CONCURRENT_MODE) && defined(CONFIG_IOCTL_CFG80211)
+#if defined(CONFIG_CONCURRENT_MODE)
 	rtw_cfg80211_indicate_scan_done_for_buddy(adapter, _FALSE);
 #endif
 
@@ -2210,7 +2205,6 @@ void rtw_stassoc_event_callback(_adapter *adapter, u8 *pbuf)
 
 			/* report to upper layer */
 			RTW_INFO("indicate_sta_assoc_event to upper layer - hostapd\n");
-#ifdef CONFIG_IOCTL_CFG80211
 			_enter_critical_bh(&psta->lock, &irqL);
 			if (psta->passoc_req && psta->assoc_req_len > 0) {
 				passoc_req = rtw_zmalloc(psta->assoc_req_len);
@@ -2230,9 +2224,6 @@ void rtw_stassoc_event_callback(_adapter *adapter, u8 *pbuf)
 
 				rtw_mfree(passoc_req, assoc_req_len);
 			}
-#else /* !CONFIG_IOCTL_CFG80211	 */
-			rtw_indicate_sta_assoc_event(adapter, psta);
-#endif /* !CONFIG_IOCTL_CFG80211 */
 #endif /* !CONFIG_AUTO_AP_MODE */
 
 #ifdef CONFIG_BEAMFORMING
@@ -2468,13 +2459,11 @@ void rtw_stadel_event_callback(_adapter *adapter, u8 *pbuf)
 		rtw_wfd_st_switch(psta, 0);
 
 	if (MLME_IS_AP(adapter)) {
-#ifdef CONFIG_IOCTL_CFG80211
 #ifdef COMPAT_KERNEL_RELEASE
 
 #elif (LINUX_VERSION_CODE < KERNEL_VERSION(2, 6, 37)) || defined(CONFIG_CFG80211_FORCE_COMPATIBLE_2_6_37_UNDER)
 		rtw_cfg80211_indicate_sta_disassoc(adapter, pstadel->macaddr, *(u16 *)pstadel->rsvd);
 #endif /* (LINUX_VERSION_CODE < KERNEL_VERSION(2, 6, 37)) || defined(CONFIG_CFG80211_FORCE_COMPATIBLE_2_6_37_UNDER) */
-#endif /* CONFIG_IOCTL_CFG80211 */
 
 		return;
 	}
@@ -2677,22 +2666,15 @@ void rtw_join_timeout_handler(void *ctx)
 		rtw_indicate_disconnect(adapter, 0, _FALSE);
 		free_scanqueue(pmlmepriv);/* ??? */
 
-#ifdef CONFIG_IOCTL_CFG80211
 		/* indicate disconnect for the case that join_timeout and check_fwstate != FW_LINKED */
 		rtw_cfg80211_indicate_disconnect(adapter, 0, _FALSE);
-#endif /* CONFIG_IOCTL_CFG80211 */
-
 	}
 
 	_exit_critical_bh(&pmlmepriv->lock, &irqL);
 
-
 #ifdef CONFIG_DRVEXT_MODULE_WSC
 	drvext_assoc_fail_indicate(&adapter->drvextpriv);
 #endif
-
-
-
 }
 
 /*
@@ -2712,13 +2694,11 @@ void rtw_scan_timeout_handler(void *ctx)
 
 	_exit_critical_bh(&pmlmepriv->lock, &irqL);
 
-#ifdef CONFIG_IOCTL_CFG80211
 	rtw_cfg80211_surveydone_event_callback(adapter);
-#endif /* CONFIG_IOCTL_CFG80211 */
 
 	rtw_indicate_scan_done(adapter, _TRUE);
 
-#if defined(CONFIG_CONCURRENT_MODE) && defined(CONFIG_IOCTL_CFG80211)
+#if defined(CONFIG_CONCURRENT_MODE)
 	rtw_cfg80211_indicate_scan_done_for_buddy(adapter, _TRUE);
 #endif
 }

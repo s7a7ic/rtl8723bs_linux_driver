@@ -41,13 +41,11 @@ void rtw_os_indicate_connect(_adapter *adapter)
 {
 	struct mlme_priv *pmlmepriv = &(adapter->mlmepriv);
 
-#ifdef CONFIG_IOCTL_CFG80211
 	if ((check_fwstate(pmlmepriv, WIFI_ADHOC_MASTER_STATE) == _TRUE) ||
 	    (check_fwstate(pmlmepriv, WIFI_ADHOC_STATE) == _TRUE))
 		rtw_cfg80211_ibss_indicate_connect(adapter);
 	else
 		rtw_cfg80211_indicate_connect(adapter);
-#endif /* CONFIG_IOCTL_CFG80211 */
 
 	rtw_indicate_wx_assoc_event(adapter);
 	netif_carrier_on(adapter->pnetdev);
@@ -63,9 +61,7 @@ void rtw_os_indicate_connect(_adapter *adapter)
 extern void indicate_wx_scan_complete_event(_adapter *padapter);
 void rtw_os_indicate_scan_done(_adapter *padapter, bool aborted)
 {
-#ifdef CONFIG_IOCTL_CFG80211
 	rtw_cfg80211_indicate_scan_done(padapter, aborted);
-#endif
 	indicate_wx_scan_complete_event(padapter);
 }
 
@@ -138,9 +134,7 @@ void rtw_os_indicate_disconnect(_adapter *adapter,  u16 reason, u8 locally_gener
 
 	netif_carrier_off(adapter->pnetdev); /* Do it first for tx broadcast pkt after disconnection issue! */
 
-#ifdef CONFIG_IOCTL_CFG80211
 	rtw_cfg80211_indicate_disconnect(adapter,  reason, locally_generated);
-#endif /* CONFIG_IOCTL_CFG80211 */
 
 	rtw_indicate_wx_disassoc_event(adapter);
 
@@ -184,10 +178,6 @@ void rtw_report_sec_ie(_adapter *adapter, u8 authmode, u8 *sec_ie)
 
 		wrqu.data.length = (wrqu.data.length < IW_CUSTOM_MAX) ? wrqu.data.length : IW_CUSTOM_MAX;
 
-#ifndef CONFIG_IOCTL_CFG80211
-		wireless_send_event(adapter->pnetdev, IWEVCUSTOM, &wrqu, buff);
-#endif
-
 		rtw_mfree(buff, IW_CUSTOM_MAX);
 	}
 }
@@ -213,10 +203,6 @@ void rtw_indicate_sta_assoc_event(_adapter *padapter, struct sta_info *psta)
 	_rtw_memcpy(wrqu.addr.sa_data, psta->cmn.mac_addr, ETH_ALEN);
 
 	RTW_INFO("+rtw_indicate_sta_assoc_event\n");
-
-#ifndef CONFIG_IOCTL_CFG80211
-	wireless_send_event(padapter->pnetdev, IWEVREGISTERED, &wrqu, NULL);
-#endif
 }
 
 void rtw_indicate_sta_disassoc_event(_adapter *padapter, struct sta_info *psta)
@@ -238,10 +224,6 @@ void rtw_indicate_sta_disassoc_event(_adapter *padapter, struct sta_info *psta)
 	_rtw_memcpy(wrqu.addr.sa_data, psta->cmn.mac_addr, ETH_ALEN);
 
 	RTW_INFO("+rtw_indicate_sta_disassoc_event\n");
-
-#ifndef CONFIG_IOCTL_CFG80211
-	wireless_send_event(padapter->pnetdev, IWEVEXPIRED, &wrqu, NULL);
-#endif
 }
 
 #ifdef CONFIG_HOSTAPD_MLME

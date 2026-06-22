@@ -33,9 +33,7 @@ struct mi_state {
 	u8 scan_num;		/* WIFI_SITE_MONITOR */
 	u8 scan_enter_num;	/* WIFI_SITE_MONITOR && !SCAN_DISABLE && !SCAN_BACK_OP */
 	u8 uwps_num;		/* WIFI_UNDER_WPS */
-#ifdef CONFIG_IOCTL_CFG80211
 	u8 mgmt_tx_num;
-#endif
 
 	u8 union_ch;
 	u8 union_bw;
@@ -77,11 +75,7 @@ struct mi_state {
 
 #define MSTATE_ROCH_NUM(_mstate)		0
 
-#if defined(CONFIG_IOCTL_CFG80211)
 #define MSTATE_MGMT_TX_NUM(_mstate)		((_mstate)->mgmt_tx_num)
-#else
-#define MSTATE_MGMT_TX_NUM(_mstate)		0
-#endif
 
 #define MSTATE_U_CH(_mstate)			((_mstate)->union_ch)
 #define MSTATE_U_BW(_mstate)			((_mstate)->union_bw)

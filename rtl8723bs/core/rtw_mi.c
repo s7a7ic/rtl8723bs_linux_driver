@@ -222,11 +222,8 @@ void _rtw_mi_status(_adapter *adapter, struct mi_state *mstate, u8 target_sel)
 				MSTATE_SCAN_ENTER_NUM(mstate)++;
 		}
 
-#ifdef CONFIG_IOCTL_CFG80211
 		if (rtw_cfg80211_get_is_mgmt_tx(iface))
 			MSTATE_MGMT_TX_NUM(mstate)++;
-#endif /* CONFIG_IOCTL_CFG80211 */
-
 	}
 }
 
@@ -267,9 +264,7 @@ inline void rtw_mi_status_merge(struct mi_state *d, struct mi_state *a)
 	d->scan_num += a->scan_num;
 	d->scan_enter_num += a->scan_enter_num;
 	d->uwps_num += a->uwps_num;
-#ifdef CONFIG_IOCTL_CFG80211
 	d->mgmt_tx_num += a->mgmt_tx_num;
-#endif
 }
 
 void dump_mi_status(void *sel, struct dvobj_priv *dvobj)
@@ -293,9 +288,7 @@ void dump_mi_status(void *sel, struct dvobj_priv *dvobj)
 #endif
 	RTW_PRINT_SEL(sel, "scan_num:%d\n", DEV_STA_NUM(dvobj));
 	RTW_PRINT_SEL(sel, "under_wps_num:%d\n", DEV_WPS_NUM(dvobj));
-#if defined(CONFIG_IOCTL_CFG80211)
 	RTW_PRINT_SEL(sel, "mgmt_tx_num:%d\n", DEV_MGMT_TX_NUM(dvobj));
-#endif
 	RTW_PRINT_SEL(sel, "union_ch:%d\n", DEV_U_CH(dvobj));
 	RTW_PRINT_SEL(sel, "union_bw:%d\n", DEV_U_BW(dvobj));
 	RTW_PRINT_SEL(sel, "union_offset:%d\n", DEV_U_OFFSET(dvobj));

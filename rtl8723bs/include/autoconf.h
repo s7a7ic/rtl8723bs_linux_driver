@@ -26,21 +26,11 @@
 #define CONFIG_80211N_HT
 #define CONFIG_RECV_REORDERING_CTRL
 
-/* #define CONFIG_IOCTL_CFG80211 */		/* Set from Makefile */
-#ifdef CONFIG_IOCTL_CFG80211
-	/*
-	 * Indecate new sta asoc through cfg80211_new_sta
-	 * If kernel version >= 3.2 or
-	 * version < 3.2 but already apply cfg80211 patch,
-	 * RTW_USE_CFG80211_STA_EVENT must be defiend!
-	 */
-	/* #define RTW_USE_CFG80211_STA_EVENT */ /* Indecate new sta asoc through cfg80211_new_sta */
-	#ifndef CONFIG_PLATFORM_INTEL_BYT
+#ifndef CONFIG_PLATFORM_INTEL_BYT
 	#define CONFIG_CFG80211_FORCE_COMPATIBLE_2_6_37_UNDER
-	#endif /* !CONFIG_PLATFORM_INTEL_BYT */
-	/* #define CONFIG_DEBUG_CFG80211 */
-	#define CONFIG_SET_SCAN_DENY_TIMER
-#endif
+#endif /* !CONFIG_PLATFORM_INTEL_BYT */
+/* #define CONFIG_DEBUG_CFG80211 */
+#define CONFIG_SET_SCAN_DENY_TIMER
 
 #define CONFIG_AP_MODE
 #ifdef CONFIG_AP_MODE
@@ -108,8 +98,6 @@
 /*
  * Others
  */
-/* #define CONFIG_MAC_LOOPBACK_DRIVER */
-
 #define CONFIG_SKB_COPY	/* for amsdu */
 
 #define CONFIG_NEW_SIGNAL_STAT_PROCESS
@@ -128,15 +116,6 @@
 /*
  * Auto Config Section
  */
-#ifdef CONFIG_MAC_LOOPBACK_DRIVER
-#undef CONFIG_IOCTL_CFG80211
-#undef CONFIG_AP_MODE
-#undef CONFIG_NATIVEAP_MLME
-#undef CONFIG_POWER_SAVING
-#undef CONFIG_BT_COEXIST
-#undef CONFIG_ANTENNA_DIVERSITY
-#undef SUPPORT_HW_RFOFF_DETECTED
-#endif
 
 #ifdef CONFIG_MP_INCLUDED
 	#define MP_DRIVER	1

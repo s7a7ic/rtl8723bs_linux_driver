@@ -9,8 +9,6 @@
 #include <drv_types.h>
 #include <hal_data.h>
 
-#ifdef CONFIG_IOCTL_CFG80211
-
 #if (LINUX_VERSION_CODE >= KERNEL_VERSION(4, 0, 0))
 #define STATION_INFO_SIGNAL		BIT(NL80211_STA_INFO_SIGNAL)
 #define STATION_INFO_TX_BITRATE		BIT(NL80211_STA_INFO_TX_BITRATE)
@@ -3159,7 +3157,6 @@ void rtw_cfg80211_indicate_sta_assoc(_adapter *padapter, u8 *pmgmt_frame, uint f
 
 	RTW_INFO(FUNC_ADPT_FMT"\n", FUNC_ADPT_ARG(padapter));
 
-#if defined(RTW_USE_CFG80211_STA_EVENT) || defined(COMPAT_KERNEL_RELEASE)
 	{
 		struct station_info sinfo;
 		u8 ie_offset;
@@ -3174,27 +3171,6 @@ void rtw_cfg80211_indicate_sta_assoc(_adapter *padapter, u8 *pmgmt_frame, uint f
 		sinfo.assoc_req_ies_len = frame_len - WLAN_HDR_A3_LEN - ie_offset;
 		cfg80211_new_sta(ndev, get_addr2_ptr(pmgmt_frame), &sinfo, GFP_ATOMIC);
 	}
-#else /* defined(RTW_USE_CFG80211_STA_EVENT) */
-	channel = pmlmeext->cur_channel;
-	freq = rtw_ch2freq(channel);
-
-	#ifdef COMPAT_KERNEL_RELEASE
-	rtw_cfg80211_rx_mgmt(pwdev, freq, 0, pmgmt_frame, frame_len, GFP_ATOMIC);
-	#elif (LINUX_VERSION_CODE >= KERNEL_VERSION(2, 6, 37)) && !defined(CONFIG_CFG80211_FORCE_COMPATIBLE_2_6_37_UNDER)
-	rtw_cfg80211_rx_mgmt(pwdev, freq, 0, pmgmt_frame, frame_len, GFP_ATOMIC);
-	#else /* COMPAT_KERNEL_RELEASE */
-	{
-		/* to avoid WARN_ON(wdev->iftype != NL80211_IFTYPE_STATION)  when calling cfg80211_send_rx_assoc() */
-		pwdev->iftype = NL80211_IFTYPE_STATION;
-		RTW_INFO("iftype=%d before call cfg80211_send_rx_assoc()\n", pwdev->iftype);
-		rtw_cfg80211_send_rx_assoc(padapter, NULL, pmgmt_frame, frame_len);
-		RTW_INFO("iftype=%d after call cfg80211_send_rx_assoc()\n", pwdev->iftype);
-		pwdev->iftype = NL80211_IFTYPE_AP;
-		/* cfg80211_rx_action(padapter->pnetdev, freq, pmgmt_frame, frame_len, GFP_ATOMIC); */
-	}
-	#endif /* COMPAT_KERNEL_RELEASE */
-#endif /* defined(RTW_USE_CFG80211_STA_EVENT) */
-
 }
 
 void rtw_cfg80211_indicate_sta_disassoc(_adapter *padapter, unsigned char *da, unsigned short reason)
@@ -3213,41 +3189,7 @@ void rtw_cfg80211_indicate_sta_disassoc(_adapter *padapter, unsigned char *da, u
 
 	RTW_INFO(FUNC_ADPT_FMT"\n", FUNC_ADPT_ARG(padapter));
 
-#if defined(RTW_USE_CFG80211_STA_EVENT) || defined(COMPAT_KERNEL_RELEASE)
 	cfg80211_del_sta(ndev, da, GFP_ATOMIC);
-#else /* defined(RTW_USE_CFG80211_STA_EVENT) */
-	channel = pmlmeext->cur_channel;
-	freq = rtw_ch2freq(channel);
-
-	pmgmt_frame = mgmt_buf;
-	pwlanhdr = (struct rtw_ieee80211_hdr *)pmgmt_frame;
-
-	fctrl = &(pwlanhdr->frame_ctl);
-	*(fctrl) = 0;
-
-	_rtw_memcpy(pwlanhdr->addr1, adapter_mac_addr(padapter), ETH_ALEN);
-	_rtw_memcpy(pwlanhdr->addr2, da, ETH_ALEN);
-	_rtw_memcpy(pwlanhdr->addr3, get_my_bssid(&(pmlmeinfo->network)), ETH_ALEN);
-
-	SetSeqNum(pwlanhdr, pmlmeext->mgnt_seq);
-	pmlmeext->mgnt_seq++;
-	set_frame_sub_type(pmgmt_frame, WIFI_DEAUTH);
-
-	pmgmt_frame += sizeof(struct rtw_ieee80211_hdr_3addr);
-	frame_len = sizeof(struct rtw_ieee80211_hdr_3addr);
-
-	reason = cpu_to_le16(reason);
-	pmgmt_frame = rtw_set_fixed_ie(pmgmt_frame, _RSON_CODE_ , (unsigned char *)&reason, &frame_len);
-
-	#ifdef COMPAT_KERNEL_RELEASE
-	rtw_cfg80211_rx_mgmt(wdev, freq, 0, mgmt_buf, frame_len, GFP_ATOMIC);
-	#elif (LINUX_VERSION_CODE >= KERNEL_VERSION(2, 6, 37)) && !defined(CONFIG_CFG80211_FORCE_COMPATIBLE_2_6_37_UNDER)
-	rtw_cfg80211_rx_mgmt(wdev, freq, 0, mgmt_buf, frame_len, GFP_ATOMIC);
-	#else /* COMPAT_KERNEL_RELEASE */
-	cfg80211_send_disassoc(padapter->pnetdev, mgmt_buf, frame_len);
-	/* cfg80211_rx_action(padapter->pnetdev, freq, mgmt_buf, frame_len, GFP_ATOMIC); */
-	#endif /* COMPAT_KERNEL_RELEASE */
-#endif /* defined(RTW_USE_CFG80211_STA_EVENT) */
 }
 
 static int rtw_cfg80211_monitor_if_open(struct net_device *ndev)
@@ -6187,5 +6129,3 @@ void rtw_cfg80211_dev_res_unregister(struct dvobj_priv *dvobj)
 	rtw_wiphy_unregister(dvobj_to_wiphy(dvobj));
 #endif
 }
-
-#endif /* CONFIG_IOCTL_CFG80211 */

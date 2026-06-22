@@ -406,7 +406,6 @@ ccflags-y += -DDM_ODM_SUPPORT_TYPE=0x04
 
 ifeq ($(CONFIG_PLATFORM_ARM_PC), y)
 ccflags-y += -DCONFIG_LITTLE_ENDIAN
-ccflags-y += -DCONFIG_IOCTL_CFG80211 -DRTW_USE_CFG80211_STA_EVENT
 ARCH := arm
 CROSS_COMPILE ?=
 KVER  := $(shell uname -r)

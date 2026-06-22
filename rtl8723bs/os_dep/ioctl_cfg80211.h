@@ -15,10 +15,6 @@
 #endif
 #endif
 
-#if defined(RTW_USE_CFG80211_STA_EVENT)
-	#undef CONFIG_CFG80211_FORCE_COMPATIBLE_2_6_37_UNDER
-#endif
-
 #ifndef RTW_P2P_GROUP_INTERFACE
 	#define RTW_P2P_GROUP_INTERFACE 0
 #endif

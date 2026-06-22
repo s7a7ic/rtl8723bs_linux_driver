@@ -919,7 +919,7 @@ struct dvobj_priv {
 #ifdef PLATFORM_LINUX
 	_thread_hdl_ rtnl_lock_holder;
 
-	#if defined(CONFIG_IOCTL_CFG80211) && defined(RTW_SINGLE_WIPHY)
+	#if defined(RTW_SINGLE_WIPHY)
 	struct wiphy *wiphy;
 	#endif
 #endif /* PLATFORM_LINUX */
@@ -974,7 +974,7 @@ struct dvobj_priv {
 #define dvobj_to_macidctl(dvobj) (&(dvobj->macid_ctl))
 #define dvobj_to_sec_camctl(dvobj) (&(dvobj->cam_ctl))
 #define dvobj_to_regsty(dvobj) (&(dvobj->padapters[IFACE_ID0]->registrypriv))
-#if defined(CONFIG_IOCTL_CFG80211) && defined(RTW_SINGLE_WIPHY)
+#if defined(RTW_SINGLE_WIPHY)
 #define dvobj_to_wiphy(dvobj) ((dvobj)->wiphy)
 #endif
 #define dvobj_to_rfctl(dvobj) (&(dvobj->rf_ctl))
@@ -1057,22 +1057,6 @@ struct proxim {
 };
 #endif /* CONFIG_INTEL_PROXIM */
 
-#ifdef CONFIG_MAC_LOOPBACK_DRIVER
-typedef struct loopbackdata {
-	_sema	sema;
-	_thread_hdl_ lbkthread;
-	u8 bstop;
-	u32 cnt;
-	u16 size;
-	u16 txsize;
-	u8 txbuf[0x8000];
-	u16 rxsize;
-	u8 rxbuf[0x8000];
-	u8 msg[100];
-
-} LOOPBACKDATA, *PLOOPBACKDATA;
-#endif
-
 struct tsf_info {
 	u8 sync_port;/*tsf sync from portx*/
 	u8 offset; /*tsf timer offset*/
@@ -1119,8 +1103,6 @@ struct _ADAPTER {
 	struct	hostapd_priv	*phostapdpriv;
 #endif
 
-#ifdef CONFIG_IOCTL_CFG80211
-#endif /* CONFIG_IOCTL_CFG80211 */
 	u32	setband;
 	ATOMIC_T bandskip;
 
@@ -1194,16 +1176,12 @@ struct _ADAPTER {
 	struct iw_statistics iwstats;
 	struct proc_dir_entry *dir_dev;/* for proc directory */
 	struct proc_dir_entry *dir_odm;
-
-#ifdef CONFIG_IOCTL_CFG80211
 	struct wireless_dev *rtw_wdev;
 	struct rtw_wdev_priv wdev_data;
 
 #if !defined(RTW_SINGLE_WIPHY)
 	struct wiphy *wiphy;
 #endif
-
-#endif /* CONFIG_IOCTL_CFG80211 */
 
 	u8 mac_addr[ETH_ALEN];
 	int net_closed;
@@ -1242,10 +1220,6 @@ struct _ADAPTER {
 	 * be used in intel Proximity mode */
 	struct proxim proximity;
 #endif /* CONFIG_INTEL_PROXIM */
-
-#ifdef CONFIG_MAC_LOOPBACK_DRIVER
-	PLOOPBACKDATA ploopback;
-#endif
 
 	/* for debug purpose */
 	u8 fix_rate;

@@ -90,11 +90,7 @@ void rtw_wfd_st_switch(struct sta_info *sta, bool on);
 #define MLME_IS_MSRC(adapter) rtw_chk_miracast_mode((adapter), MIRACAST_SOURCE)
 #define MLME_IS_MSINK(adapter) rtw_chk_miracast_mode((adapter), MIRACAST_SINK)
 
-#ifdef CONFIG_IOCTL_CFG80211
 #define MLME_IS_MGMT_TX(adapter) rtw_cfg80211_get_is_mgmt_tx(adapter)
-#else
-#define MLME_IS_MGMT_TX(adapter) 0
-#endif
 
 #define MLME_STATE_FMT "%s%s%s%s%s%s%s%s%s%s%s%s"
 #define MLME_STATE_ARG(adapter) \
@@ -295,7 +291,6 @@ struct scan_limit_info {
 #endif /* CONFIG_P2P_OP_CHK_SOCIAL_CH */
 };
 
-#ifdef CONFIG_IOCTL_CFG80211
 struct cfg80211_wifidirect_info {
 	_timer					remain_on_ch_timer;
 	u8						restore_channel;
@@ -307,7 +302,6 @@ struct cfg80211_wifidirect_info {
 	struct wireless_dev *ro_ch_wdev;
 	systime last_ro_ch_time; /* this will be updated at the beginning and end of ro_ch */
 };
-#endif /* CONFIG_IOCTL_CFG80211 */
 
 struct wifidirect_info {
 	_adapter				*padapter;
@@ -727,7 +721,7 @@ struct mlme_priv {
 	u8 ori_offset;
 #endif /* #if defined (CONFIG_AP_MODE) && defined (CONFIG_NATIVEAP_MLME) */
 
-#if defined(CONFIG_WFD) && defined(CONFIG_IOCTL_CFG80211)
+#if defined(CONFIG_WFD)
 	u8 *wfd_beacon_ie;
 	u32 wfd_beacon_ie_len;
 
@@ -1010,7 +1004,7 @@ void rtw_free_mlme_priv_ie_data(struct mlme_priv *pmlmepriv);
 #define MLME_ASSOC_REQ_IE		4
 #define MLME_ASSOC_RESP_IE		5
 
-#if defined(CONFIG_WFD) && defined(CONFIG_IOCTL_CFG80211)
+#if defined(CONFIG_WFD)
 int rtw_mlme_update_wfd_ie_data(struct mlme_priv *mlme, u8 type, u8 *ie, u32 ie_len);
 #endif
 
