@@ -17,15 +17,6 @@
 #include <rtl8822b_hal.h>	/* rtl8822bs_set_hal_ops() */
 #endif /* CONFIG_RTL8822B */
 
-#ifdef CONFIG_PLATFORM_INTEL_BYT
-#ifdef CONFIG_ACPI
-#include <linux/acpi.h>
-#include <linux/acpi_gpio.h>
-#include "rtw_android.h"
-#endif
-static int wlan_en_gpio = -1;
-#endif /* CONFIG_PLATFORM_INTEL_BYT */
-
 #ifndef dev_to_sdio_func
 #define dev_to_sdio_func(d)     container_of(d, struct sdio_func, dev)
 #endif
@@ -603,11 +594,6 @@ static void rtw_sdio_primary_adapter_deinit(_adapter *padapter)
 
 	rtw_vmfree((u8 *)padapter, sizeof(_adapter));
 
-#ifdef CONFIG_PLATFORM_RTD2880B
-	RTW_INFO("wlan link down\n");
-	rtd2885_wlan_netlink_sendMsg("linkdown", "8712");
-#endif
-
 #ifdef RTW_SUPPORT_PLATFORM_SHUTDOWN
 	g_test_adapter = NULL;
 #endif /* RTW_SUPPORT_PLATFORM_SHUTDOWN */
@@ -630,40 +616,6 @@ static int rtw_drv_init(
 	struct net_device *pnetdev;
 	PADAPTER padapter = NULL;
 	struct dvobj_priv *dvobj;
-
-#ifdef CONFIG_PLATFORM_INTEL_BYT
-
-#ifdef CONFIG_ACPI
-	acpi_handle handle;
-	struct acpi_device *adev;
-#endif
-
-#if defined(CONFIG_ACPI) && defined(CONFIG_GPIO_WAKEUP)
-	handle = ACPI_HANDLE(&func->dev);
-
-	if (handle) {
-		/* Dont try to do acpi pm for the wifi module */
-		if (!handle || acpi_bus_get_device(handle, &adev))
-			RTW_INFO("Could not get acpi pointer!\n");
-		else {
-			adev->flags.power_manageable = 0;
-			RTW_INFO("Disabling ACPI power management support!\n");
-		}
-		oob_gpio = acpi_get_gpio_by_index(&func->dev, 0, NULL);
-		RTW_INFO("rtw_drv_init: ACPI_HANDLE found oob_gpio %d!\n", oob_gpio);
-		wifi_configure_gpio();
-	} else
-		RTW_INFO("rtw_drv_init: ACPI_HANDLE NOT found!\n");
-#endif
-
-#if defined(CONFIG_ACPI)
-	if (&func->dev && ACPI_HANDLE(&func->dev)) {
-		wlan_en_gpio = acpi_get_gpio_by_index(&func->dev, 1, NULL);
-		RTW_INFO("rtw_drv_init: ACPI_HANDLE found wlan_en %d!\n", wlan_en_gpio);
-	} else
-		RTW_INFO("rtw_drv_init: ACPI_HANDLE NOT found!\n");
-#endif
-#endif /* CONFIG_PLATFORM_INTEL_BYT */
 
 	dvobj = sdio_dvobj_init(func, id);
 	if (dvobj == NULL) {
@@ -694,11 +646,6 @@ static int rtw_drv_init(
 
 #ifdef CONFIG_HOSTAPD_MLME
 	hostapd_mode_init(padapter);
-#endif
-
-#ifdef CONFIG_PLATFORM_RTD2880B
-	RTW_INFO("wlan link up\n");
-	rtd2885_wlan_netlink_sendMsg("linkup", "8712");
 #endif
 
 	if (sdio_alloc_irq(dvobj) != _SUCCESS)
@@ -885,11 +832,7 @@ static int rtw_sdio_resume(struct device *dev)
 	if (pwrpriv->bInternalAutoSuspend)
 		ret = rtw_resume_process(padapter);
 	else {
-#ifdef CONFIG_PLATFORM_INTEL_BYT
-		if (0)
-#else
 		if (pwrpriv->wowlan_mode || pwrpriv->wowlan_ap_mode)
-#endif
 		{
 			rtw_resume_lock_suspend();
 			ret = rtw_resume_process(padapter);
@@ -924,9 +867,7 @@ static int rtw_drv_entry(void)
 	RTW_PRINT(DRV_NAME" BT-Coex version = %s\n", BTCOEXVERSION);
 #endif /* BTCOEXVERSION */
 
-#ifndef CONFIG_PLATFORM_INTEL_BYT
 	rtw_android_wifictrl_func_add();
-#endif /* !CONFIG_PLATFORM_INTEL_BYT */
 
 	sdio_drvpriv.drv_registered = true;
 	rtw_suspend_lock_init();
@@ -970,21 +911,6 @@ static void rtw_drv_halt(void)
 
 	rtw_mstat_dump(RTW_DBGDUMP);
 }
-
-#ifdef CONFIG_PLATFORM_INTEL_BYT
-int rtw_sdio_set_power(int on)
-{
-
-	if (wlan_en_gpio >= 0) {
-		if (on)
-			gpio_set_value(wlan_en_gpio, 1);
-		else
-			gpio_set_value(wlan_en_gpio, 0);
-	}
-
-	return 0;
-}
-#endif /* CONFIG_PLATFORM_INTEL_BYT */
 
 module_init(rtw_drv_entry);
 module_exit(rtw_drv_halt);

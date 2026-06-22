@@ -102,14 +102,7 @@ u8 *_rtw_malloc(u32 sz)
 {
 	u8	*pbuf = NULL;
 
-#ifdef PLATFORM_LINUX
-#ifdef RTK_DMP_PLATFORM
-	if (sz > 0x4000)
-		pbuf = (u8 *)dvr_malloc(sz);
-	else
-#endif
-		pbuf = kmalloc(sz, in_interrupt() ? GFP_ATOMIC : GFP_KERNEL);
-#endif
+	pbuf = kmalloc(sz, in_interrupt() ? GFP_ATOMIC : GFP_KERNEL);
 
 #ifdef DBG_MEMORY_LEAK
 	if (pbuf != NULL) {
@@ -134,11 +127,6 @@ u8 *_rtw_zmalloc(u32 sz)
 
 void	_rtw_mfree(u8 *pbuf, u32 sz)
 {
-#ifdef RTK_DMP_PLATFORM
-	if (sz > 0x4000)
-		dvr_free(pbuf);
-	else
-#endif
 		kfree(pbuf);
 
 #ifdef DBG_MEMORY_LEAK
