@@ -2531,12 +2531,6 @@ u8 traffic_status_watchdog(_adapter *padapter, u8 from_timer)
 
 	session_tracker_chk_cmd(padapter, NULL);
 
-#ifdef CONFIG_BEAMFORMING
-#ifdef RTW_BEAMFORMING_VERSION_2
-	rtw_bf_update_traffic(padapter);
-#endif /* RTW_BEAMFORMING_VERSION_2 */
-#endif /* CONFIG_BEAMFORMING */
-
 	pmlmepriv->LinkDetectInfo.NumRxOkInPeriod = 0;
 	pmlmepriv->LinkDetectInfo.NumTxOkInPeriod = 0;
 	pmlmepriv->LinkDetectInfo.NumRxUnicastOkInPeriod = 0;
@@ -2548,9 +2542,7 @@ u8 traffic_status_watchdog(_adapter *padapter, u8 from_timer)
 	pmlmepriv->LinkDetectInfo.bHigherBusyTxTraffic = bHigherBusyTxTraffic;
 
 	return bEnterPS;
-
 }
-
 
 /* for 11n Logo 4.2.31/4.2.32 */
 static void dynamic_update_bcn_check(_adapter *padapter)
@@ -2616,16 +2608,8 @@ void rtw_iface_dynamic_chk_wk_hdl(_adapter *padapter)
 
 	/* for debug purpose */
 	_linked_info_dump(padapter);
-
-	#ifdef CONFIG_BEAMFORMING
-	#ifndef RTW_BEAMFORMING_VERSION_2
-	#if (BEAMFORMING_SUPPORT == 0) /*for diver defined beamforming*/
-	beamforming_watchdog(padapter);
-	#endif
-	#endif /* !RTW_BEAMFORMING_VERSION_2 */
-	#endif
-
 }
+
 void rtw_dynamic_chk_wk_hdl(_adapter *padapter)
 {
 	rtw_mi_dynamic_chk_wk_hdl(padapter);
@@ -4387,11 +4371,6 @@ u8 rtw_drvextra_cmd_hdl(_adapter *padapter, unsigned char *pbuf)
 			break;
 		}
 		break;
-#ifdef CONFIG_BEAMFORMING
-	case BEAMFORMING_WK_CID:
-		beamforming_wk_hdl(padapter, pdrvextra_cmd->type, pdrvextra_cmd->pbuf);
-		break;
-#endif
 	case DM_RA_MSK_WK_CID:
 		rtw_dm_ra_mask_hdl(padapter, (struct sta_info *)pdrvextra_cmd->pbuf);
 		break;

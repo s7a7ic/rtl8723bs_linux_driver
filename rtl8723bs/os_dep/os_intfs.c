@@ -382,9 +382,6 @@ module_param(rtw_rx_ampdu_amsdu, int, 0644);
 module_param(rtw_tx_ampdu_amsdu, int, 0644);
 #endif /* CONFIG_80211N_HT */
 
-#ifdef CONFIG_BEAMFORMING
-module_param(rtw_beamform_cap, int, 0644);
-#endif
 module_param(rtw_lowrate_two_xmit, int, 0644);
 
 module_param(rtw_power_mgnt, int, 0644);
@@ -2150,22 +2147,12 @@ u8 rtw_init_drv_sw(_adapter *padapter)
 	}
 #endif /* CONFIG_INTEL_WIDI */
 
-#ifdef CONFIG_BEAMFORMING
-#ifdef RTW_BEAMFORMING_VERSION_2
-	rtw_bf_init(padapter);
-#endif /* RTW_BEAMFORMING_VERSION_2 */
-#endif /* CONFIG_BEAMFORMING */
-
 #ifdef CONFIG_RTW_REPEATER_SON
 	init_rtw_rson_data(adapter_to_dvobj(padapter));
 #endif
 
 exit:
-
-
-
 	return ret8;
-
 }
 
 #ifdef CONFIG_WOWLAN
@@ -2177,7 +2164,6 @@ void rtw_cancel_dynamic_chk_timer(_adapter *padapter)
 
 void rtw_cancel_all_timer(_adapter *padapter)
 {
-
 	_cancel_timer_ex(&padapter->mlmepriv.assoc_timer);
 
 	_cancel_timer_ex(&padapter->mlmepriv.scan_to_timer);

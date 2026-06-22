@@ -146,20 +146,6 @@
 		#define CONFIG_FW_MULTI_PORT_SUPPORT
 	#endif /* CONFIG_CONCURRENT_MODE */
 
-	/*
-	 * Beamforming related definition
-	 */
-	#if defined(CONFIG_CONCURRENT_MODE) && defined(CONFIG_BEAMFORMING)
-		#undef CONFIG_BEAMFORMING
-		#warning "Not support Beamforming in concurrent mode yet!!"
-	#endif /* CONFIG_CONCURRENT_MODE && CONFIG_BEAMFORMING */
-	/* Beamforming mechanism is on driver not phydm, always disable it */
-	#define BEAMFORMING_SUPPORT				0
-	/* Only support new beamforming mechanism */
-	#ifdef CONFIG_BEAMFORMING
-		#define RTW_BEAMFORMING_VERSION_2
-	#endif /* CONFIG_BEAMFORMING */
-
 	#ifndef CONFIG_RTW_MAC_HIDDEN_RPT
 		#define CONFIG_RTW_MAC_HIDDEN_RPT
 	#endif /* CONFIG_RTW_MAC_HIDDEN_RPT */

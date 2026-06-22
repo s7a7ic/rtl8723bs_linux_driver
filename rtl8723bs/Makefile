@@ -1,4 +1,5 @@
 # SPDX-License-Identifier: GPL-2.0
+
 ccflags-y += $(USER_EXTRA_CFLAGS)
 #ccflags-y += -O1
 #ccflags-y += -Wall
@@ -438,7 +439,6 @@ rtk_core :=	core/rtw_cmd.o \
 		core/rtw_sreset.o \
 		core/rtw_btcoex_wifionly.o \
 		core/rtw_btcoex.o \
-		core/rtw_beamforming.o \
 		core/rtw_odm.o \
 		core/rtw_efuse.o
 

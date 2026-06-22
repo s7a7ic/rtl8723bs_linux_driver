@@ -825,10 +825,6 @@ u32 rtw_init_bcmc_stainfo(_adapter *padapter)
 		res = _FAIL;
 		goto exit;
 	}
-#ifdef CONFIG_BEAMFORMING
-	psta->cmn.bf_info.g_id = 63;
-	psta->cmn.bf_info.p_aid = 0;
-#endif
 
 	ptxservq = &(psta->sta_xmitpriv.be_q);
 
