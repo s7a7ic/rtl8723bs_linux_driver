@@ -184,12 +184,12 @@ u32 sdio_read32(struct intf_hdl *pintfhdl, u32 addr)
 	padapter = pintfhdl->padapter;
 	ftaddr = _cvrt2ftaddr(addr, &deviceId, &offset);
 
-	bMacPwrCtrlOn = _FALSE;
+	bMacPwrCtrlOn = false;
 	rtw_hal_get_hwreg(padapter, HW_VAR_APFM_ON_MAC, &bMacPwrCtrlOn);
 	if (((deviceId == WLAN_IOREG_DEVICE_ID) && (offset < 0x100))
-	    || (_FALSE == bMacPwrCtrlOn)
+	    || (false == bMacPwrCtrlOn)
 #ifdef CONFIG_LPS_LCLK
-	    || (_TRUE == adapter_to_pwrctl(padapter)->bFwCurrentInPSMode)
+	    || (true == adapter_to_pwrctl(padapter)->bFwCurrentInPSMode)
 #endif
 	   ) {
 		val = 0;
@@ -250,12 +250,12 @@ s32 sdio_readN(struct intf_hdl *pintfhdl, u32 addr, u32 cnt, u8 *pbuf)
 
 	ftaddr = _cvrt2ftaddr(addr, &deviceId, &offset);
 
-	bMacPwrCtrlOn = _FALSE;
+	bMacPwrCtrlOn = false;
 	rtw_hal_get_hwreg(padapter, HW_VAR_APFM_ON_MAC, &bMacPwrCtrlOn);
 	if (((deviceId == WLAN_IOREG_DEVICE_ID) && (offset < 0x100))
-	    || (_FALSE == bMacPwrCtrlOn)
+	    || (false == bMacPwrCtrlOn)
 #ifdef CONFIG_LPS_LCLK
-	    || (_TRUE == adapter_to_pwrctl(padapter)->bFwCurrentInPSMode)
+	    || (true == adapter_to_pwrctl(padapter)->bFwCurrentInPSMode)
 #endif
 	   ) {
 		err = sd_cmd52_read(pintfhdl, ftaddr, cnt, pbuf);
@@ -328,12 +328,12 @@ s32 sdio_write32(struct intf_hdl *pintfhdl, u32 addr, u32 val)
 
 	ftaddr = _cvrt2ftaddr(addr, &deviceId, &offset);
 
-	bMacPwrCtrlOn = _FALSE;
+	bMacPwrCtrlOn = false;
 	rtw_hal_get_hwreg(padapter, HW_VAR_APFM_ON_MAC, &bMacPwrCtrlOn);
 	if (((deviceId == WLAN_IOREG_DEVICE_ID) && (offset < 0x100))
-	    || (_FALSE == bMacPwrCtrlOn)
+	    || (false == bMacPwrCtrlOn)
 #ifdef CONFIG_LPS_LCLK
-	    || (_TRUE == adapter_to_pwrctl(padapter)->bFwCurrentInPSMode)
+	    || (true == adapter_to_pwrctl(padapter)->bFwCurrentInPSMode)
 #endif
 	   ) {
 		val = cpu_to_le32(val);
@@ -392,12 +392,12 @@ s32 sdio_writeN(struct intf_hdl *pintfhdl, u32 addr, u32 cnt, u8 *pbuf)
 
 	ftaddr = _cvrt2ftaddr(addr, &deviceId, &offset);
 
-	bMacPwrCtrlOn = _FALSE;
+	bMacPwrCtrlOn = false;
 	rtw_hal_get_hwreg(padapter, HW_VAR_APFM_ON_MAC, &bMacPwrCtrlOn);
 	if (((deviceId == WLAN_IOREG_DEVICE_ID) && (offset < 0x100))
-	    || (_FALSE == bMacPwrCtrlOn)
+	    || (false == bMacPwrCtrlOn)
 #ifdef CONFIG_LPS_LCLK
-	    || (_TRUE == adapter_to_pwrctl(padapter)->bFwCurrentInPSMode)
+	    || (true == adapter_to_pwrctl(padapter)->bFwCurrentInPSMode)
 #endif
 	   ) {
 		err = sd_cmd52_write(pintfhdl, ftaddr, cnt, pbuf);
@@ -533,7 +533,7 @@ static u32 sdio_write_port(
 	psdio = &adapter_to_dvobj(padapter)->intf_data;
 
 	if (!rtw_is_hw_init_completed(padapter)) {
-		RTW_INFO("%s [addr=0x%x cnt=%d] padapter->hw_init_completed == _FALSE\n", __func__, addr, cnt);
+		RTW_INFO("%s [addr=0x%x cnt=%d] padapter->hw_init_completed == false\n", __func__, addr, cnt);
 		return _FAIL;
 	}
 
@@ -594,9 +594,9 @@ s32 _sdio_local_read(
 
 	HalSdioGetCmdAddr8723BSdio(padapter, SDIO_LOCAL_DEVICE_ID, addr, &addr);
 
-	bMacPwrCtrlOn = _FALSE;
+	bMacPwrCtrlOn = false;
 	rtw_hal_get_hwreg(padapter, HW_VAR_APFM_ON_MAC, &bMacPwrCtrlOn);
-	if (_FALSE == bMacPwrCtrlOn) {
+	if (false == bMacPwrCtrlOn) {
 		err = _sd_cmd52_read(pintfhdl, addr, cnt, pbuf);
 		return err;
 	}
@@ -635,11 +635,11 @@ s32 sdio_local_read(
 
 	HalSdioGetCmdAddr8723BSdio(padapter, SDIO_LOCAL_DEVICE_ID, addr, &addr);
 
-	bMacPwrCtrlOn = _FALSE;
+	bMacPwrCtrlOn = false;
 	rtw_hal_get_hwreg(padapter, HW_VAR_APFM_ON_MAC, &bMacPwrCtrlOn);
-	if ((_FALSE == bMacPwrCtrlOn)
+	if ((false == bMacPwrCtrlOn)
 #ifdef CONFIG_LPS_LCLK
-	    || (_TRUE == adapter_to_pwrctl(padapter)->bFwCurrentInPSMode)
+	    || (true == adapter_to_pwrctl(padapter)->bFwCurrentInPSMode)
 #endif
 	   ) {
 		err = sd_cmd52_read(pintfhdl, addr, cnt, pbuf);
@@ -685,11 +685,11 @@ s32 _sdio_local_write(
 
 	HalSdioGetCmdAddr8723BSdio(padapter, SDIO_LOCAL_DEVICE_ID, addr, &addr);
 
-	bMacPwrCtrlOn = _FALSE;
+	bMacPwrCtrlOn = false;
 	rtw_hal_get_hwreg(padapter, HW_VAR_APFM_ON_MAC, &bMacPwrCtrlOn);
-	if ((_FALSE == bMacPwrCtrlOn)
+	if ((false == bMacPwrCtrlOn)
 #ifdef CONFIG_LPS_LCLK
-	    || (_TRUE == adapter_to_pwrctl(padapter)->bFwCurrentInPSMode)
+	    || (true == adapter_to_pwrctl(padapter)->bFwCurrentInPSMode)
 #endif
 	   ) {
 		err = _sd_cmd52_write(pintfhdl, addr, cnt, pbuf);
@@ -734,11 +734,11 @@ s32 sdio_local_write(
 
 	HalSdioGetCmdAddr8723BSdio(padapter, SDIO_LOCAL_DEVICE_ID, addr, &addr);
 
-	bMacPwrCtrlOn = _FALSE;
+	bMacPwrCtrlOn = false;
 	rtw_hal_get_hwreg(padapter, HW_VAR_APFM_ON_MAC, &bMacPwrCtrlOn);
-	if ((_FALSE == bMacPwrCtrlOn)
+	if ((false == bMacPwrCtrlOn)
 #ifdef CONFIG_LPS_LCLK
-	    || (_TRUE == adapter_to_pwrctl(padapter)->bFwCurrentInPSMode)
+	    || (true == adapter_to_pwrctl(padapter)->bFwCurrentInPSMode)
 #endif
 	   ) {
 		err = sd_cmd52_write(pintfhdl, addr, cnt, pbuf);
@@ -804,11 +804,11 @@ u32 SdioLocalCmd53Read4Byte(PADAPTER padapter, u32 addr)
 	struct intf_hdl *pintfhdl = &padapter->iopriv.intf;
 
 	HalSdioGetCmdAddr8723BSdio(padapter, SDIO_LOCAL_DEVICE_ID, addr, &addr);
-	bMacPwrCtrlOn = _FALSE;
+	bMacPwrCtrlOn = false;
 	rtw_hal_get_hwreg(padapter, HW_VAR_APFM_ON_MAC, &bMacPwrCtrlOn);
-	if ((_FALSE == bMacPwrCtrlOn)
+	if ((false == bMacPwrCtrlOn)
 #ifdef CONFIG_LPS_LCLK
-	    || (_TRUE == adapter_to_pwrctl(padapter)->bFwCurrentInPSMode)
+	    || (true == adapter_to_pwrctl(padapter)->bFwCurrentInPSMode)
 #endif
 	   ) {
 		sd_cmd52_read(pintfhdl, addr, 4, (u8 *)&val);
@@ -949,7 +949,7 @@ static s32 ReadInterrupt8723BSdio(PADAPTER padapter, u32 *phisr)
 
 
 	if (phisr == NULL)
-		return _FALSE;
+		return false;
 
 	himr = GET_HAL_DATA(padapter)->sdio_himr;
 
@@ -969,7 +969,7 @@ static s32 ReadInterrupt8723BSdio(PADAPTER padapter, u32 *phisr)
 
 	*phisr = hisr;
 
-	return _TRUE;
+	return true;
 }
 
 /*
@@ -1166,9 +1166,9 @@ u8 CheckIPSStatus(PADAPTER padapter)
 		 rtw_read8(padapter, 0x100), rtw_read8(padapter, 0x86));
 
 	if (rtw_read8(padapter, 0x100) == 0xEA)
-		return _TRUE;
+		return true;
 	else
-		return _FALSE;
+		return false;
 }
 
 #ifdef CONFIG_WOWLAN
@@ -1521,7 +1521,7 @@ u8 HalQueryTxBufferStatus8723BSdio(PADAPTER padapter)
 	_rtw_memcpy(phal->SdioTxFIFOFreePage, &NumOfFreePage, 4);
 	/* _exit_critical_bh(&phal->SdioTxFIFOFreePageLock, &irql); */
 
-	return _TRUE;
+	return true;
 }
 
 /*
@@ -1532,7 +1532,7 @@ u8 HalQueryTxOQTBufferStatus8723BSdio(PADAPTER padapter)
 {
 	HAL_DATA_TYPE *pHalData = GET_HAL_DATA(padapter);
 	pHalData->SdioTxOQTFreeSpace = SdioLocalCmd52Read1Byte(padapter, SDIO_REG_OQT_FREE_PG);
-	return _TRUE;
+	return true;
 }
 
 #if defined(CONFIG_WOWLAN) || defined(CONFIG_AP_WOWLAN)
@@ -1544,11 +1544,11 @@ u8 RecvOnePkt(PADAPTER padapter)
 	struct sdio_func *func;
 	u32 tmp = 0;
 	u16 len = 0;
-	u8 res = _FALSE;
+	u8 res = false;
 
 	if (padapter == NULL) {
 		RTW_ERR("%s: padapter is NULL!\n", __func__);
-		return _FALSE;
+		return false;
 	}
 
 	psddev = adapter_to_dvobj(padapter);
@@ -1568,9 +1568,9 @@ u8 RecvOnePkt(PADAPTER padapter)
 		if (precvbuf) {
 			/* printk("Completed Recv One Pkt.\n"); */
 			sd_rxhandler(padapter, precvbuf);
-			res = _TRUE;
+			res = true;
 		} else
-			res = _FALSE;
+			res = false;
 		sdio_release_host(func);
 	}
 	RTW_INFO("-%s-\n", __func__);

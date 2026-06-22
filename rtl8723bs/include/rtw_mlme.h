@@ -393,7 +393,7 @@ struct wifidirect_info {
 struct tdls_ss_record {	/* signal strength record */
 	u8		macaddr[ETH_ALEN];
 	u8		RxPWDBAll;
-	u8		is_tdls_sta;	/* _TRUE: direct link sta, _FALSE: else */
+	u8		is_tdls_sta;	/* true: direct link sta, false: else */
 };
 
 struct tdls_temp_mgmt {
@@ -866,12 +866,12 @@ __inline static sint check_fwstate(struct mlme_priv *pmlmepriv, sint state)
 {
 	if ((state == WIFI_NULL_STATE) &&
 		(pmlmepriv->fw_state == WIFI_NULL_STATE))
-		return _TRUE;
+		return true;
 
 	if (pmlmepriv->fw_state & state)
-		return _TRUE;
+		return true;
 
-	return _FALSE;
+	return false;
 }
 
 __inline static sint get_fwstate(struct mlme_priv *pmlmepriv)
@@ -990,7 +990,7 @@ void rtw_clear_scan_deny(_adapter *adapter);
 void rtw_set_scan_deny_timer_hdl(void *ctx);
 void rtw_set_scan_deny(_adapter *adapter, u32 ms);
 #else
-#define rtw_is_scan_deny(adapter) _FALSE
+#define rtw_is_scan_deny(adapter) false
 #define rtw_clear_scan_deny(adapter) do {} while (0)
 #define rtw_set_scan_deny(adapter, ms) do {} while (0)
 #endif

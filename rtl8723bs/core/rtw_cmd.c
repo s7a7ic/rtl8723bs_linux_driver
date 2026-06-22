@@ -64,7 +64,7 @@ static void c2h_wk_callback(_workitem *work)
 	u8 id, seq, plen;
 	u8 *payload;
 
-	evtpriv->c2h_wk_alive = _TRUE;
+	evtpriv->c2h_wk_alive = true;
 
 	while (!rtw_cbuf_empty(evtpriv->c2h_queue)) {
 		c2h_evt = (u8 *)rtw_cbuf_pop(evtpriv->c2h_queue);
@@ -96,7 +96,7 @@ static void c2h_wk_callback(_workitem *work)
 			continue;
 		}
 
-		if (direct_hdl_filter(adapter, id, seq, plen, payload) == _TRUE) {
+		if (direct_hdl_filter(adapter, id, seq, plen, payload) == true) {
 			/* Handle directly */
 			rtw_hal_c2h_handler(adapter, id, seq, plen, payload);
 			rtw_mfree(c2h_evt, C2H_REG_LEN);
@@ -107,7 +107,7 @@ static void c2h_wk_callback(_workitem *work)
 		}
 	}
 
-	evtpriv->c2h_wk_alive = _FALSE;
+	evtpriv->c2h_wk_alive = false;
 }
 #endif /* CONFIG_C2H_WK */
 
@@ -157,7 +157,7 @@ exit:
 
 #ifdef CONFIG_C2H_WK
 	_init_workitem(&pevtpriv->c2h_wk, c2h_wk_callback, NULL);
-	pevtpriv->c2h_wk_alive = _FALSE;
+	pevtpriv->c2h_wk_alive = false;
 	pevtpriv->c2h_queue = rtw_cbuf_alloc(C2H_QUEUE_MAX_LEN + 1);
 #endif
 	return res;
@@ -360,7 +360,7 @@ void rtw_free_cmd_priv(struct	cmd_priv *pcmdpriv)
 int rtw_cmd_filter(struct cmd_priv *pcmdpriv, struct cmd_obj *cmd_obj);
 int rtw_cmd_filter(struct cmd_priv *pcmdpriv, struct cmd_obj *cmd_obj)
 {
-	u8 bAllow = _FALSE; /* set to _TRUE to allow enqueuing cmd when hw_init_completed is _FALSE */
+	u8 bAllow = false; /* set to true to allow enqueuing cmd when hw_init_completed is false */
 
 #ifdef SUPPORT_HW_RFOFF_DETECTED
 	/* To decide allow or not */
@@ -371,20 +371,20 @@ int rtw_cmd_filter(struct cmd_priv *pcmdpriv, struct cmd_obj *cmd_obj)
 			struct drvextra_cmd_parm	*pdrvextra_cmd_parm = (struct drvextra_cmd_parm *)cmd_obj->parmbuf;
 			if (pdrvextra_cmd_parm->ec_id == POWER_SAVING_CTRL_WK_CID) {
 				/* RTW_INFO("==>enqueue POWER_SAVING_CTRL_WK_CID\n"); */
-				bAllow = _TRUE;
+				bAllow = true;
 			}
 		}
 	}
 #endif
 
 	if (cmd_obj->cmdcode == GEN_CMD_CODE(_SetChannelPlan))
-		bAllow = _TRUE;
+		bAllow = true;
 
 	if (cmd_obj->no_io)
-		bAllow = _TRUE;
+		bAllow = true;
 
-	if ((!rtw_is_hw_init_completed(pcmdpriv->padapter) && (bAllow == _FALSE))
-	    || ATOMIC_READ(&(pcmdpriv->cmdthd_running)) == _FALSE	/* com_thread not running */
+	if ((!rtw_is_hw_init_completed(pcmdpriv->padapter) && (bAllow == false))
+	    || ATOMIC_READ(&(pcmdpriv->cmdthd_running)) == false	/* com_thread not running */
 	   ) {
 		if (DBG_CMD_EXECUTE)
 			RTW_INFO(ADPT_FMT" drop "CMD_FMT" hw_init_completed:%u, cmdthd_running:%u\n", ADPT_ARG(cmd_obj->padapter)
@@ -498,7 +498,7 @@ thread_return rtw_cmd_thread(thread_context context)
 
 	pcmdbuf = pcmdpriv->cmd_buf;
 	prspbuf = pcmdpriv->rsp_buf;
-	ATOMIC_SET(&(pcmdpriv->cmdthd_running), _TRUE);
+	ATOMIC_SET(&(pcmdpriv->cmdthd_running), true);
 	_rtw_up_sema(&pcmdpriv->start_cmdthread_sema);
 
 	while (1) {
@@ -650,7 +650,7 @@ post_process:
 #endif
 
 	/* to avoid enqueue cmd after free all cmd_obj */
-	ATOMIC_SET(&(pcmdpriv->cmdthd_running), _FALSE);
+	ATOMIC_SET(&(pcmdpriv->cmdthd_running), false);
 
 	/* free all cmd_obj resources */
 	do {
@@ -806,7 +806,7 @@ u8 rtw_sitesurvey_cmd(_adapter  *padapter, NDIS_802_11_SSID *ssid, int ssid_num,
 	struct mlme_priv	*pmlmepriv = &padapter->mlmepriv;
 
 #ifdef CONFIG_LPS
-	if (check_fwstate(pmlmepriv, _FW_LINKED) == _TRUE)
+	if (check_fwstate(pmlmepriv, _FW_LINKED) == true)
 		rtw_lps_ctrl_wk_cmd(padapter, LPS_CTRL_SCAN, 1);
 #endif
 
@@ -820,7 +820,7 @@ u8 rtw_sitesurvey_cmd(_adapter  *padapter, NDIS_802_11_SSID *ssid, int ssid_num,
 		return _FAIL;
 	}
 
-	rtw_free_network_queue(padapter, _FALSE);
+	rtw_free_network_queue(padapter, false);
 
 
 	init_h2fwcmd_w_parm_no_rsp(ph2c, psurveyPara, GEN_CMD_CODE(_SiteSurvey));
@@ -1168,7 +1168,7 @@ void rtw_getbbrfreg_cmdrsp_callback(_adapter	*padapter,  struct cmd_obj *pcmd)
 
 #ifdef CONFIG_MP_INCLUDED
 	if (padapter->registrypriv.mp_mode == 1)
-		padapter->mppriv.workparam.bcompleted = _TRUE;
+		padapter->mppriv.workparam.bcompleted = true;
 #endif
 }
 
@@ -1180,7 +1180,7 @@ void rtw_readtssi_cmdrsp_callback(_adapter	*padapter,  struct cmd_obj *pcmd)
 
 #ifdef CONFIG_MP_INCLUDED
 	if (padapter->registrypriv.mp_mode == 1)
-		padapter->mppriv.workparam.bcompleted = _TRUE;
+		padapter->mppriv.workparam.bcompleted = true;
 #endif
 
 }
@@ -1324,7 +1324,7 @@ u8 rtw_joinbss_cmd(_adapter  *padapter, struct wlan_network *pnetwork)
 
 
 	/* for hidden ap to set fw_state here */
-	if (check_fwstate(pmlmepriv, WIFI_STATION_STATE | WIFI_ADHOC_STATE) != _TRUE) {
+	if (check_fwstate(pmlmepriv, WIFI_STATION_STATE | WIFI_ADHOC_STATE) != true) {
 		switch (ndis_network_mode) {
 		case Ndis802_11IBSS:
 			set_fwstate(pmlmepriv, WIFI_ADHOC_STATE);
@@ -1375,7 +1375,7 @@ u8 rtw_joinbss_cmd(_adapter  *padapter, struct wlan_network *pnetwork)
 	/* If not,  we have to copy the connecting AP's MAC address to it so that */
 	/* the driver just has the bssid information for PMKIDList searching. */
 
-	if (pmlmepriv->assoc_by_bssid == _FALSE)
+	if (pmlmepriv->assoc_by_bssid == false)
 		_rtw_memcpy(&pmlmepriv->assoc_bssid[0], &pnetwork->network.MacAddress[0], ETH_ALEN);
 
 	psecnetwork->IELength = rtw_restruct_sec_ie(padapter, &pnetwork->network.IEs[0], &psecnetwork->IEs[0], pnetwork->network.IELength);
@@ -1398,7 +1398,7 @@ u8 rtw_joinbss_cmd(_adapter  *padapter, struct wlan_network *pnetwork)
 	}
 
 #ifdef CONFIG_80211N_HT
-	phtpriv->ht_option = _FALSE;
+	phtpriv->ht_option = false;
 	ptmp = rtw_get_ie(&pnetwork->network.IEs[12], _HT_CAPABILITY_IE_, &tmp_len, pnetwork->network.IELength - 12);
 	if (pregistrypriv->ht_enable && ptmp && tmp_len > 0) {
 		/*	Added by Albert 2010/06/23 */
@@ -1432,7 +1432,7 @@ u8 rtw_joinbss_cmd(_adapter  *padapter, struct wlan_network *pnetwork)
 
 			RTW_INFO("FT: Target AP "MAC_FMT" MDID=(0x%2x), capacity=(0x%2x)\n", MAC_ARG(pnetwork->network.MacAddress), pftpriv->mdid, pftpriv->ft_cap);
 			rtw_set_ft_flags(padapter, RTW_FT_SUPPORTED);
-			if ((rtw_chk_ft_flags(padapter, RTW_FT_STA_OVER_DS_SUPPORTED)) && (pftpriv->ft_roam_on_expired == _FALSE) && (pftpriv->ft_cap & 0x01))
+			if ((rtw_chk_ft_flags(padapter, RTW_FT_STA_OVER_DS_SUPPORTED)) && (pftpriv->ft_roam_on_expired == false) && (pftpriv->ft_cap & 0x01))
 				rtw_set_ft_flags(padapter, RTW_FT_OVER_DS_SUPPORTED);
 		} else {
 				/*Don't use FT roaming if Target AP cannot support FT*/
@@ -1604,7 +1604,7 @@ u8 rtw_setstakey_cmd(_adapter *padapter, struct sta_info *sta, u8 key_type, bool
 	if (check_fwstate(pmlmepriv, WIFI_STATION_STATE))
 		psetstakey_para->algorithm = (unsigned char) psecuritypriv->dot11PrivacyAlgrthm;
 	else
-		GET_ENCRY_ALGO(psecuritypriv, sta, psetstakey_para->algorithm, _FALSE);
+		GET_ENCRY_ALGO(psecuritypriv, sta, psetstakey_para->algorithm, false);
 
 	if (key_type == GROUP_KEY)
 		_rtw_memcpy(&psetstakey_para->key, &psecuritypriv->dot118021XGrpKey[psecuritypriv->dot118021XGrpKeyid].skey, 16);
@@ -1618,7 +1618,7 @@ u8 rtw_setstakey_cmd(_adapter *padapter, struct sta_info *sta, u8 key_type, bool
 #endif /* CONFIG_TDLS */
 
 	/* jeff: set this becasue at least sw key is ready */
-	padapter->securitypriv.busetkipkey = _TRUE;
+	padapter->securitypriv.busetkipkey = true;
 
 	if (enqueue) {
 		ph2c = (struct cmd_obj *)rtw_zmalloc(sizeof(struct cmd_obj));
@@ -2095,7 +2095,7 @@ u8 _rtw_set_chplan_cmd(_adapter *adapter, int flags, u8 chplan, const struct cou
 
 
 	/* check if allow software config */
-	if (swconfig && rtw_hal_is_disable_sw_channel_plan(adapter) == _TRUE) {
+	if (swconfig && rtw_hal_is_disable_sw_channel_plan(adapter) == true) {
 		res = _FAIL;
 		goto exit;
 	}
@@ -2166,8 +2166,8 @@ inline u8 rtw_set_country_cmd(_adapter *adapter, int flags, const char *country_
 {
 	const struct country_chplan *ent;
 
-	if (is_alpha(country_code[0]) == _FALSE
-	    || is_alpha(country_code[1]) == _FALSE
+	if (is_alpha(country_code[0]) == false
+	    || is_alpha(country_code[1]) == false
 	   ) {
 		RTW_PRINT("%s input country_code is not alpha2\n", __func__);
 		return _FAIL;
@@ -2331,12 +2331,12 @@ exit:
 /* from_timer == 1 means driver is in LPS */
 u8 traffic_status_watchdog(_adapter *padapter, u8 from_timer)
 {
-	u8	bEnterPS = _FALSE;
+	u8	bEnterPS = false;
 	u16 BusyThresholdHigh;
 	u16	BusyThresholdLow;
 	u16	BusyThreshold;
-	u8	bBusyTraffic = _FALSE, bTxBusyTraffic = _FALSE, bRxBusyTraffic = _FALSE;
-	u8	bHigherBusyTraffic = _FALSE, bHigherBusyRxTraffic = _FALSE, bHigherBusyTxTraffic = _FALSE;
+	u8	bBusyTraffic = false, bTxBusyTraffic = false, bRxBusyTraffic = false;
+	u8	bHigherBusyTraffic = false, bHigherBusyRxTraffic = false, bHigherBusyTxTraffic = false;
 
 	struct mlme_priv		*pmlmepriv = &(padapter->mlmepriv);
 #ifdef CONFIG_TDLS
@@ -2363,7 +2363,7 @@ u8 traffic_status_watchdog(_adapter *padapter, u8 from_timer)
 	/*  */
 	/* Determine if our traffic is busy now */
 	/*  */
-	if ((check_fwstate(pmlmepriv, _FW_LINKED) == _TRUE)
+	if ((check_fwstate(pmlmepriv, _FW_LINKED) == true)
 	    /*&& !MgntInitAdapterInProgress(pMgntInfo)*/) {
 		/* if we raise bBusyTraffic in last watchdog, using lower threshold. */
 		if (pmlmepriv->LinkDetectInfo.bBusyTraffic)
@@ -2371,23 +2371,23 @@ u8 traffic_status_watchdog(_adapter *padapter, u8 from_timer)
 
 		if (pmlmepriv->LinkDetectInfo.NumRxOkInPeriod > BusyThreshold ||
 		    pmlmepriv->LinkDetectInfo.NumTxOkInPeriod > BusyThreshold) {
-			bBusyTraffic = _TRUE;
+			bBusyTraffic = true;
 
 			if (pmlmepriv->LinkDetectInfo.NumRxOkInPeriod > pmlmepriv->LinkDetectInfo.NumTxOkInPeriod)
-				bRxBusyTraffic = _TRUE;
+				bRxBusyTraffic = true;
 			else
-				bTxBusyTraffic = _TRUE;
+				bTxBusyTraffic = true;
 		}
 
 		/* Higher Tx/Rx data. */
 		if (pmlmepriv->LinkDetectInfo.NumRxOkInPeriod > 4000 ||
 		    pmlmepriv->LinkDetectInfo.NumTxOkInPeriod > 4000) {
-			bHigherBusyTraffic = _TRUE;
+			bHigherBusyTraffic = true;
 
 			if (pmlmepriv->LinkDetectInfo.NumRxOkInPeriod > pmlmepriv->LinkDetectInfo.NumTxOkInPeriod)
-				bHigherBusyRxTraffic = _TRUE;
+				bHigherBusyRxTraffic = true;
 			else
-				bHigherBusyTxTraffic = _TRUE;
+				bHigherBusyTxTraffic = true;
 		}
 
 #ifdef CONFIG_TRAFFIC_PROTECT
@@ -2411,7 +2411,7 @@ u8 traffic_status_watchdog(_adapter *padapter, u8 from_timer)
 #ifdef CONFIG_TDLS
 #ifdef CONFIG_TDLS_AUTOSETUP
 		/* TDLS_WATCHDOG_PERIOD * 2sec, periodically send */
-		if (hal_chk_wl_func(padapter, WL_FUNC_TDLS) == _TRUE) {
+		if (hal_chk_wl_func(padapter, WL_FUNC_TDLS) == true) {
 			if ((ptdlsinfo->watchdog_count % TDLS_WATCHDOG_PERIOD) == 0) {
 				_rtw_memcpy(txmgmt.peer, baddr, ETH_ALEN);
 				issue_tdls_dis_req(padapter, &txmgmt);
@@ -2434,9 +2434,9 @@ u8 traffic_status_watchdog(_adapter *padapter, u8 from_timer)
 			if (padapter->dump_rx_cnt_mode & DUMP_DRV_TRX_COUNTER_DATA)
 				RTW_INFO("(-)Tx = %d, Rx = %d\n", pmlmepriv->LinkDetectInfo.NumTxOkInPeriod, pmlmepriv->LinkDetectInfo.NumRxUnicastOkInPeriod);
 #endif
-			bEnterPS = _FALSE;
+			bEnterPS = false;
 #ifdef CONFIG_LPS_SLOW_TRANSITION
-			if (bBusyTraffic == _TRUE) {
+			if (bBusyTraffic == true) {
 				if (pmlmepriv->LinkDetectInfo.TrafficTransitionCount <= 4)
 					pmlmepriv->LinkDetectInfo.TrafficTransitionCount = 4;
 
@@ -2461,15 +2461,15 @@ u8 traffic_status_watchdog(_adapter *padapter, u8 from_timer)
 				pmlmepriv->LinkDetectInfo.TrafficTransitionCount = 0;
 
 			if (pmlmepriv->LinkDetectInfo.TrafficTransitionCount == 0)
-				bEnterPS = _TRUE;
+				bEnterPS = true;
 #else /* CONFIG_LPS_SLOW_TRANSITION */
-			bEnterPS = _TRUE;
+			bEnterPS = true;
 #endif /* CONFIG_LPS_SLOW_TRANSITION */
 		}
 
 #ifdef CONFIG_DYNAMIC_DTIM
 		if (pmlmepriv->LinkDetectInfo.LowPowerTransitionCount == 8)
-			bEnterPS = _FALSE;
+			bEnterPS = false;
 
 		RTW_INFO("LowPowerTransitionCount=%d\n", pmlmepriv->LinkDetectInfo.LowPowerTransitionCount);
 #endif /* CONFIG_DYNAMIC_DTIM */
@@ -2490,7 +2490,7 @@ u8 traffic_status_watchdog(_adapter *padapter, u8 from_timer)
 				/* rtw_hal_dm_watchdog_in_lps(padapter); */
 			}
 #ifdef CONFIG_DYNAMIC_DTIM
-			if (adapter_to_pwrctl(padapter)->bFwCurrentInPSMode == _TRUE)
+			if (adapter_to_pwrctl(padapter)->bFwCurrentInPSMode == true)
 				pmlmepriv->LinkDetectInfo.LowPowerTransitionCount++;
 #endif /* CONFIG_DYNAMIC_DTIM */
 		} else {
@@ -2571,28 +2571,28 @@ static void dynamic_update_bcn_check(_adapter *padapter)
 		if (count % 10 == 0) {
 			count = 1;
 
-			if (_FALSE == ATOMIC_READ(&pmlmepriv->olbc)
-				&& _FALSE == ATOMIC_READ(&pmlmepriv->olbc_ht)) {
+			if (false == ATOMIC_READ(&pmlmepriv->olbc)
+				&& false == ATOMIC_READ(&pmlmepriv->olbc_ht)) {
 
 				if (rtw_ht_operation_update(padapter) > 0) {
-					update_beacon(padapter, _HT_CAPABILITY_IE_, NULL, _FALSE);
-					update_beacon(padapter, _HT_ADD_INFO_IE_, NULL, _TRUE);
+					update_beacon(padapter, _HT_CAPABILITY_IE_, NULL, false);
+					update_beacon(padapter, _HT_ADD_INFO_IE_, NULL, true);
 				}
 			}
 		}
 
 		/* In 2s, there are any legacy AP, update HT info, and then reset count  */
 
-		if (_FALSE != ATOMIC_READ(&pmlmepriv->olbc)
-			&& _FALSE != ATOMIC_READ(&pmlmepriv->olbc_ht)) {
+		if (false != ATOMIC_READ(&pmlmepriv->olbc)
+			&& false != ATOMIC_READ(&pmlmepriv->olbc_ht)) {
 					
 			if (rtw_ht_operation_update(padapter) > 0) {
-				update_beacon(padapter, _HT_CAPABILITY_IE_, NULL, _FALSE);
-				update_beacon(padapter, _HT_ADD_INFO_IE_, NULL, _TRUE);
+				update_beacon(padapter, _HT_CAPABILITY_IE_, NULL, false);
+				update_beacon(padapter, _HT_ADD_INFO_IE_, NULL, true);
 
 			}
-			ATOMIC_SET(&pmlmepriv->olbc, _FALSE);
-			ATOMIC_SET(&pmlmepriv->olbc_ht, _FALSE);
+			ATOMIC_SET(&pmlmepriv->olbc, false);
+			ATOMIC_SET(&pmlmepriv->olbc_ht, false);
 			count = 0;
 		}
 
@@ -2635,7 +2635,7 @@ void rtw_dynamic_chk_wk_hdl(_adapter *padapter)
 	rtw_hal_sreset_linked_status_check(padapter);
 #endif
 
-	/* if(check_fwstate(pmlmepriv, _FW_UNDER_LINKING|_FW_UNDER_SURVEY)==_FALSE) */
+	/* if(check_fwstate(pmlmepriv, _FW_UNDER_LINKING|_FW_UNDER_SURVEY)==false) */
 	{
 #ifdef DBG_RX_COUNTER_DUMP
 		rtw_dump_rx_counters(padapter);
@@ -2667,17 +2667,17 @@ void lps_ctrl_wk_hdl(_adapter *padapter, u8 lps_ctrl_type)
 	u8	mstatus;
 
 
-	if ((check_fwstate(pmlmepriv, WIFI_ADHOC_MASTER_STATE) == _TRUE)
-	    || (check_fwstate(pmlmepriv, WIFI_ADHOC_STATE) == _TRUE))
+	if ((check_fwstate(pmlmepriv, WIFI_ADHOC_MASTER_STATE) == true)
+	    || (check_fwstate(pmlmepriv, WIFI_ADHOC_STATE) == true))
 		return;
 
 	switch (lps_ctrl_type) {
 	case LPS_CTRL_SCAN:
 		/* RTW_INFO("LPS_CTRL_SCAN\n"); */
 #ifdef CONFIG_BT_COEXIST
-		rtw_btcoex_ScanNotify(padapter, _TRUE);
+		rtw_btcoex_ScanNotify(padapter, true);
 #endif /* CONFIG_BT_COEXIST */
-		if (check_fwstate(pmlmepriv, _FW_LINKED) == _TRUE) {
+		if (check_fwstate(pmlmepriv, _FW_LINKED) == true) {
 			/* connect */
 			LPS_Leave(padapter, "LPS_CTRL_SCAN");
 		}
@@ -2830,7 +2830,7 @@ void rtw_lps_change_dtim_hdl(_adapter *padapter, u8 dtim)
 		return;
 
 #ifdef CONFIG_BT_COEXIST
-	if (rtw_btcoex_IsBtControlLps(padapter) == _TRUE)
+	if (rtw_btcoex_IsBtControlLps(padapter) == true)
 		return;
 #endif
 
@@ -2845,7 +2845,7 @@ void rtw_lps_change_dtim_hdl(_adapter *padapter, u8 dtim)
 		pwrpriv->dtim = dtim;
 	}
 
-	if ((pwrpriv->bFwCurrentInPSMode == _TRUE) && (pwrpriv->pwr_mode > PS_MODE_ACTIVE)) {
+	if ((pwrpriv->bFwCurrentInPSMode == true) && (pwrpriv->pwr_mode > PS_MODE_ACTIVE)) {
 		u8 ps_mode = pwrpriv->pwr_mode;
 
 		/* RTW_INFO("change DTIM from %d to %d, ps_mode=%d\n", pwrpriv->dtim, dtim, ps_mode); */
@@ -2948,7 +2948,7 @@ exit:
 #ifdef CONFIG_ANTENNA_DIVERSITY
 void antenna_select_wk_hdl(_adapter *padapter, u8 antenna)
 {
-	rtw_hal_set_odm_var(padapter, HAL_ODM_ANTDIV_SELECT, &antenna, _TRUE);
+	rtw_hal_set_odm_var(padapter, HAL_ODM_ANTDIV_SELECT, &antenna, true);
 }
 
 u8 rtw_antenna_select_cmd(_adapter *padapter, u8 antenna, u8 enqueue)
@@ -2957,12 +2957,12 @@ u8 rtw_antenna_select_cmd(_adapter *padapter, u8 antenna, u8 enqueue)
 	struct drvextra_cmd_parm	*pdrvextra_cmd_parm;
 	struct cmd_priv	*pcmdpriv = &padapter->cmdpriv;
 	struct dvobj_priv *dvobj = adapter_to_dvobj(padapter);
-	u8	bSupportAntDiv = _FALSE;
+	u8	bSupportAntDiv = false;
 	u8	res = _SUCCESS;
 	int	i;
 
 	rtw_hal_get_def_var(padapter, HAL_DEF_IS_SUPPORT_ANT_DIV, &(bSupportAntDiv));
-	if (_FALSE == bSupportAntDiv)
+	if (false == bSupportAntDiv)
 		return _FAIL;
 
 	for (i = 0; i < dvobj->iface_nums; i++) {
@@ -2970,7 +2970,7 @@ u8 rtw_antenna_select_cmd(_adapter *padapter, u8 antenna, u8 enqueue)
 			return _FAIL;
 	}
 
-	if (_TRUE == enqueue) {
+	if (true == enqueue) {
 		ph2c = (struct cmd_obj *)rtw_zmalloc(sizeof(struct cmd_obj));
 		if (ph2c == NULL) {
 			res = _FAIL;
@@ -3107,7 +3107,7 @@ static void rtw_chk_hi_queue_hdl(_adapter *padapter)
 	struct sta_info *psta_bmc;
 	struct sta_priv *pstapriv = &padapter->stapriv;
 	systime start = rtw_get_current_time();
-	u8 empty = _FALSE;
+	u8 empty = false;
 
 	psta_bmc = rtw_get_bcmc_stainfo(padapter);
 	if (!psta_bmc)
@@ -3115,23 +3115,23 @@ static void rtw_chk_hi_queue_hdl(_adapter *padapter)
 
 	rtw_hal_get_hwreg(padapter, HW_VAR_CHK_HI_QUEUE_EMPTY, &empty);
 
-	while (_FALSE == empty && rtw_get_passing_time_ms(start) < rtw_get_wait_hiq_empty_ms()) {
+	while (false == empty && rtw_get_passing_time_ms(start) < rtw_get_wait_hiq_empty_ms()) {
 		rtw_msleep_os(100);
 		rtw_hal_get_hwreg(padapter, HW_VAR_CHK_HI_QUEUE_EMPTY, &empty);
 	}
 
 	if (psta_bmc->sleepq_len == 0) {
 		if (empty == _SUCCESS) {
-			bool update_tim = _FALSE;
+			bool update_tim = false;
 
 			if (pstapriv->tim_bitmap & BIT(0))
-				update_tim = _TRUE;
+				update_tim = true;
 
 			pstapriv->tim_bitmap &= ~BIT(0);
 			pstapriv->sta_dz_bitmap &= ~BIT(0);
 
-			if (update_tim == _TRUE)
-				_update_beacon(padapter, _TIM_IE_, NULL, _TRUE, "bmc sleepq and HIQ empty");
+			if (update_tim == true)
+				_update_beacon(padapter, _TIM_IE_, NULL, true, "bmc sleepq and HIQ empty");
 		} else /* re check again */
 			rtw_chk_hi_queue_cmd(padapter);
 
@@ -3196,7 +3196,7 @@ u8 rtw_dfs_master_hdl(_adapter *adapter)
 	}
 
 	if (!rfctl->dbg_dfs_master_fake_radar_detect_cnt
-		&& rtw_odm_radar_detect(adapter) != _TRUE)
+		&& rtw_odm_radar_detect(adapter) != true)
 		goto cac_status_chk;
 
 	if (rfctl->dbg_dfs_master_fake_radar_detect_cnt != 0) {
@@ -3247,7 +3247,7 @@ cac_status_chk:
 		rtw_hal_set_hwreg(adapter, HW_VAR_TXPAUSE, &pause);
 		rfctl->cac_start_time = rfctl->cac_end_time = RTW_CAC_STOPPED;
 
-		if (rtw_mi_check_fwstate(adapter, WIFI_UNDER_LINKING|WIFI_SITE_MONITOR) == _FALSE) {
+		if (rtw_mi_check_fwstate(adapter, WIFI_UNDER_LINKING|WIFI_SITE_MONITOR) == false) {
 			ResumeTxBeacon(adapter);
 			rtw_mi_tx_beacon_hdl(adapter);
 		}
@@ -3298,7 +3298,7 @@ void rtw_dfs_master_timer_hdl(void *ctx)
 {
 	_adapter *adapter = (_adapter *)ctx;
 
-	rtw_dfs_master_cmd(adapter, _TRUE);
+	rtw_dfs_master_cmd(adapter, true);
 }
 
 void rtw_dfs_master_enable(_adapter *adapter, u8 ch, u8 bw, u8 offset)
@@ -3310,10 +3310,10 @@ void rtw_dfs_master_enable(_adapter *adapter, u8 ch, u8 bw, u8 offset)
 
 	RTW_INFO(FUNC_ADPT_FMT" on %u,%u,%u\n", FUNC_ADPT_ARG(adapter), ch, bw, offset);
 
-	if (rtw_is_cac_reset_needed(adapter, ch, bw, offset) == _TRUE)
+	if (rtw_is_cac_reset_needed(adapter, ch, bw, offset) == true)
 		rtw_reset_cac(adapter, ch, bw, offset);
 
-	rfctl->radar_detect_by_others = _FALSE;
+	rfctl->radar_detect_by_others = false;
 	rfctl->radar_detect_ch = ch;
 	rfctl->radar_detect_bw = bw;
 	rfctl->radar_detect_offset = offset;
@@ -3361,7 +3361,7 @@ void rtw_dfs_master_disable(_adapter *adapter, u8 ch, u8 bw, u8 offset, bool by_
 		rfctl->cac_start_time = rfctl->cac_end_time = RTW_CAC_STOPPED;
 		_cancel_timer_ex(&adapter->mlmepriv.dfs_master_timer);
 
-		if (rtw_mi_check_fwstate(adapter, WIFI_UNDER_LINKING|WIFI_SITE_MONITOR) == _FALSE) {
+		if (rtw_mi_check_fwstate(adapter, WIFI_UNDER_LINKING|WIFI_SITE_MONITOR) == false) {
 			ResumeTxBeacon(adapter);
 			rtw_mi_tx_beacon_hdl(adapter);
 		}
@@ -3386,14 +3386,14 @@ void rtw_dfs_master_status_apply(_adapter *adapter, u8 self_action)
 	struct mlme_ext_priv *mlmeext = &adapter->mlmeextpriv;
 	struct mi_state mstate;
 	u8 u_ch, u_bw, u_offset;
-	bool ld_sta_in_dfs = _FALSE;
-	bool sync_ch = _FALSE; /* _FALSE: asign channel directly */
-	bool needed = _FALSE;
+	bool ld_sta_in_dfs = false;
+	bool sync_ch = false; /* false: asign channel directly */
+	bool needed = false;
 
 	rtw_mi_status_no_self(adapter, &mstate);
 	rtw_mi_get_ch_setting_union_no_self(adapter, &u_ch, &u_bw, &u_offset);
 	if (u_ch != 0)
-		sync_ch = _TRUE;
+		sync_ch = true;
 
 	switch (self_action) {
 	case MLME_STA_CONNECTING:
@@ -3423,7 +3423,7 @@ void rtw_dfs_master_status_apply(_adapter *adapter, u8 self_action)
 		break;
 	}
 
-	if (sync_ch == _TRUE) {
+	if (sync_ch == true) {
 		if (!rtw_is_chbw_grouped(mlmeext->cur_channel, mlmeext->cur_bwmode, mlmeext->cur_ch_offset, u_ch, u_bw, u_offset)) {
 			RTW_INFO(FUNC_ADPT_FMT" can't sync %u,%u,%u with %u,%u,%u\n", FUNC_ADPT_ARG(adapter)
 				, mlmeext->cur_channel, mlmeext->cur_bwmode, mlmeext->cur_ch_offset, u_ch, u_bw, u_offset);
@@ -3441,7 +3441,7 @@ void rtw_dfs_master_status_apply(_adapter *adapter, u8 self_action)
 	if (MSTATE_STA_LD_NUM(&mstate) > 0) {
 		/* rely on AP on which STA mode connects */
 		if (rtw_is_dfs_chbw(u_ch, u_bw, u_offset))
-			ld_sta_in_dfs = _TRUE;
+			ld_sta_in_dfs = true;
 		goto apply;
 	}
 
@@ -3456,7 +3456,7 @@ void rtw_dfs_master_status_apply(_adapter *adapter, u8 self_action)
 	}
 
 	if (rtw_is_dfs_chbw(u_ch, u_bw, u_offset))
-		needed = _TRUE;
+		needed = true;
 
 apply:
 
@@ -3467,7 +3467,7 @@ apply:
 		, MSTATE_AP_NUM(&mstate), MSTATE_MESH_NUM(&mstate)
 		, u_ch, u_bw, u_offset);
 
-	if (needed == _TRUE)
+	if (needed == true)
 		rtw_dfs_master_enable(adapter, u_ch, u_bw, u_offset);
 	else
 		rtw_dfs_master_disable(adapter, u_ch, u_bw, u_offset, ld_sta_in_dfs);
@@ -3719,7 +3719,7 @@ static s32 rtw_mp_cmd_hdl(_adapter *padapter, u8 mp_cmd_id)
 			padapter->mppriv.mode = MP_ON;
 			MPT_PwrCtlDM(padapter, 0);
 		}
-		padapter->mppriv.bmac_filter = _FALSE;
+		padapter->mppriv.bmac_filter = false;
 #ifdef CONFIG_RTL8723B
 #ifdef CONFIG_USB_HCI
 		rtw_write32(padapter, 0x765, 0x0000);
@@ -4022,7 +4022,7 @@ s32 c2h_evt_hdl(_adapter *adapter, u8 *c2h_evt, c2h_id_filter filter)
 
 	rtw_hal_c2h_reg_hdr_parse(adapter, c2h_evt, &id, &seq, &plen, &payload);
 
-	if (filter && filter(adapter, id, seq, plen, payload) == _FALSE)
+	if (filter && filter(adapter, id, seq, plen, payload) == false)
 		goto exit;
 
 	ret = rtw_hal_c2h_handler(adapter, id, seq, plen, payload);
@@ -4128,7 +4128,7 @@ void session_tracker_chk_for_sta(_adapter *adapter, struct sta_info *sta)
 	phead = &st_ctl->tracker_q.queue;
 	plist = get_next(phead);
 	pnext = get_next(plist);
-	while (rtw_end_of_queue_search(phead, plist) == _FALSE) {
+	while (rtw_end_of_queue_search(phead, plist) == false) {
 		st = LIST_CONTAINOR(plist, struct session_tracker, list);
 		plist = pnext;
 		pnext = get_next(pnext);
@@ -4164,7 +4164,7 @@ void session_tracker_chk_for_sta(_adapter *adapter, struct sta_info *sta)
 	_exit_critical_bh(&st_ctl->tracker_q.lock, &irqL);
 
 	plist = get_next(&dlist);
-	while (rtw_end_of_queue_search(&dlist, plist) == _FALSE) {
+	while (rtw_end_of_queue_search(&dlist, plist) == false) {
 		st = LIST_CONTAINOR(plist, struct session_tracker, list);
 		plist = get_next(plist);
 		rtw_mfree((u8 *)st, sizeof(struct session_tracker));
@@ -4195,7 +4195,7 @@ void session_tracker_chk_for_adapter(_adapter *adapter)
 		phead = &(stapriv->sta_hash[i]);
 		plist = get_next(phead);
 
-		while ((rtw_end_of_queue_search(phead, plist)) == _FALSE) {
+		while ((rtw_end_of_queue_search(phead, plist)) == false) {
 			sta = LIST_CONTAINOR(plist, struct sta_info, hash_list);
 			plist = get_next(plist);
 
@@ -4253,7 +4253,7 @@ void session_tracker_cmd_hdl(_adapter *adapter, struct st_cmd_parm *parm)
 
 		phead = &st_ctl->tracker_q.queue;
 		plist = get_next(phead);
-		while (rtw_end_of_queue_search(phead, plist) == _FALSE) {
+		while (rtw_end_of_queue_search(phead, plist) == false) {
 			st = LIST_CONTAINOR(plist, struct session_tracker, list);
 
 			if (st->local_naddr == local_naddr
@@ -4265,7 +4265,7 @@ void session_tracker_cmd_hdl(_adapter *adapter, struct st_cmd_parm *parm)
 			plist = get_next(plist);
 		}
 
-		if (rtw_end_of_queue_search(phead, plist) == _TRUE)
+		if (rtw_end_of_queue_search(phead, plist) == true)
 			st = NULL;
 
 		switch (cmd) {
@@ -4533,7 +4533,7 @@ void rtw_create_ibss_post_hdl(_adapter *padapter, int status)
 
 		pdev_network->Length = get_WLAN_BSSID_EX_sz(pdev_network);
 		_rtw_memcpy(&(pwlan->network), pdev_network, pdev_network->Length);
-		/* pwlan->fixed = _TRUE; */
+		/* pwlan->fixed = true; */
 
 		/* copy pdev_network information to pmlmepriv->cur_network */
 		_rtw_memcpy(&mlme_cur_network->network, pdev_network, (get_WLAN_BSSID_EX_sz(pdev_network)));
@@ -4588,7 +4588,7 @@ void rtw_setassocsta_cmdrsp_callback(_adapter	*padapter,  struct cmd_obj *pcmd)
 
 	_enter_critical_bh(&pmlmepriv->lock, &irqL);
 
-	if ((check_fwstate(pmlmepriv, WIFI_MP_STATE) == _TRUE) && (check_fwstate(pmlmepriv, _FW_UNDER_LINKING) == _TRUE))
+	if ((check_fwstate(pmlmepriv, WIFI_MP_STATE) == true) && (check_fwstate(pmlmepriv, _FW_UNDER_LINKING) == true))
 		_clr_fwstate_(pmlmepriv, _FW_UNDER_LINKING);
 
 	set_fwstate(pmlmepriv, _FW_LINKED);
@@ -4605,6 +4605,6 @@ void rtw_getrttbl_cmd_cmdrsp_callback(_adapter	*padapter,  struct cmd_obj *pcmd)
 	rtw_free_cmd_obj(pcmd);
 #ifdef CONFIG_MP_INCLUDED
 	if (padapter->registrypriv.mp_mode == 1)
-		padapter->mppriv.workparam.bcompleted = _TRUE;
+		padapter->mppriv.workparam.bcompleted = true;
 #endif
 }

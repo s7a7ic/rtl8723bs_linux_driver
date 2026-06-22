@@ -879,13 +879,13 @@ NDIS_STATUS oid_rt_pro8711_wi_poll_hdl(struct oid_par_priv *poid_par_priv)
 	if (poid_par_priv->information_buf_len < sizeof(struct mp_wiparam))
 		return NDIS_STATUS_INVALID_LENGTH;
 
-	if (Adapter->mppriv.workparam.bcompleted == _FALSE)
+	if (Adapter->mppriv.workparam.bcompleted == false)
 		return NDIS_STATUS_NOT_ACCEPTED;
 
 	pwi_param = (struct mp_wiparam *)poid_par_priv->information_buf;
 
 	_rtw_memcpy(pwi_param, &Adapter->mppriv.workparam, sizeof(struct mp_wiparam));
-	Adapter->mppriv.act_in_progress = _FALSE;
+	Adapter->mppriv.act_in_progress = false;
 	*poid_par_priv->bytes_rw = poid_par_priv->information_buf_len;
 
 	return status;
@@ -1113,15 +1113,15 @@ NDIS_STATUS oid_rt_pro_read_tssi_hdl(struct oid_par_priv *poid_par_priv)
 	if (poid_par_priv->type_of_oid != SET_OID)
 		return NDIS_STATUS_NOT_ACCEPTED;
 
-	if (Adapter->mppriv.act_in_progress == _TRUE)
+	if (Adapter->mppriv.act_in_progress == true)
 		return NDIS_STATUS_NOT_ACCEPTED;
 
 	if (poid_par_priv->information_buf_len < sizeof(u8))
 		return NDIS_STATUS_INVALID_LENGTH;
 
 	/* init workparam */
-	Adapter->mppriv.act_in_progress = _TRUE;
-	Adapter->mppriv.workparam.bcompleted = _FALSE;
+	Adapter->mppriv.act_in_progress = true;
+	Adapter->mppriv.workparam.bcompleted = false;
 	Adapter->mppriv.workparam.act_type = MPT_READ_TSSI;
 	Adapter->mppriv.workparam.io_offset = 0;
 	Adapter->mppriv.workparam.io_value = 0xFFFFFFFF;
@@ -1299,13 +1299,13 @@ NDIS_STATUS oid_rt_pro_h2c_get_rate_table_hdl(struct oid_par_priv *poid_par_priv
 	u8 res = _SUCCESS;
 	DEBUG_INFO(("===> Set OID_RT_PRO_H2C_GET_RATE_TABLE.\n"));
 
-	if (pmp_wi_cntx->bmp_wi_progress == _TRUE) {
+	if (pmp_wi_cntx->bmp_wi_progress == true) {
 		DEBUG_ERR(("\n mp workitem is progressing, not allow to set another workitem right now!!!\n"));
 		Status = NDIS_STATUS_NOT_ACCEPTED;
 		break;
 	} else {
-		pmp_wi_cntx->bmp_wi_progress = _TRUE;
-		pmp_wi_cntx->param.bcompleted = _FALSE;
+		pmp_wi_cntx->bmp_wi_progress = true;
+		pmp_wi_cntx->param.bcompleted = false;
 		pmp_wi_cntx->param.act_type = MPT_GET_RATE_TABLE;
 		pmp_wi_cntx->param.io_offset = 0x0;
 		pmp_wi_cntx->param.bytes_cnt = sizeof(struct getratable_rsp);
@@ -1345,63 +1345,63 @@ NDIS_STATUS oid_rt_pro_encryption_ctrl_hdl(struct oid_par_priv *poid_par_priv)
 		switch (encry_mode) {
 		case HW_CONTROL:
 #if 0
-			Adapter->registrypriv.software_decrypt = _FALSE;
-			Adapter->registrypriv.software_encrypt = _FALSE;
+			Adapter->registrypriv.software_decrypt = false;
+			Adapter->registrypriv.software_encrypt = false;
 #else
-			psecuritypriv->sw_decrypt = _FALSE;
-			psecuritypriv->sw_encrypt = _FALSE;
+			psecuritypriv->sw_decrypt = false;
+			psecuritypriv->sw_encrypt = false;
 #endif
 			break;
 		case SW_CONTROL:
 #if 0
-			Adapter->registrypriv.software_decrypt = _TRUE;
-			Adapter->registrypriv.software_encrypt = _TRUE;
+			Adapter->registrypriv.software_decrypt = true;
+			Adapter->registrypriv.software_encrypt = true;
 #else
-			psecuritypriv->sw_decrypt = _TRUE;
-			psecuritypriv->sw_encrypt = _TRUE;
+			psecuritypriv->sw_decrypt = true;
+			psecuritypriv->sw_encrypt = true;
 #endif
 			break;
 		case HW_ENCRY_SW_DECRY:
 #if 0
-			Adapter->registrypriv.software_decrypt = _TRUE;
-			Adapter->registrypriv.software_encrypt = _FALSE;
+			Adapter->registrypriv.software_decrypt = true;
+			Adapter->registrypriv.software_encrypt = false;
 #else
-			psecuritypriv->sw_decrypt = _TRUE;
-			psecuritypriv->sw_encrypt = _FALSE;
+			psecuritypriv->sw_decrypt = true;
+			psecuritypriv->sw_encrypt = false;
 #endif
 			break;
 		case SW_ENCRY_HW_DECRY:
 #if 0
-			Adapter->registrypriv.software_decrypt = _FALSE;
-			Adapter->registrypriv.software_encrypt = _TRUE;
+			Adapter->registrypriv.software_decrypt = false;
+			Adapter->registrypriv.software_encrypt = true;
 #else
-			psecuritypriv->sw_decrypt = _FALSE;
-			psecuritypriv->sw_encrypt = _TRUE;
+			psecuritypriv->sw_decrypt = false;
+			psecuritypriv->sw_encrypt = true;
 #endif
 			break;
 		}
 
 	} else {
 #if 0
-		if (Adapter->registrypriv.software_encrypt == _FALSE) {
-			if (Adapter->registrypriv.software_decrypt == _FALSE)
+		if (Adapter->registrypriv.software_encrypt == false) {
+			if (Adapter->registrypriv.software_decrypt == false)
 				encry_mode = HW_CONTROL;
 			else
 				encry_mode = HW_ENCRY_SW_DECRY;
 		} else {
-			if (Adapter->registrypriv.software_decrypt == _FALSE)
+			if (Adapter->registrypriv.software_decrypt == false)
 				encry_mode = SW_ENCRY_HW_DECRY;
 			else
 				encry_mode = SW_CONTROL;
 		}
 #else
-		if ((psecuritypriv->sw_encrypt == _FALSE) && (psecuritypriv->sw_decrypt == _FALSE))
+		if ((psecuritypriv->sw_encrypt == false) && (psecuritypriv->sw_decrypt == false))
 			encry_mode = HW_CONTROL;
-		else if ((psecuritypriv->sw_encrypt == _FALSE) && (psecuritypriv->sw_decrypt == _TRUE))
+		else if ((psecuritypriv->sw_encrypt == false) && (psecuritypriv->sw_decrypt == true))
 			encry_mode = HW_ENCRY_SW_DECRY;
-		else if ((psecuritypriv->sw_encrypt == _TRUE) && (psecuritypriv->sw_decrypt == _FALSE))
+		else if ((psecuritypriv->sw_encrypt == true) && (psecuritypriv->sw_decrypt == false))
 			encry_mode = SW_ENCRY_HW_DECRY;
-		else if ((psecuritypriv->sw_encrypt == _TRUE) && (psecuritypriv->sw_decrypt == _TRUE))
+		else if ((psecuritypriv->sw_encrypt == true) && (psecuritypriv->sw_decrypt == true))
 			encry_mode = SW_CONTROL;
 #endif
 		*(u8 *)poid_par_priv->information_buf =  encry_mode;
@@ -1505,9 +1505,9 @@ static u32 mp_query_drv_var(_adapter *padapter, u8 offset, u32 var)
 		} else if (offset < 0x1d) { /* For setting data rate */
 			padapter->registrypriv.tx_rate = offset;
 			var = padapter->registrypriv.tx_rate;
-			padapter->registrypriv.use_rate = _TRUE;
+			padapter->registrypriv.use_rate = true;
 		} else { /* not use the data rate */
-			padapter->registrypriv.use_rate = _FALSE;
+			padapter->registrypriv.use_rate = false;
 		}
 	} else if (offset <= 110) { /* for setting debug level */
 		if (offset == 110) { /* For query data rate */
@@ -1657,14 +1657,14 @@ NDIS_STATUS oid_rt_pro_read_efuse_hdl(struct oid_par_priv *poid_par_priv)
 	cnts = pefuse->cnts;
 	data = pefuse->data;
 
-	EFUSE_GetEfuseDefinition(Adapter, EFUSE_WIFI, TYPE_AVAILABLE_EFUSE_BYTES_TOTAL, (PVOID)&max_available_size, _FALSE);
+	EFUSE_GetEfuseDefinition(Adapter, EFUSE_WIFI, TYPE_AVAILABLE_EFUSE_BYTES_TOTAL, (PVOID)&max_available_size, false);
 
 	if ((addr + cnts) > max_available_size) {
 		return NDIS_STATUS_NOT_ACCEPTED;
 	}
 
 	_irqlevel_changed_(&oldirql, LOWER);
-	if (rtw_efuse_access(Adapter, _FALSE, addr, cnts, data) == _FAIL) {
+	if (rtw_efuse_access(Adapter, false, addr, cnts, data) == _FAIL) {
 		status = NDIS_STATUS_FAILURE;
 	} else
 		*poid_par_priv->bytes_rw = poid_par_priv->information_buf_len;
@@ -1689,14 +1689,14 @@ NDIS_STATUS oid_rt_pro_write_efuse_hdl(struct oid_par_priv *poid_par_priv)
 	cnts = pefuse->cnts;
 	data = pefuse->data;
 
-	EFUSE_GetEfuseDefinition(Adapter, EFUSE_WIFI, TYPE_AVAILABLE_EFUSE_BYTES_TOTAL, (PVOID)&max_available_size, _FALSE);
+	EFUSE_GetEfuseDefinition(Adapter, EFUSE_WIFI, TYPE_AVAILABLE_EFUSE_BYTES_TOTAL, (PVOID)&max_available_size, false);
 
 	if ((addr + cnts) > max_available_size) {
 		return NDIS_STATUS_NOT_ACCEPTED;
 	}
 
 	_irqlevel_changed_(&oldirql, LOWER);
-	if (rtw_efuse_access(Adapter, _TRUE, addr, cnts, data) == _FAIL)
+	if (rtw_efuse_access(Adapter, true, addr, cnts, data) == _FAIL)
 		status = NDIS_STATUS_FAILURE;
 	_irqlevel_changed_(&oldirql, RAISE);
 
@@ -1720,20 +1720,20 @@ NDIS_STATUS oid_rt_pro_rw_efuse_pgpkt_hdl(struct oid_par_priv *poid_par_priv)
 
 	if (poid_par_priv->type_of_oid == QUERY_OID) {
 
-		Efuse_PowerSwitch(Adapter, _FALSE, _TRUE);
-		if (Efuse_PgPacketRead(Adapter, ppgpkt->offset, ppgpkt->data, _FALSE) == _TRUE)
+		Efuse_PowerSwitch(Adapter, false, true);
+		if (Efuse_PgPacketRead(Adapter, ppgpkt->offset, ppgpkt->data, false) == true)
 			*poid_par_priv->bytes_rw = poid_par_priv->information_buf_len;
 		else
 			status = NDIS_STATUS_FAILURE;
-		Efuse_PowerSwitch(Adapter, _FALSE, _FALSE);
+		Efuse_PowerSwitch(Adapter, false, false);
 	} else {
 
-		Efuse_PowerSwitch(Adapter, _TRUE, _TRUE);
-		if (Efuse_PgPacketWrite(Adapter, ppgpkt->offset, ppgpkt->word_en, ppgpkt->data, _FALSE) == _TRUE)
+		Efuse_PowerSwitch(Adapter, true, true);
+		if (Efuse_PgPacketWrite(Adapter, ppgpkt->offset, ppgpkt->word_en, ppgpkt->data, false) == true)
 			*poid_par_priv->bytes_rw = poid_par_priv->information_buf_len;
 		else
 			status = NDIS_STATUS_FAILURE;
-		Efuse_PowerSwitch(Adapter, _TRUE, _FALSE);
+		Efuse_PowerSwitch(Adapter, true, false);
 	}
 
 	_irqlevel_changed_(&oldirql, RAISE);
@@ -1803,7 +1803,7 @@ NDIS_STATUS oid_rt_pro_efuse_map_hdl(struct oid_par_priv *poid_par_priv)
 	PADAPTER	Adapter = (PADAPTER)(poid_par_priv->adapter_context);
 	u16	mapLen = 0;
 
-	EFUSE_GetEfuseDefinition(Adapter, EFUSE_WIFI, TYPE_EFUSE_MAP_LEN, (PVOID)&mapLen, _FALSE);
+	EFUSE_GetEfuseDefinition(Adapter, EFUSE_WIFI, TYPE_EFUSE_MAP_LEN, (PVOID)&mapLen, false);
 
 	*poid_par_priv->bytes_rw = 0;
 

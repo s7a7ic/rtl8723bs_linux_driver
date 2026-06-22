@@ -153,7 +153,7 @@ typedef struct compat_android_wifi_priv_cmd {
  * time (only) in dhd_open, subsequential wifi on will be handled by
  * wl_android_wifi_on
  */
-static int g_wifi_on = _TRUE;
+static int g_wifi_on = true;
 
 unsigned int oob_irq = 0;
 unsigned int oob_gpio = 0;
@@ -359,7 +359,7 @@ int rtw_android_get_rssi(struct net_device *net, char *command, int total_len)
 	struct	wlan_network	*pcur_network = &pmlmepriv->cur_network;
 	int bytes_written = 0;
 
-	if (check_fwstate(pmlmepriv, _FW_LINKED) == _TRUE) {
+	if (check_fwstate(pmlmepriv, _FW_LINKED) == true) {
 		bytes_written += snprintf(&command[bytes_written], total_len, "%s rssi %d",
 			pcur_network->network.Ssid.Ssid, padapter->recvpriv.rssi);
 	}
@@ -417,7 +417,7 @@ int rtw_android_set_block_scan(struct net_device *net, char *command, int total_
 	_adapter *adapter = (_adapter *)rtw_netdev_priv(net);
 	char *block_value = command + strlen(android_wifi_cmd_str[ANDROID_WIFI_CMD_BLOCK_SCAN]) + 1;
 
-	adapter_wdev_data(adapter)->block_scan = (*block_value == '0') ? _FALSE : _TRUE;
+	adapter_wdev_data(adapter)->block_scan = (*block_value == '0') ? false : true;
 
 	return 0;
 }
@@ -427,7 +427,7 @@ int rtw_android_set_block(struct net_device *net, char *command, int total_len)
 	_adapter *adapter = (_adapter *)rtw_netdev_priv(net);
 	char *block_value = command + strlen(android_wifi_cmd_str[ANDROID_WIFI_CMD_BLOCK]) + 1;
 
-	adapter_wdev_data(adapter)->block = (*block_value == '0') ? _FALSE : _TRUE;
+	adapter_wdev_data(adapter)->block = (*block_value == '0') ? false : true;
 
 	return 0;
 }
@@ -540,7 +540,7 @@ int rtw_gtk_offload(struct net_device *net, u8 *cmd_ptr)
 			printk(" %02x ", psta->kck[i]);
 		*/
 		_rtw_memcpy(psta->replay_ctr, cmd_ptr, RTW_REPLAY_CTR_LEN);
-		psecuritypriv->binstallKCK_KEK = _TRUE;
+		psecuritypriv->binstallKCK_KEK = true;
 
 		/* printk("\nREPLAY_CTR: "); */
 		/* for(i=0;i<RTW_REPLAY_CTR_LEN; i++) */
@@ -1077,7 +1077,7 @@ static void shutdown_card(void)
 #ifdef CONFIG_GPIO_WAKEUP
 	/*default wake up pin change to BT*/
 	RTW_INFO("%s:default wake up pin change to BT\n", __FUNCTION__);
-	rtw_hal_switch_gpio_wl_ctrl(g_test_adapter, WAKEUP_GPIO_IDX, _FALSE);
+	rtw_hal_switch_gpio_wl_ctrl(g_test_adapter, WAKEUP_GPIO_IDX, false);
 #endif /* CONFIG_GPIO_WAKEUP */
 #endif /* CONFIG_WOWLAN */
 

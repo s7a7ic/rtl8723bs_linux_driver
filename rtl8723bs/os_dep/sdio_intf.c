@@ -189,7 +189,7 @@ static u8 gpio_hostwakeup_alloc_irq(PADAPTER padapter)
 
 	if (err < 0) {
 		RTW_INFO("Oops: can't allocate gpio irq %d err:%d\n", oob_irq, err);
-		return _FALSE;
+		return false;
 	} else
 		RTW_INFO("allocate gpio irq %d ok\n", oob_irq);
 	enable_irq_wake(oob_irq);
@@ -308,7 +308,7 @@ static u32 sdio_init(struct dvobj_priv *dvobj)
 	psdio_data->timing = func->card->host->ios.timing;
 	psdio_data->clock = func->card->host->ios.clock;
 
-	psdio_data->sd3_bus_mode = _FALSE;
+	psdio_data->sd3_bus_mode = false;
 #if LINUX_VERSION_CODE >= KERNEL_VERSION(3, 0, 0)
 	if (psdio_data->timing <= MMC_TIMING_UHS_DDR50
 		#if LINUX_VERSION_CODE >= KERNEL_VERSION(3, 8, 0)
@@ -317,7 +317,7 @@ static u32 sdio_init(struct dvobj_priv *dvobj)
 		&& psdio_data->timing >= MMC_TIMING_UHS_SDR50
 		#endif
 	)
-		psdio_data->sd3_bus_mode = _TRUE;
+		psdio_data->sd3_bus_mode = true;
 #endif
 	SDIO_CARD_INFO_DUMP(dvobj);
 
@@ -481,7 +481,7 @@ _adapter *rtw_sdio_primary_adapter_init(struct dvobj_priv *dvobj)
 	padapter->iface_id = IFACE_ID0;
 
 	/* set adapter_type/iface type for primary padapter */
-	padapter->isprimary = _TRUE;
+	padapter->isprimary = true;
 	padapter->adapter_type = PRIMARY_ADAPTER;
 #ifdef CONFIG_MI_WITH_MBSSID_CAM
 	padapter->hw_port = HW_PORT0;
@@ -585,7 +585,7 @@ static void rtw_sdio_primary_adapter_deinit(_adapter *padapter)
 	/*rtw_cancel_all_timer(if1);*/
 
 #ifdef CONFIG_WOWLAN
-	adapter_to_pwrctl(padapter)->wowlan_mode = _FALSE;
+	adapter_to_pwrctl(padapter)->wowlan_mode = false;
 	RTW_PRINT("%s wowlan_mode:%d\n", __func__, adapter_to_pwrctl(padapter)->wowlan_mode);
 #endif /* CONFIG_WOWLAN */
 
@@ -744,7 +744,7 @@ static void rtw_dev_remove(struct sdio_func *func)
 	struct pwrctrl_priv *pwrctl = dvobj_to_pwrctl(dvobj);
 	PADAPTER padapter = dvobj_get_primary_adapter(dvobj);
 
-	dvobj->processing_dev_remove = _TRUE;
+	dvobj->processing_dev_remove = true;
 
 	/* TODO: use rtw_os_ndevs_deinit instead at the first stage of driver's dev deinit function */
 	rtw_os_ndevs_unregister(dvobj);
@@ -766,7 +766,7 @@ static void rtw_dev_remove(struct sdio_func *func)
 	rtw_unregister_early_suspend(pwrctl);
 #endif
 
-	if (GET_HAL_DATA(padapter)->bFWReady == _TRUE) {
+	if (GET_HAL_DATA(padapter)->bFWReady == true) {
 		rtw_ps_deny(padapter, PS_DENY_DRV_REMOVE);
 		rtw_pm_set_ips(padapter, IPS_NONE);
 		rtw_pm_set_lps(padapter, PS_MODE_ACTIVE);
@@ -815,11 +815,11 @@ static int rtw_sdio_suspend(struct device *dev)
 	padapter = dvobj_get_primary_adapter(psdpriv);
 	pdbgpriv = &psdpriv->drv_dbg;
 	if (rtw_is_drv_stopped(padapter)) {
-		RTW_INFO("%s bDriverStopped == _TRUE\n", __func__);
+		RTW_INFO("%s bDriverStopped == true\n", __func__);
 		goto exit;
 	}
 
-	if (pwrpriv->bInSuspend == _TRUE) {
+	if (pwrpriv->bInSuspend == true) {
 		RTW_INFO("%s bInSuspend = %d\n", __func__, pwrpriv->bInSuspend);
 		pdbgpriv->dbg_suspend_error_cnt++;
 		goto exit;
@@ -859,7 +859,7 @@ int rtw_resume_process(_adapter *padapter)
 	struct dvobj_priv *psdpriv = padapter->dvobj;
 	struct debug_priv *pdbgpriv = &psdpriv->drv_dbg;
 
-	if (pwrpriv->bInSuspend == _FALSE) {
+	if (pwrpriv->bInSuspend == false) {
 		pdbgpriv->dbg_resume_error_cnt++;
 		RTW_INFO("%s bInSuspend = %d\n", __FUNCTION__, pwrpriv->bInSuspend);
 		return -1;
@@ -900,7 +900,7 @@ static int rtw_sdio_resume(struct device *dev)
 #else
 			if (rtw_is_earlysuspend_registered(pwrpriv)) {
 				/* jeff: bypass resume here, do in late_resume */
-				rtw_set_do_late_resume(pwrpriv, _TRUE);
+				rtw_set_do_late_resume(pwrpriv, true);
 			} else {
 				rtw_resume_lock_suspend();
 				ret = rtw_resume_process(padapter);
@@ -928,7 +928,7 @@ static int rtw_drv_entry(void)
 	rtw_android_wifictrl_func_add();
 #endif /* !CONFIG_PLATFORM_INTEL_BYT */
 
-	sdio_drvpriv.drv_registered = _TRUE;
+	sdio_drvpriv.drv_registered = true;
 	rtw_suspend_lock_init();
 	rtw_drv_proc_init();
 	rtw_ndev_notifier_register();
@@ -936,7 +936,7 @@ static int rtw_drv_entry(void)
 
 	ret = sdio_register_driver(&sdio_drvpriv.r871xs_drv);
 	if (ret != 0) {
-		sdio_drvpriv.drv_registered = _FALSE;
+		sdio_drvpriv.drv_registered = false;
 		rtw_suspend_lock_uninit();
 		rtw_drv_proc_deinit();
 		rtw_ndev_notifier_unregister();
@@ -955,7 +955,7 @@ static void rtw_drv_halt(void)
 {
 	RTW_PRINT("module exit start\n");
 
-	sdio_drvpriv.drv_registered = _FALSE;
+	sdio_drvpriv.drv_registered = false;
 
 	sdio_unregister_driver(&sdio_drvpriv.r871xs_drv);
 

@@ -463,7 +463,7 @@ bool rtw_chbw_to_freq_range(u8 ch, u8 bw, u8 offset, u32 *hi, u32 *lo)
 	u32 freq;
 	u32 hi_ret = 0, lo_ret = 0;
 	int i;
-	bool valid = _FALSE;
+	bool valid = false;
 
 	if (hi)
 		*hi = 0;
@@ -495,7 +495,7 @@ bool rtw_chbw_to_freq_range(u8 ch, u8 bw, u8 offset, u32 *hi, u32 *lo)
 	if (lo)
 		*lo = lo_ret;
 
-	valid = _TRUE;
+	valid = true;
 
 exit:
 	return valid;
@@ -1034,7 +1034,7 @@ void _dump_regd_exc_list(void *sel, struct rf_ctl_t *rfctl)
 	head = &rfctl->reg_exc_list;
 	cur = get_next(head);
 
-	while ((rtw_end_of_queue_search(head, cur)) == _FALSE) {
+	while ((rtw_end_of_queue_search(head, cur)) == false) {
 		u8 has_country;
 
 		ent = LIST_CONTAINOR(cur, struct regd_exc_ent, list);
@@ -1107,7 +1107,7 @@ struct regd_exc_ent *_rtw_regd_exc_search(struct rf_ctl_t *rfctl, const char *co
 	head = &rfctl->reg_exc_list;
 	cur = get_next(head);
 
-	while ((rtw_end_of_queue_search(head, cur)) == _FALSE) {
+	while ((rtw_end_of_queue_search(head, cur)) == false) {
 		u8 has_country;
 
 		ent = LIST_CONTAINOR(cur, struct regd_exc_ent, list);
@@ -1165,7 +1165,7 @@ void rtw_regd_exc_list_free(struct rf_ctl_t *rfctl)
 	head = &rfctl->reg_exc_list;
 	cur = get_next(head);
 
-	while ((rtw_end_of_queue_search(head, cur)) == _FALSE) {
+	while ((rtw_end_of_queue_search(head, cur)) == false) {
 		ent = LIST_CONTAINOR(cur, struct regd_exc_ent, list);
 		cur = get_next(cur);
 		rtw_list_delete(&ent->list);
@@ -1309,7 +1309,7 @@ void dump_txpwr_lmt(void *sel, _adapter *adapter)
 
 					head = &rfctl->txpwr_lmt_list;
 					cur = get_next(head);
-					while ((rtw_end_of_queue_search(head, cur)) == _FALSE) {
+					while ((rtw_end_of_queue_search(head, cur)) == false) {
 						ent = LIST_CONTAINOR(cur, struct txpwr_lmt_ent, list);
 						cur = get_next(cur);
 
@@ -1332,7 +1332,7 @@ void dump_txpwr_lmt(void *sel, _adapter *adapter)
 						_RTW_PRINT_SEL(sel, "|");
 						head = &rfctl->txpwr_lmt_list;
 						cur = get_next(head);
-						while ((rtw_end_of_queue_search(head, cur)) == _FALSE) {
+						while ((rtw_end_of_queue_search(head, cur)) == false) {
 							ent = LIST_CONTAINOR(cur, struct txpwr_lmt_ent, list);
 							cur = get_next(cur);
 							_RTW_PRINT_SEL(sel, "%3c "
@@ -1362,7 +1362,7 @@ void dump_txpwr_lmt(void *sel, _adapter *adapter)
 						RTW_PRINT_SEL(sel, "%3u ", ch);
 						head = &rfctl->txpwr_lmt_list;
 						cur = get_next(head);
-						while ((rtw_end_of_queue_search(head, cur)) == _FALSE) {
+						while ((rtw_end_of_queue_search(head, cur)) == false) {
 							ent = LIST_CONTAINOR(cur, struct txpwr_lmt_ent, list);
 							cur = get_next(cur);
 							lmt = phy_get_txpwr_lmt_abs(adapter, ent->regd_name, band, bw, tlrs, ntx_idx, ch, 0);
@@ -1404,7 +1404,7 @@ void dump_txpwr_lmt(void *sel, _adapter *adapter)
 							head = &rfctl->txpwr_lmt_list;
 							cur = get_next(head);
 							i = 0;
-							while ((rtw_end_of_queue_search(head, cur)) == _FALSE) {
+							while ((rtw_end_of_queue_search(head, cur)) == false) {
 								ent = LIST_CONTAINOR(cur, struct txpwr_lmt_ent, list);
 								cur = get_next(cur);
 								lmt_offset = phy_get_txpwr_lmt(adapter, ent->regd_name, band, bw, path, rs, ntx_idx, ch, 0);
@@ -1475,12 +1475,12 @@ void rtw_txpwr_lmt_add_with_nlen(struct rf_ctl_t *rfctl, const char *regd_name, 
 	/* search for existed entry */
 	head = &rfctl->txpwr_lmt_list;
 	cur = get_next(head);
-	while ((rtw_end_of_queue_search(head, cur)) == _FALSE) {
+	while ((rtw_end_of_queue_search(head, cur)) == false) {
 		ent = LIST_CONTAINOR(cur, struct txpwr_lmt_ent, list);
 		cur = get_next(cur);
 
 		if (strlen(ent->regd_name) == nlen
-			&& _rtw_memcmp(ent->regd_name, regd_name, nlen) == _TRUE)
+			&& _rtw_memcmp(ent->regd_name, regd_name, nlen) == true)
 			goto chk_lmt_val;
 	}
 
@@ -1563,7 +1563,7 @@ struct txpwr_lmt_ent *_rtw_txpwr_lmt_get_by_name(struct rf_ctl_t *rfctl, const c
 	head = &rfctl->txpwr_lmt_list;
 	cur = get_next(head);
 
-	while ((rtw_end_of_queue_search(head, cur)) == _FALSE) {
+	while ((rtw_end_of_queue_search(head, cur)) == false) {
 		ent = LIST_CONTAINOR(cur, struct txpwr_lmt_ent, list);
 		cur = get_next(cur);
 
@@ -1601,7 +1601,7 @@ void rtw_txpwr_lmt_list_free(struct rf_ctl_t *rfctl)
 	head = &rfctl->txpwr_lmt_list;
 	cur = get_next(head);
 
-	while ((rtw_end_of_queue_search(head, cur)) == _FALSE) {
+	while ((rtw_end_of_queue_search(head, cur)) == false) {
 		ent = LIST_CONTAINOR(cur, struct txpwr_lmt_ent, list);
 		cur = get_next(cur);
 		if (ent->regd_name == rfctl->regd_name)
@@ -1819,15 +1819,15 @@ u8 rtw_is_dfs_chbw(u8 ch, u8 bw, u8 offset)
 
 bool rtw_is_long_cac_range(u32 hi, u32 lo, u8 dfs_region)
 {
-	return (dfs_region == PHYDM_DFS_DOMAIN_ETSI && rtw_is_range_overlap(hi, lo, 5650, 5600)) ? _TRUE : _FALSE;
+	return (dfs_region == PHYDM_DFS_DOMAIN_ETSI && rtw_is_range_overlap(hi, lo, 5650, 5600)) ? true : false;
 }
 
 bool rtw_is_long_cac_ch(u8 ch, u8 bw, u8 offset, u8 dfs_region)
 {
 	u32 hi, lo;
 
-	if (rtw_chbw_to_freq_range(ch, bw, offset, &hi, &lo) == _FALSE)
-		return _FALSE;
+	if (rtw_chbw_to_freq_range(ch, bw, offset, &hi, &lo) == false)
+		return false;
 
-	return rtw_is_long_cac_range(hi, lo, dfs_region) ? _TRUE : _FALSE;
+	return rtw_is_long_cac_range(hi, lo, dfs_region) ? true : false;
 }

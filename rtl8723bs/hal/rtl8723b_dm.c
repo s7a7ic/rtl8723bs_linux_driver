@@ -41,7 +41,7 @@ static VOID dm_CheckProtection(IN PADAPTER Adapter)
 static void dm_CheckPbcGPIO(_adapter *padapter)
 {
 	u8	tmp1byte;
-	u8	bPbcPressed = _FALSE;
+	u8	bPbcPressed = false;
 
 	if (!padapter->registrypriv.hw_wps_pbc)
 		return;
@@ -64,7 +64,7 @@ static void dm_CheckPbcGPIO(_adapter *padapter)
 		return ;
 
 	if (tmp1byte & HAL_8192C_HW_GPIO_WPS_BIT)
-		bPbcPressed = _TRUE;
+		bPbcPressed = true;
 #else
 	tmp1byte = rtw_read8(padapter, GPIO_IN);
 
@@ -72,10 +72,10 @@ static void dm_CheckPbcGPIO(_adapter *padapter)
 		return ;
 
 	if ((tmp1byte & HAL_8192C_HW_GPIO_WPS_BIT) == 0)
-		bPbcPressed = _TRUE;
+		bPbcPressed = true;
 #endif
 
-	if (_TRUE == bPbcPressed) {
+	if (true == bPbcPressed) {
 		/* Here we only set bPbcPressed to true */
 		/* After trigger PBC, the variable will be set to false */
 		RTW_INFO("CheckPbcGPIO - PBC is pressed\n");
@@ -102,8 +102,8 @@ dm_InterruptMigration(
 	HAL_DATA_TYPE	*pHalData = GET_HAL_DATA(Adapter);
 	struct mlme_priv	*pmlmepriv = &(Adapter->mlmepriv);
 	BOOLEAN			bCurrentIntMt, bCurrentACIntDisable;
-	BOOLEAN			IntMtToSet = _FALSE;
-	BOOLEAN			ACIntToSet = _FALSE;
+	BOOLEAN			IntMtToSet = false;
+	BOOLEAN			ACIntToSet = false;
 
 
 	/* Retrieve current interrupt migration and Tx four ACs IMR settings first. */
@@ -115,13 +115,13 @@ dm_InterruptMigration(
 	/* when interrupt migration is set before. 2010.03.05. */
 	/*  */
 	if (!Adapter->registrypriv.wifi_spec &&
-	    (check_fwstate(pmlmepriv, _FW_LINKED) == _TRUE) &&
+	    (check_fwstate(pmlmepriv, _FW_LINKED) == true) &&
 	    pmlmepriv->LinkDetectInfo.bHigherBusyTraffic) {
-		IntMtToSet = _TRUE;
+		IntMtToSet = true;
 
 		/* To check whether we should disable Tx interrupt or not. */
 		if (pmlmepriv->LinkDetectInfo.bHigherBusyRxTraffic)
-			ACIntToSet = _TRUE;
+			ACIntToSet = true;
 	}
 
 	/* Update current settings. */
@@ -208,8 +208,8 @@ void rtl8723b_InitHalDm(IN PADAPTER Adapter)
 
 VOID rtl8723b_HalDmWatchDog(IN PADAPTER Adapter)
 {
-	BOOLEAN		bFwCurrentInPSMode = _FALSE;
-	u8 bFwPSAwake = _TRUE;
+	BOOLEAN		bFwCurrentInPSMode = false;
+	u8 bFwPSAwake = true;
 	PHAL_DATA_TYPE	pHalData = GET_HAL_DATA(Adapter);
 
 #ifdef CONFIG_MP_INCLUDED

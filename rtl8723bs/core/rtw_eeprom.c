@@ -107,12 +107,12 @@ void standby(_adapter	*padapter)
 u16 wait_eeprom_cmd_done(_adapter *padapter)
 {
 	u8	x;
-	u16	i, res = _FALSE;
+	u16	i, res = false;
 	standby(padapter);
 	for (i = 0; i < 200; i++) {
 		x = rtw_read8(padapter, EE_9346CR);
 		if (x & _EEDO) {
-			res = _TRUE;
+			res = true;
 			goto exit;
 		}
 		rtw_udelay_os(CLOCK_RATE);
@@ -202,7 +202,7 @@ void eeprom_write16(_adapter *padapter, u16 reg, u16 data)
 	/* write the data to the selected EEPROM word. */
 	shift_out_bits(padapter, data, 16);
 
-	if (wait_eeprom_cmd_done(padapter) == _FALSE)
+	if (wait_eeprom_cmd_done(padapter) == false)
 
 		goto exit;
 
@@ -348,7 +348,7 @@ u8 eeprom_read(_adapter *padapter, u32 addr_off, u8 sz, u8 *rbuf)
 		stmp = eeprom_read16(padapter, reg);
 		rbuf[idx] = (u8)(stmp & 0xff);
 	}
-	return _TRUE;
+	return true;
 }
 
 

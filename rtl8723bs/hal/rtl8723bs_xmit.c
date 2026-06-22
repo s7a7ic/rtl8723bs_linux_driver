@@ -16,7 +16,7 @@ static u8 rtw_sdio_wait_enough_TxOQT_space(PADAPTER padapter, u8 agg_num)
 	while (pHalData->SdioTxOQTFreeSpace < agg_num) {
 		if (RTW_CANNOT_RUN(padapter)) {
 			RTW_INFO("%s: bSurpriseRemoved or bDriverStopped (wait TxOQT)\n", __func__);
-			return _FALSE;
+			return false;
 		}
 
 		HalQueryTxOQTBufferStatus8723BSdio(padapter);
@@ -36,7 +36,7 @@ static u8 rtw_sdio_wait_enough_TxOQT_space(PADAPTER padapter, u8 agg_num)
 	/* if (n > 1) */
 	/*	++priv->pshare->nr_out_of_txoqt_space; */
 
-	return _TRUE;
+	return true;
 }
 
 s32 _dequeue_writeport(PADAPTER padapter)
@@ -48,7 +48,7 @@ s32 _dequeue_writeport(PADAPTER padapter)
 	u8	PageIdx = 0;
 	u32	deviceId;
 #ifdef CONFIG_SDIO_TX_ENABLE_AVAL_INT
-	u8	bUpdatePageNum = _FALSE;
+	u8	bUpdatePageNum = false;
 #else
 	u32	polling_num = 0;
 #endif
@@ -56,7 +56,7 @@ s32 _dequeue_writeport(PADAPTER padapter)
 	pxmitbuf = select_and_dequeue_pending_xmitbuf(padapter);
 
 	if (pxmitbuf == NULL)
-		return _TRUE;
+		return true;
 
 	deviceId = ffaddr2deviceId(pdvobjpriv, pxmitbuf->ff_hwaddr);
 
@@ -77,19 +77,19 @@ s32 _dequeue_writeport(PADAPTER padapter)
 
 query_free_page:
 	/* check if hardware tx fifo page is enough */
-	if (_FALSE == rtw_hal_sdio_query_tx_freepage(padapter, PageIdx, pxmitbuf->pg_num)) {
+	if (false == rtw_hal_sdio_query_tx_freepage(padapter, PageIdx, pxmitbuf->pg_num)) {
 		if (RTW_CANNOT_RUN(padapter))
 			goto free_xmitbuf;
 #ifdef CONFIG_SDIO_TX_ENABLE_AVAL_INT
 		if (!bUpdatePageNum) {
 			/* Total number of page is NOT available, so update current FIFO status */
 			HalQueryTxBufferStatus8723BSdio(padapter);
-			bUpdatePageNum = _TRUE;
+			bUpdatePageNum = true;
 			goto query_free_page;
 		} else {
-			bUpdatePageNum = _FALSE;
+			bUpdatePageNum = false;
 			enqueue_pending_xmitbuf_to_head(pxmitpriv, pxmitbuf);
-			return _TRUE;
+			return true;
 		}
 #else /* CONFIG_SDIO_TX_ENABLE_AVAL_INT */
 		polling_num++;
@@ -98,7 +98,7 @@ query_free_page:
 			/*	__func__, polling_num, pxmitbuf->len, pxmitbuf->agg_num, pframe->pg_num, freePage[PageIdx] + freePage[PUBLIC_QUEUE_IDX]); */
 			enqueue_pending_xmitbuf_to_head(pxmitpriv, pxmitbuf);
 			rtw_usleep_os(50);
-			return _FALSE;
+			return false;
 		}
 
 		/* Total number of page is NOT available, so update current FIFO status */
@@ -107,11 +107,11 @@ query_free_page:
 #endif /* CONFIG_SDIO_TX_ENABLE_AVAL_INT */
 	}
 
-	if (rtw_sdio_wait_enough_TxOQT_space(padapter, pxmitbuf->agg_num) == _FALSE)
+	if (rtw_sdio_wait_enough_TxOQT_space(padapter, pxmitbuf->agg_num) == false)
 		goto free_xmitbuf;
 
 #ifdef CONFIG_CHECK_LEAVE_LPS
-	traffic_check_for_leave_lps(padapter, _TRUE, pxmitbuf->agg_num);
+	traffic_check_for_leave_lps(padapter, true, pxmitbuf->agg_num);
 #endif
 
 	rtw_write_port(padapter, deviceId, pxmitbuf->len, (u8 *)pxmitbuf);
@@ -157,7 +157,7 @@ free_xmitbuf:
 	tasklet_hi_schedule(&pxmitpriv->xmit_tasklet);
 #endif
 
-	return _FALSE;
+	return false;
 }
 
 /*
@@ -236,10 +236,10 @@ static s32 xmit_xmitframes(PADAPTER padapter, struct xmit_priv *pxmitpriv)
 	u8 txdesc_size = TXDESC_SIZE;
 	int inx[4];
 	u8 pre_qsel = 0xFF, next_qsel = 0xFF;
-	u8 single_sta_in_queue = _FALSE;
+	u8 single_sta_in_queue = false;
 
 	err = 0;
-	no_res = _FALSE;
+	no_res = false;
 	hwxmits = pxmitpriv->hwxmits;
 	hwentry = pxmitpriv->hwxmit_entry;
 	ptxservq = NULL;
@@ -261,7 +261,7 @@ static s32 xmit_xmitframes(PADAPTER padapter, struct xmit_priv *pxmitpriv)
 	for (idx = 0; idx < hwentry; idx++) {
 		phwxmit = hwxmits + inx[idx];
 
-		if ((check_pending_xmitbuf(pxmitpriv) == _TRUE) && (padapter->mlmepriv.LinkDetectInfo.bHigherBusyTxTraffic == _TRUE)) {
+		if ((check_pending_xmitbuf(pxmitpriv) == true) && (padapter->mlmepriv.LinkDetectInfo.bHigherBusyTxTraffic == true)) {
 			if ((phwxmit->accnt > 0) && (phwxmit->accnt < 5)) {
 				err = -2;
 				break;
@@ -279,7 +279,7 @@ static s32 xmit_xmitframes(PADAPTER padapter, struct xmit_priv *pxmitpriv)
 
 		single_sta_in_queue = rtw_end_of_queue_search(sta_phead, get_next(sta_plist));
 
-		while (rtw_end_of_queue_search(sta_phead, sta_plist) == _FALSE) {
+		while (rtw_end_of_queue_search(sta_phead, sta_plist) == false) {
 			ptxservq = LIST_CONTAINOR(sta_plist, struct tx_servq, tx_pending);
 			sta_plist = get_next(sta_plist);
 
@@ -293,7 +293,7 @@ static s32 xmit_xmitframes(PADAPTER padapter, struct xmit_priv *pxmitpriv)
 
 			frame_phead = get_list_head(pframe_queue);
 
-			while (rtw_is_list_empty(frame_phead) == _FALSE) {
+			while (rtw_is_list_empty(frame_phead) == false) {
 				frame_plist = get_next(frame_phead);
 				pxmitframe = LIST_CONTAINOR(frame_plist, struct xmit_frame, list);
 
@@ -319,7 +319,7 @@ static s32 xmit_xmitframes(PADAPTER padapter, struct xmit_priv *pxmitpriv)
 							/* can not yield under lock */
 
 							/* rtw_yield_os(); */
-							if (single_sta_in_queue == _FALSE) {
+							if (single_sta_in_queue == false) {
 								/* break the loop in case there is more than one sta in this ac queue */
 								pxmitbuf = NULL;
 								err = -3;
@@ -391,7 +391,7 @@ static s32 xmit_xmitframes(PADAPTER padapter, struct xmit_priv *pxmitpriv)
 				pxmitframe = NULL;
 			}
 
-			if (_rtw_queue_empty(pframe_queue) == _TRUE)
+			if (_rtw_queue_empty(pframe_queue) == true)
 				rtw_list_delete(&ptxservq->tx_pending);
 			else if (err == -3) {
 				/* Re-arrange the order of stations in this ac queue to balance the service for these stations */
@@ -573,8 +573,8 @@ s32 rtl8723bs_mgnt_xmit(PADAPTER padapter, struct xmit_frame *pmgntframe)
  *	Handle xmitframe(packet) come from rtw_xmit()
  *
  * Return:
- *	_TRUE	dump packet directly ok
- *	_FALSE	enqueue, temporary can't transmit packets to hardware
+ *	true	dump packet directly ok
+ *	false	enqueue, temporary can't transmit packets to hardware
  */
 s32 rtl8723bs_hal_xmit(PADAPTER padapter, struct xmit_frame *pxmitframe)
 {
@@ -591,7 +591,7 @@ s32 rtl8723bs_hal_xmit(PADAPTER padapter, struct xmit_frame *pxmitframe)
 	    (pxmitframe->attrib.ether_type != 0x0806) &&
 	    (pxmitframe->attrib.ether_type != 0x888e) &&
 	    (pxmitframe->attrib.dhcp_pkt != 1)) {
-		if (padapter->mlmepriv.LinkDetectInfo.bBusyTraffic == _TRUE)
+		if (padapter->mlmepriv.LinkDetectInfo.bBusyTraffic == true)
 			rtw_issue_addbareq_cmd(padapter, pxmitframe);
 	}
 #endif
@@ -603,12 +603,12 @@ s32 rtl8723bs_hal_xmit(PADAPTER padapter, struct xmit_frame *pxmitframe)
 		rtw_free_xmitframe(pxmitpriv, pxmitframe);
 
 		pxmitpriv->tx_drop++;
-		return _TRUE;
+		return true;
 	}
 
 	_rtw_up_sema(&pxmitpriv->SdioXmitSema);
 
-	return _FALSE;
+	return false;
 }
 
 s32	rtl8723bs_hal_xmitframe_enqueue(_adapter *padapter, struct xmit_frame *pxmitframe)
@@ -670,7 +670,7 @@ void rtl8723bs_free_xmit_priv(PADAPTER padapter)
 	_rtw_init_listhead(&tmplist);
 
 	_enter_critical_bh(&pqueue->lock, &irql);
-	if (_rtw_queue_empty(pqueue) == _FALSE) {
+	if (_rtw_queue_empty(pqueue) == false) {
 		/* Insert tmplist to end of queue, and delete phead */
 		/* then tmplist become head of queue. */
 		rtw_list_insert_tail(&tmplist, phead);
@@ -679,7 +679,7 @@ void rtl8723bs_free_xmit_priv(PADAPTER padapter)
 	_exit_critical_bh(&pqueue->lock, &irql);
 
 	phead = &tmplist;
-	while (rtw_is_list_empty(phead) == _FALSE) {
+	while (rtw_is_list_empty(phead) == false) {
 		plist = get_next(phead);
 		rtw_list_delete(plist);
 

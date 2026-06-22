@@ -130,11 +130,11 @@ static void _init_mp_priv_(struct mp_priv *pmp_priv)
 	pmp_priv->network_macaddr[4] = 0x66;
 	pmp_priv->network_macaddr[5] = 0x55;
 
-	pmp_priv->bSetRxBssid = _FALSE;
-	pmp_priv->bRTWSmbCfg = _FALSE;
-	pmp_priv->bloopback = _FALSE;
+	pmp_priv->bSetRxBssid = false;
+	pmp_priv->bRTWSmbCfg = false;
+	pmp_priv->bloopback = false;
 
-	pmp_priv->bloadefusemap = _FALSE;
+	pmp_priv->bloadefusemap = false;
 
 	pnetwork = &pmp_priv->mp_network.network;
 	_rtw_memcpy(pnetwork->MacAddress, pmp_priv->network_macaddr, ETH_ALEN);
@@ -219,8 +219,8 @@ static void mp_init_xmit_attrib(struct mp_tx *pmptx, PADAPTER padapter)
 	/*	do_queue_select(padapter, pattrib); */
 	pattrib->nr_frags = 1;
 	pattrib->encrypt = 0;
-	pattrib->bswenc = _FALSE;
-	pattrib->qos_en = _FALSE;
+	pattrib->bswenc = false;
+	pattrib->qos_en = false;
 
 	pattrib->pktlen = 1500;
 }
@@ -237,7 +237,7 @@ s32 init_mp_priv(PADAPTER padapter)
 	pmppriv->mp_dm = 0;
 	pmppriv->tx.stop = 1;
 	pmppriv->bSetTxPower = 0;		/*for  manually set tx power*/
-	pmppriv->bTxBufCkFail = _FALSE;
+	pmppriv->bTxBufCkFail = false;
 	pmppriv->pktInterval = 0;
 	pmppriv->pktLength = 1000;
 
@@ -492,14 +492,14 @@ u8 rtw_mp_set_antdiv(PADAPTER padapter, BOOLEAN bMain)
 	u8 cur_ant, change_ant;
 
 	if (!pHalData->AntDivCfg)
-		return _FALSE;
+		return false;
 	/*rtw_hal_get_odm_var(padapter, HAL_ODM_ANTDIV_SELECT, &cur_ant, NULL);*/
 	change_ant = (bMain == MAIN_ANT) ? MAIN_ANT : AUX_ANT;
 
 	RTW_INFO("%s: config %s\n", __func__, (bMain == MAIN_ANT) ? "MAIN_ANT" : "AUX_ANT");
-	rtw_antenna_select_cmd(padapter, change_ant, _FALSE);
+	rtw_antenna_select_cmd(padapter, change_ant, false);
 
-	return _TRUE;
+	return true;
 }
 #endif
 
@@ -515,15 +515,15 @@ MPT_InitializeAdapter(
 	u32		ledsetting;
 	struct mlme_priv *pmlmepriv = &pAdapter->mlmepriv;
 
-	pMptCtx->bMptDrvUnload = _FALSE;
-	pMptCtx->bMassProdTest = _FALSE;
-	pMptCtx->bMptIndexEven = _TRUE;	/* default gain index is -6.0db */
+	pMptCtx->bMptDrvUnload = false;
+	pMptCtx->bMassProdTest = false;
+	pMptCtx->bMptIndexEven = true;	/* default gain index is -6.0db */
 	pMptCtx->h2cReqNum = 0x0;
 	/* init for BT MP */
 #if defined(CONFIG_RTL8723B)
-	pMptCtx->bMPh2c_timeout = _FALSE;
-	pMptCtx->MptH2cRspEvent = _FALSE;
-	pMptCtx->MptBtC2hEvent = _FALSE;
+	pMptCtx->bMPh2c_timeout = false;
+	pMptCtx->MptH2cRspEvent = false;
+	pMptCtx->MptBtC2hEvent = false;
 	_rtw_init_sema(&pMptCtx->MPh2c_Sema, 0);
 	rtw_init_timer(&pMptCtx->MPh2c_timeout_timer, pAdapter, MPh2c_timeout_handle, pAdapter);
 #endif
@@ -548,7 +548,7 @@ MPT_InitializeAdapter(
 	rtw_write16(pAdapter, 0x860, 0x110);
 #endif
 
-	pMptCtx->bMptWorkItemInProgress = _FALSE;
+	pMptCtx->bMptWorkItemInProgress = false;
 	pMptCtx->CurrMptAct = NULL;
 	pMptCtx->mpt_rf_path = RF_PATH_A;
 	/* ------------------------------------------------------------------------- */
@@ -563,7 +563,7 @@ MPT_InitializeAdapter(
 
 
 	PHY_LCCalibrate(pAdapter);
-	PHY_IQCalibrate(pAdapter, _FALSE);
+	PHY_IQCalibrate(pAdapter, false);
 	/* dm_check_txpowertracking(&pHalData->odmpriv);	*/ /* trigger thermal meter */
 
 	PHY_SetRFPathSwitch(pAdapter, 1/*pHalData->bDefaultAntenna*/); /* default use Main */
@@ -612,7 +612,7 @@ MPT_DeInitAdapter(
 {
 	PMPT_CONTEXT		pMptCtx = &pAdapter->mppriv.mpt_ctx;
 
-	pMptCtx->bMptDrvUnload = _TRUE;
+	pMptCtx->bMptDrvUnload = true;
 #if defined(CONFIG_RTL8723B)
 	_rtw_free_sema(&(pMptCtx->MPh2c_Sema));
 	_cancel_timer_ex(&pMptCtx->MPh2c_timeout_timer);
@@ -627,13 +627,13 @@ static u8 mpt_ProStartTest(PADAPTER padapter)
 {
 	PMPT_CONTEXT pMptCtx = &padapter->mppriv.mpt_ctx;
 
-	pMptCtx->bMassProdTest = _TRUE;
-	pMptCtx->is_start_cont_tx = _FALSE;
-	pMptCtx->bCckContTx = _FALSE;
-	pMptCtx->bOfdmContTx = _FALSE;
-	pMptCtx->bSingleCarrier = _FALSE;
-	pMptCtx->is_carrier_suppression = _FALSE;
-	pMptCtx->is_single_tone = _FALSE;
+	pMptCtx->bMassProdTest = true;
+	pMptCtx->is_start_cont_tx = false;
+	pMptCtx->bCckContTx = false;
+	pMptCtx->bOfdmContTx = false;
+	pMptCtx->bSingleCarrier = false;
+	pMptCtx->is_carrier_suppression = false;
+	pMptCtx->is_single_tone = false;
 	pMptCtx->HWTxmode = PACKETS_TX;
 
 	return _SUCCESS;
@@ -656,7 +656,7 @@ void GetPowerTracking(PADAPTER padapter, u8 *enable)
 
 void rtw_mp_trigger_iqk(PADAPTER padapter)
 {
-	PHY_IQCalibrate(padapter, _FALSE);
+	PHY_IQCalibrate(padapter, false);
 }
 
 void rtw_mp_trigger_lck(PADAPTER padapter)
@@ -675,7 +675,7 @@ static void init_mp_data(PADAPTER padapter)
 	v8 &= ~EN_BCN_FUNCTION;
 	rtw_write8(padapter, REG_BCN_CTRL, v8);
 
-	pDM_Odm->rf_calibrate_info.txpowertrack_control = _FALSE;
+	pDM_Odm->rf_calibrate_info.txpowertrack_control = false;
 }
 
 void MPT_PwrCtlDM(PADAPTER padapter, u32 bstart)
@@ -690,14 +690,14 @@ void MPT_PwrCtlDM(PADAPTER padapter, u32 bstart)
 		rf_ability = ((u32)halrf_cmn_info_get(pDM_Odm, HALRF_CMNINFO_ABILITY)) | HAL_RF_TX_PWR_TRACK;
 		halrf_cmn_info_set(pDM_Odm, HALRF_CMNINFO_ABILITY, rf_ability);
 
-		pDM_Odm->rf_calibrate_info.txpowertrack_control = _TRUE;
+		pDM_Odm->rf_calibrate_info.txpowertrack_control = true;
 		padapter->mppriv.mp_dm = 1;
 
 	} else {
 		RTW_INFO("in MPT_PwrCtlDM stop\n");
 		rf_ability = ((u32)halrf_cmn_info_get(pDM_Odm, HALRF_CMNINFO_ABILITY)) & ~HAL_RF_TX_PWR_TRACK;
 		halrf_cmn_info_set(pDM_Odm, HALRF_CMNINFO_ABILITY, rf_ability);
-		pDM_Odm->rf_calibrate_info.txpowertrack_control = _FALSE;
+		pDM_Odm->rf_calibrate_info.txpowertrack_control = false;
 		padapter->mppriv.mp_dm = 0;
 		{
 			struct _TXPWRTRACK_CFG	c;
@@ -770,13 +770,13 @@ u32 mp_join(PADAPTER padapter, u8 mode)
 
 	_enter_critical_bh(&pmlmepriv->lock, &irqL);
 
-	if (check_fwstate(pmlmepriv, WIFI_MP_STATE) == _TRUE)
+	if (check_fwstate(pmlmepriv, WIFI_MP_STATE) == true)
 		goto end_of_mp_start_test;
 
 	/* init mp_start_test status */
-	if (check_fwstate(pmlmepriv, _FW_LINKED) == _TRUE) {
+	if (check_fwstate(pmlmepriv, _FW_LINKED) == true) {
 		rtw_disassoc_cmd(padapter, 500, 0);
-		rtw_indicate_disconnect(padapter, 0, _FALSE);
+		rtw_indicate_disconnect(padapter, 0, false);
 		rtw_free_assoc_resources(padapter, 1);
 	}
 	pmppriv->prev_fw_state = get_fwstate(pmlmepriv);
@@ -925,11 +925,11 @@ void mp_stop_test(PADAPTER padapter)
 	if (pmppriv->mode == MP_ON) {
 		pmppriv->bSetTxPower = 0;
 		_enter_critical_bh(&pmlmepriv->lock, &irqL);
-		if (check_fwstate(pmlmepriv, WIFI_MP_STATE) == _FALSE)
+		if (check_fwstate(pmlmepriv, WIFI_MP_STATE) == false)
 			goto end_of_mp_stop_test;
 
 		/* 3 1. disconnect psudo AdHoc */
-		rtw_indicate_disconnect(padapter, 0, _FALSE);
+		rtw_indicate_disconnect(padapter, 0, false);
 
 		/* 3 2. clear psta used in mp test mode.
 		*	rtw_free_assoc_resources(padapter, 1); */
@@ -1074,7 +1074,7 @@ int SetTxPower(PADAPTER pAdapter)
 {
 
 	hal_mpt_SetTxPower(pAdapter);
-	return _TRUE;
+	return true;
 }
 
 void SetTxAGCOffset(PADAPTER pAdapter, u32 ulTxAGCOffset)
@@ -1230,9 +1230,9 @@ static u8 check_nic_enough_desc(_adapter *padapter, struct pkt_attrib *pattrib)
 	 * between the tail and the head
 	 */
 	if ((ring->entries - ring->qlen) >= 2)
-		return _TRUE;
+		return true;
 	else
-		return _FALSE;
+		return false;
 }
 #endif
 
@@ -1255,7 +1255,7 @@ static thread_return mp_xmit_packet_thread(thread_context context)
 	while (1) {
 		pxmitframe = alloc_mp_xmitframe(pxmitpriv);
 #ifdef CONFIG_PCIE_HCI
-		if(check_nic_enough_desc(padapter, &pmptx->attrib) == _FALSE) {
+		if(check_nic_enough_desc(padapter, &pmptx->attrib) == false) {
 			rtw_usleep_os(1000);
 			continue;
 		}
@@ -1829,7 +1829,7 @@ void SetPacketRx(PADAPTER pAdapter, u8 bStartRx, u8 bAB)
 		pHalData->ReceiveConfig |= RCR_ACRC32;
 		pHalData->ReceiveConfig |= RCR_APP_PHYST_RXFF | RCR_APP_ICV | RCR_APP_MIC;
 
-		if (pmppriv->bSetRxBssid == _TRUE) {
+		if (pmppriv->bSetRxBssid == true) {
 			RTW_INFO("%s: pmppriv->network_macaddr=" MAC_FMT "\n", __func__,
 				 MAC_ARG(pmppriv->network_macaddr));
 			pHalData->ReceiveConfig = 0;
@@ -1961,7 +1961,7 @@ u32 mp_query_psd(PADAPTER pAdapter, u8 *data)
 	}
 #endif
 
-	if (check_fwstate(&pAdapter->mlmepriv, WIFI_MP_STATE) == _FALSE) {
+	if (check_fwstate(&pAdapter->mlmepriv, WIFI_MP_STATE) == false) {
 		return 0;
 	}
 
@@ -2014,7 +2014,7 @@ void _rtw_mp_xmit_priv(struct xmit_priv *pxmitpriv)
 
 	pxmitbuf = (struct xmit_buf *)pxmitpriv->pxmit_extbuf;
 	for (i = 0; i < num_xmit_extbuf; i++) {
-		rtw_os_xmit_resource_free(padapter, pxmitbuf, (max_xmit_extbuf_size + XMITBUF_ALIGN_SZ), _FALSE);
+		rtw_os_xmit_resource_free(padapter, pxmitbuf, (max_xmit_extbuf_size + XMITBUF_ALIGN_SZ), false);
 
 		pxmitbuf++;
 	}
@@ -2051,7 +2051,7 @@ void _rtw_mp_xmit_priv(struct xmit_priv *pxmitpriv)
 		pxmitbuf->padapter = padapter;
 		pxmitbuf->buf_tag = XMITBUF_MGNT;
 
-		res = rtw_os_xmit_resource_alloc(padapter, pxmitbuf, max_xmit_extbuf_size + XMITBUF_ALIGN_SZ, _TRUE);
+		res = rtw_os_xmit_resource_alloc(padapter, pxmitbuf, max_xmit_extbuf_size + XMITBUF_ALIGN_SZ, true);
 		if (res == _FAIL) {
 			res = _FAIL;
 			goto exit;
@@ -2570,9 +2570,9 @@ u8 rtw_mp_mode_check(PADAPTER pAdapter)
 	PADAPTER primary_adapter = GET_PRIMARY_ADAPTER(pAdapter);
 
 	if (primary_adapter->registrypriv.mp_mode == 1)
-		return _TRUE;
+		return true;
 	else
-		return _FALSE;
+		return false;
 }
 
 

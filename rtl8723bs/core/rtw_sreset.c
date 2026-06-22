@@ -15,7 +15,7 @@ void sreset_init_value(_adapter *padapter)
 	struct sreset_priv *psrtpriv = &pHalData->srestpriv;
 
 	_rtw_mutex_init(&psrtpriv->silentreset_mutex);
-	psrtpriv->silent_reset_inprogress = _FALSE;
+	psrtpriv->silent_reset_inprogress = false;
 	psrtpriv->Wifi_Error_Status = WIFI_STATUS_SUCCESS;
 	psrtpriv->last_tx_time = 0;
 	psrtpriv->last_tx_complete_time = 0;
@@ -42,7 +42,7 @@ u8 sreset_get_wifi_status(_adapter *padapter)
 	u8 status = WIFI_STATUS_SUCCESS;
 	u32 val32 = 0;
 	_irqL irqL;
-	if (psrtpriv->silent_reset_inprogress == _TRUE)
+	if (psrtpriv->silent_reset_inprogress == true)
 		return status;
 	val32 = rtw_read32(padapter, REG_TXDMA_STATUS);
 	if (val32 == 0xeaeaeaea)
@@ -89,7 +89,7 @@ bool sreset_inprogress(_adapter *padapter)
 	HAL_DATA_TYPE	*pHalData = GET_HAL_DATA(padapter);
 	return pHalData->srestpriv.silent_reset_inprogress;
 #else
-	return _FALSE;
+	return false;
 #endif
 }
 
@@ -118,9 +118,9 @@ void sreset_restore_security_station(_adapter *padapter)
 
 		for (EntryId = 0; EntryId < 4; EntryId++) {
 			if (EntryId == psecuritypriv->dot11PrivacyKeyIndex)
-				rtw_set_key(padapter, &padapter->securitypriv, EntryId, 1, _FALSE);
+				rtw_set_key(padapter, &padapter->securitypriv, EntryId, 1, false);
 			else
-				rtw_set_key(padapter, &padapter->securitypriv, EntryId, 0, _FALSE);
+				rtw_set_key(padapter, &padapter->securitypriv, EntryId, 0, false);
 		}
 
 	} else
@@ -132,9 +132,9 @@ void sreset_restore_security_station(_adapter *padapter)
 				/* DEBUG_ERR( ("Set wpa_set_encryption: Obtain Sta_info fail\n")); */
 			} else {
 				/* pairwise key */
-				rtw_setstakey_cmd(padapter, psta, UNICAST_KEY, _FALSE);
+				rtw_setstakey_cmd(padapter, psta, UNICAST_KEY, false);
 				/* group key */
-				rtw_set_key(padapter, &padapter->securitypriv, padapter->securitypriv.dot118021XGrpKeyid, 0, _FALSE);
+				rtw_set_key(padapter, &padapter->securitypriv, padapter->securitypriv.dot118021XGrpKeyid, 0, false);
 			}
 		}
 }
@@ -144,7 +144,7 @@ void sreset_restore_network_station(_adapter *padapter)
 	struct mlme_priv *mlmepriv = &padapter->mlmepriv;
 	struct mlme_ext_priv	*pmlmeext = &padapter->mlmeextpriv;
 	struct mlme_ext_info	*pmlmeinfo = &(pmlmeext->mlmext_info);
-	u8 doiqk = _FALSE;
+	u8 doiqk = false;
 
 #if 0
 	{
@@ -165,7 +165,7 @@ void sreset_restore_network_station(_adapter *padapter)
 	}
 #endif
 
-	rtw_setopmode_cmd(padapter, Ndis802_11Infrastructure, _FALSE);
+	rtw_setopmode_cmd(padapter, Ndis802_11Infrastructure, false);
 
 	{
 		u8 threshold;
@@ -185,12 +185,12 @@ void sreset_restore_network_station(_adapter *padapter)
 #endif
 	}
 
-	doiqk = _TRUE;
+	doiqk = true;
 	rtw_hal_set_hwreg(padapter, HW_VAR_DO_IQK , &doiqk);
 
 	set_channel_bwmode(padapter, pmlmeext->cur_channel, pmlmeext->cur_ch_offset, pmlmeext->cur_bwmode);
 
-	doiqk = _FALSE;
+	doiqk = false;
 	rtw_hal_set_hwreg(padapter , HW_VAR_DO_IQK , &doiqk);
 	/* disable dynamic functions, such as high power, DIG */
 	/*rtw_phydm_func_disable_all(padapter);*/
@@ -308,24 +308,24 @@ void sreset_reset(_adapter *padapter)
 
 	_enter_pwrlock(&pwrpriv->lock);
 
-	psrtpriv->silent_reset_inprogress = _TRUE;
+	psrtpriv->silent_reset_inprogress = true;
 	pwrpriv->change_rfpwrstate = rf_off;
 
-	rtw_mi_sreset_adapter_hdl(padapter, _FALSE);/*sreset_stop_adapter*/
+	rtw_mi_sreset_adapter_hdl(padapter, false);/*sreset_stop_adapter*/
 #ifdef CONFIG_IPS
 	_ips_enter(padapter);
 	_ips_leave(padapter);
 #endif
-	rtw_mi_sreset_adapter_hdl(padapter, _TRUE);/*sreset_start_adapter*/
+	rtw_mi_sreset_adapter_hdl(padapter, true);/*sreset_start_adapter*/
 
-	psrtpriv->silent_reset_inprogress = _FALSE;
+	psrtpriv->silent_reset_inprogress = false;
 
 	_exit_pwrlock(&pwrpriv->lock);
 
 	RTW_INFO("%s done in %d ms\n", __FUNCTION__, rtw_get_passing_time_ms(start));
 	pdbgpriv->dbg_sreset_cnt++;
 
-	psrtpriv->self_dect_fw = _FALSE;
+	psrtpriv->self_dect_fw = false;
 	psrtpriv->rx_cnt = 0;
 #endif
 }

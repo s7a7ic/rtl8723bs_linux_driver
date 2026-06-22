@@ -81,13 +81,13 @@ s32 hal_mpt_SetPowerTracking(PADAPTER padapter, u8 enable)
 		return _FAIL;
 	}
 
-	if (check_fwstate(&padapter->mlmepriv, WIFI_MP_STATE) == _FALSE) {
+	if (check_fwstate(&padapter->mlmepriv, WIFI_MP_STATE) == false) {
 		return _FAIL;
 	}
 	if (enable)
-		pDM_Odm->rf_calibrate_info.txpowertrack_control = _TRUE;
+		pDM_Odm->rf_calibrate_info.txpowertrack_control = true;
 	else
-		pDM_Odm->rf_calibrate_info.txpowertrack_control = _FALSE;
+		pDM_Odm->rf_calibrate_info.txpowertrack_control = false;
 
 	return _SUCCESS;
 }
@@ -118,9 +118,9 @@ void hal_mpt_CCKTxPowerAdjust(PADAPTER Adapter, BOOLEAN bInCH14)
 	DataRate = mpt_to_mgnt_rate(ulRateIdx);
 
 	if (u1Channel == 14 && IS_CCK_RATE(DataRate))
-		pHalData->bCCKinCH14 = TRUE;
+		pHalData->bCCKinCH14 = true;
 	else
-		pHalData->bCCKinCH14 = FALSE;
+		pHalData->bCCKinCH14 = false;
 
 	if (IS_HARDWARE_TYPE_8703B(Adapter)) {
 		if ((u1Channel == 14) && IS_CCK_RATE(DataRate)) {
@@ -283,8 +283,8 @@ void hal_mpt_SetChannel(PADAPTER pAdapter)
 
 	hal_mpt_SwitchRfSetting(pAdapter);
 
-	pHalData->bSwChnl = _TRUE;
-	pHalData->bSetChnlBW = _TRUE;
+	pHalData->bSwChnl = true;
+	pHalData->bSetChnlBW = true;
 	rtw_hal_set_chnl_bw(pAdapter, channel, bandwidth, 0, 0);
 
 	hal_mpt_CCKTxPowerAdjust(pAdapter, pHalData->bCCKinCH14);
@@ -302,8 +302,8 @@ void hal_mpt_SetBandwidth(PADAPTER pAdapter)
 	u8		channel = pmp->channel;
 	u8		bandwidth = pmp->bandwidth;
 
-	pHalData->bSwChnl = _TRUE;
-	pHalData->bSetChnlBW = _TRUE;
+	pHalData->bSwChnl = true;
+	pHalData->bSetChnlBW = true;
 	rtw_hal_set_chnl_bw(pAdapter, channel, bandwidth, 0, 0);
 
 	hal_mpt_SwitchRfSetting(pAdapter);
@@ -839,8 +839,8 @@ mpt_SetSingleTone_8814A(
 			break;
 		}
 
-		if (bEnPMacTx == FALSE) {
-			hal_mpt_SetContinuousTx(pAdapter, _TRUE);
+		if (bEnPMacTx == false) {
+			hal_mpt_SetContinuousTx(pAdapter, true);
 			issue_nulldata(pAdapter, NULL, 1, 3, 500);
 		}
 
@@ -889,8 +889,8 @@ mpt_SetSingleTone_8814A(
 
 		phy_set_bb_reg(pAdapter, rCCAonSec_Jaguar, BIT1, 0x0); /* Enable CCA*/
 
-		if (bEnPMacTx == FALSE)
-			hal_mpt_SetContinuousTx(pAdapter, _FALSE);
+		if (bEnPMacTx == false)
+			hal_mpt_SetContinuousTx(pAdapter, false);
 
 		phy_set_bb_reg(pAdapter, rA_TxScale_Jaguar, bMaskDWord, regIG0); /* 0xC1C[31:21]*/
 		phy_set_bb_reg(pAdapter, rB_TxScale_Jaguar, bMaskDWord, regIG1); /* 0xE1C[31:21]*/
@@ -1444,7 +1444,7 @@ s32 hal_mpt_SetThermalMeter(PADAPTER pAdapter, u8 target_ther)
 	}
 
 
-	if (check_fwstate(&pAdapter->mlmepriv, WIFI_MP_STATE) == _FALSE) {
+	if (check_fwstate(&pAdapter->mlmepriv, WIFI_MP_STATE) == false) {
 		return _FAIL;
 	}
 
@@ -1659,7 +1659,7 @@ void hal_mpt_SetSingleToneTx(PADAPTER pAdapter, u8 bStart)
 		}
 #if defined(CONFIG_RTL8814A) || defined(CONFIG_RTL8821C)
 				else if (IS_HARDWARE_TYPE_8814A(pAdapter) || IS_HARDWARE_TYPE_8821C(pAdapter))
-						mpt_SetSingleTone_8814A(pAdapter, TRUE, FALSE);
+						mpt_SetSingleTone_8814A(pAdapter, true, false);
 #endif
 
 		else	/*/ Turn On SingleTone and turn off the other test modes.*/
@@ -1732,7 +1732,7 @@ void hal_mpt_SetSingleToneTx(PADAPTER pAdapter, u8 bStart)
 		}
 #if defined(CONFIG_RTL8814A) || defined(CONFIG_RTL8822B) || defined(CONFIG_RTL8821C)
 		else if (IS_HARDWARE_TYPE_8814A(pAdapter) || IS_HARDWARE_TYPE_8821C(pAdapter))
-			mpt_SetSingleTone_8814A(pAdapter, FALSE, FALSE);
+			mpt_SetSingleTone_8814A(pAdapter, false, false);
 
 		else/*/ Turn off all test modes.*/
 			phy_set_bb_reg(pAdapter, rSingleTone_ContTx_Jaguar, BIT18 | BIT17 | BIT16, OFDM_ALL_OFF);
@@ -1819,8 +1819,8 @@ static	VOID mpt_StopCckContTx(
 	PMPT_CONTEXT	pMptCtx = &(pAdapter->mppriv.mpt_ctx);
 	u1Byte			u1bReg;
 
-	pMptCtx->bCckContTx = FALSE;
-	pMptCtx->bOfdmContTx = FALSE;
+	pMptCtx->bCckContTx = false;
+	pMptCtx->bOfdmContTx = false;
 
 	phy_set_bb_reg(pAdapter, rCCK0_System, bCCKBBMode, 0x0);	/*normal mode*/
 	phy_set_bb_reg(pAdapter, rCCK0_System, bCCKScramble, 0x1);	/*turn on scramble setting*/
@@ -1853,8 +1853,8 @@ static	VOID mpt_StopOfdmContTx(
 	u1Byte			u1bReg;
 	u4Byte			data;
 
-	pMptCtx->bCckContTx = FALSE;
-	pMptCtx->bOfdmContTx = FALSE;
+	pMptCtx->bCckContTx = false;
+	pMptCtx->bOfdmContTx = false;
 
 	if (IS_HARDWARE_TYPE_JAGUAR(pAdapter) || IS_HARDWARE_TYPE_JAGUAR2(pAdapter))
 		phy_set_bb_reg(pAdapter, 0x914, BIT18 | BIT17 | BIT16, OFDM_ALL_OFF);
@@ -1913,8 +1913,8 @@ static	VOID mpt_StartCckContTx(
 	phy_set_bb_reg(pAdapter, rFPGA0_XA_HSSIParameter1, bMaskDWord, 0x01000500);
 	phy_set_bb_reg(pAdapter, rFPGA0_XB_HSSIParameter1, bMaskDWord, 0x01000500);
 
-	pMptCtx->bCckContTx = TRUE;
-	pMptCtx->bOfdmContTx = FALSE;
+	pMptCtx->bCckContTx = true;
+	pMptCtx->bOfdmContTx = false;
 
 }	/* mpt_StartCckContTx */
 
@@ -1950,8 +1950,8 @@ static	VOID mpt_StartOfdmContTx(
 	phy_set_bb_reg(pAdapter, rFPGA0_XA_HSSIParameter1, bMaskDWord, 0x01000500);
 	phy_set_bb_reg(pAdapter, rFPGA0_XB_HSSIParameter1, bMaskDWord, 0x01000500);
 
-	pMptCtx->bCckContTx = FALSE;
-	pMptCtx->bOfdmContTx = TRUE;
+	pMptCtx->bCckContTx = false;
+	pMptCtx->bOfdmContTx = true;
 }	/* mpt_StartOfdmContTx */
 
 
@@ -1978,7 +1978,7 @@ void mpt_ProSetPMacTx(PADAPTER	Adapter)
 	PRINT_DATA("Dest Address", PMacTxInfo.MacAddress, 6);
 #endif
 
-	if (PMacTxInfo.bEnPMacTx == FALSE) {
+	if (PMacTxInfo.bEnPMacTx == false) {
 		if (PMacTxInfo.Mode == CONTINUOUS_TX) {
 			phy_set_bb_reg(Adapter, 0xb04, 0xf, 2);			/*	TX Stop*/
 			if (IS_MPT_CCK_RATE(PMacTxInfo.TX_RATE))
@@ -1999,7 +1999,7 @@ void mpt_ProSetPMacTx(PADAPTER	Adapter)
 			else
 				mpt_StopOfdmContTx(Adapter);
 
-			mpt_SetSingleTone_8814A(Adapter, FALSE, TRUE);
+			mpt_SetSingleTone_8814A(Adapter, false, true);
 		}
 
 		return;
@@ -2147,7 +2147,7 @@ void mpt_ProSetPMacTx(PADAPTER	Adapter)
 		phy_set_bb_reg(Adapter, 0xb04, 0xf, 4);		/*	TX Ofdm ON	*/
 
 	if (PMacTxInfo.Mode == OFDM_Single_Tone_TX)
-		mpt_SetSingleTone_8814A(Adapter, TRUE, TRUE);
+		mpt_SetSingleTone_8814A(Adapter, true, true);
 
 }
 

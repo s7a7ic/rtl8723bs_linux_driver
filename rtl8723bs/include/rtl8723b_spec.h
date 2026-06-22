@@ -152,9 +152,9 @@
  *
  * ----------------------------------------------------- */
 #undef IS_E_CUT
-#define IS_E_CUT(version)		FALSE
+#define IS_E_CUT(version)		false
 #undef IS_F_CUT
-#define IS_F_CUT(version)		((GET_CVID_CUT_VERSION(version) == E_CUT_VERSION) ? TRUE : FALSE)
+#define IS_F_CUT(version)		((GET_CVID_CUT_VERSION(version) == E_CUT_VERSION) ? true : false)
 
 /* -----------------------------------------------------
  *

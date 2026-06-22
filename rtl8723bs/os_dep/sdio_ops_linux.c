@@ -13,7 +13,7 @@ inline bool rtw_is_sdio30(_adapter *adapter)
 	struct dvobj_priv *dvobj = adapter_to_dvobj(adapter);
 	PSDIO_DATA psdio_data = &dvobj->intf_data;
 
-	return (psdio_data->sd3_bus_mode) ? _TRUE : _FALSE;
+	return (psdio_data->sd3_bus_mode) ? true : false;
 }
 
 static bool rtw_sdio_claim_host_needed(struct sdio_func *func)
@@ -22,8 +22,8 @@ static bool rtw_sdio_claim_host_needed(struct sdio_func *func)
 	PSDIO_DATA sdio_data = &dvobj->intf_data;
 
 	if (sdio_data->sys_sdio_irq_thd && sdio_data->sys_sdio_irq_thd == current)
-		return _FALSE;
-	return _TRUE;
+		return false;
+	return true;
 }
 
 inline void rtw_sdio_set_irq_thd(struct dvobj_priv *dvobj, _thread_hdl_ thd_hdl)
@@ -375,7 +375,7 @@ u32 _sd_read32(struct intf_hdl *pintfhdl, u32 addr, s32 *err)
 				if ((-ESHUTDOWN == *err) || (-ENODEV == *err))
 					rtw_set_surprise_removed(padapter);
 
-				if (rtw_inc_and_chk_continual_io_error(psdiodev) == _TRUE) {
+				if (rtw_inc_and_chk_continual_io_error(psdiodev) == true) {
 					rtw_set_surprise_removed(padapter);
 					break;
 				}
@@ -439,7 +439,7 @@ u32 sd_read32(struct intf_hdl *pintfhdl, u32 addr, s32 *err)
 				if ((-ESHUTDOWN == *err) || (-ENODEV == *err))
 					rtw_set_surprise_removed(padapter);
 
-				if (rtw_inc_and_chk_continual_io_error(psdiodev) == _TRUE) {
+				if (rtw_inc_and_chk_continual_io_error(psdiodev) == true) {
 					rtw_set_surprise_removed(padapter);
 					break;
 				}
@@ -553,7 +553,7 @@ void _sd_write32(struct intf_hdl *pintfhdl, u32 addr, u32 v, s32 *err)
 				if ((-ESHUTDOWN == *err) || (-ENODEV == *err))
 					rtw_set_surprise_removed(padapter);
 
-				if (rtw_inc_and_chk_continual_io_error(psdiodev) == _TRUE) {
+				if (rtw_inc_and_chk_continual_io_error(psdiodev) == true) {
 					rtw_set_surprise_removed(padapter);
 					break;
 				}
@@ -613,7 +613,7 @@ void sd_write32(struct intf_hdl *pintfhdl, u32 addr, u32 v, s32 *err)
 				if ((-ESHUTDOWN == *err) || (-ENODEV == *err))
 					rtw_set_surprise_removed(padapter);
 
-				if (rtw_inc_and_chk_continual_io_error(psdiodev) == _TRUE) {
+				if (rtw_inc_and_chk_continual_io_error(psdiodev) == true) {
 					rtw_set_surprise_removed(padapter);
 					break;
 				}

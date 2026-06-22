@@ -2070,7 +2070,7 @@ void halbtc8723b1ant_action_wifi_multi_port(IN struct btc_coexist *btcoexist)
 	else
 		halbtc8723b1ant_coex_table_with_type(btcoexist, NORMAL_EXEC, 21);
 
-	halbtc8723b1ant_ps_tdma(btcoexist, NORMAL_EXEC, FALSE, 8);
+	halbtc8723b1ant_ps_tdma(btcoexist, NORMAL_EXEC, false, 8);
 
 }
 
@@ -2138,9 +2138,9 @@ void halbtc8723b1ant_action_wifi_connected_bt_acl_busy(IN struct btc_coexist
 			halbtc8723b1ant_coex_table_with_type(btcoexist, NORMAL_EXEC, 19);
 
 		if (wifi_busy)
-			halbtc8723b1ant_ps_tdma(btcoexist, NORMAL_EXEC, TRUE, 41);
+			halbtc8723b1ant_ps_tdma(btcoexist, NORMAL_EXEC, true, 41);
 		else
-			halbtc8723b1ant_ps_tdma(btcoexist, NORMAL_EXEC, TRUE, 43);
+			halbtc8723b1ant_ps_tdma(btcoexist, NORMAL_EXEC, true, 43);
 
 		coex_dm->auto_tdma_adjust = false;
 

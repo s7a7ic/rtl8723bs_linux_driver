@@ -30,7 +30,7 @@ static u8 sdio_io(struct dvobj_priv *d, u32 addr, void *buf, size_t len, u8 writ
 	u32 addr_drv;	/* address with driver defined bit */
 	int err;
 	u8 retry = 0;
-	u8 stop_retry = _FALSE;	/* flag for stopping retry or not */
+	u8 stop_retry = false;	/* flag for stopping retry or not */
 
 
 	if (rtw_is_surprise_removed(dvobj_get_primary_adapter(d))) {
@@ -64,7 +64,7 @@ static u8 sdio_io(struct dvobj_priv *d, u32 addr, void *buf, size_t len, u8 writ
 
 		retry++;
 		stop_retry = rtw_inc_and_chk_continual_io_error(d);
-		if ((err == -1) || (stop_retry == _TRUE) || (retry > SD_IO_TRY_CNT)) {
+		if ((err == -1) || (stop_retry == true) || (retry > SD_IO_TRY_CNT)) {
 			/* critical error, unrecoverable */
 			RTW_ERR("%s: Fatal error! Set surprise remove flag ON! (retry=%u,%u)\n",
 				__FUNCTION__, retry, ATOMIC_READ(&d->continual_io_error));

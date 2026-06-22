@@ -22,38 +22,38 @@ void MPh2c_timeout_handle(void *FunctionContext)
 	pAdapter = (PADAPTER)FunctionContext;
 	pMptCtx = &pAdapter->mppriv.mpt_ctx;
 
-	pMptCtx->bMPh2c_timeout = _TRUE;
+	pMptCtx->bMPh2c_timeout = true;
 
-	if ((_FALSE == pMptCtx->MptH2cRspEvent)
-	    || ((_TRUE == pMptCtx->MptH2cRspEvent)
-		&& (_FALSE == pMptCtx->MptBtC2hEvent)))
+	if ((false == pMptCtx->MptH2cRspEvent)
+	    || ((true == pMptCtx->MptH2cRspEvent)
+		&& (false == pMptCtx->MptBtC2hEvent)))
 		_rtw_up_sema(&pMptCtx->MPh2c_Sema);
 }
 
 u32 WaitC2Hevent(PADAPTER pAdapter, u8 *C2H_event, u32 delay_time)
 {
 	PMPT_CONTEXT		pMptCtx = &(pAdapter->mppriv.mpt_ctx);
-	pMptCtx->bMPh2c_timeout = _FALSE;
+	pMptCtx->bMPh2c_timeout = false;
 
 	if (pAdapter->registrypriv.mp_mode == 0) {
 		RTW_INFO("[MPT], Error!! WaitC2Hevent mp_mode == 0!!\n");
-		return _FALSE;
+		return false;
 	}
 
 	_set_timer(&pMptCtx->MPh2c_timeout_timer, delay_time);
 
 	_rtw_down_sema(&pMptCtx->MPh2c_Sema);
 
-	if (pMptCtx->bMPh2c_timeout == _TRUE) {
-		*C2H_event = _FALSE;
+	if (pMptCtx->bMPh2c_timeout == true) {
+		*C2H_event = false;
 
-		return _FALSE;
+		return false;
 	}
 
 	/* for safty, cancel timer here again */
 	_cancel_timer_ex(&pMptCtx->MPh2c_timeout_timer);
 
-	return _TRUE;
+	return true;
 }
 
 BT_CTRL_STATUS mptbt_CheckC2hFrame(
@@ -104,8 +104,8 @@ BT_CTRL_STATUS mptbt_SendH2c(
 	for (i = 0; i < BT_H2C_MAX_RETRY; i++) {
 		RTW_INFO("[MPT], Send H2C command to wifi!!!\n");
 
-		pMptCtx->MptH2cRspEvent = _FALSE;
-		pMptCtx->MptBtC2hEvent = _FALSE;
+		pMptCtx->MptH2cRspEvent = false;
+		pMptCtx->MptBtC2hEvent = false;
 
 #if defined(CONFIG_RTL8723B)
 		rtl8723b_set_FwBtMpOper_cmd(Adapter, pH2c->opCode, pH2c->opCodeVer, pH2c->reqNum, pH2c->buf);
@@ -189,7 +189,7 @@ BT_CTRL_STATUS mptbt_BtFwOpCodeProcess(
 
 	if (Adapter->registrypriv.mp_mode == 0) {
 		RTW_INFO("[MPT], Error!! mptbt_BtFwOpCodeProces mp_mode == 0!!\n");
-		return _FALSE;
+		return false;
 	}
 
 	pH2c->opCode = btFwOpCode;
@@ -440,7 +440,7 @@ void MPTBT_FwC2hBtMpCtrl(
 	PMPT_CONTEXT	pMptCtx = &(Adapter->mppriv.mpt_ctx);
 	PBT_EXT_C2H pExtC2h = (PBT_EXT_C2H)tmpBuf;
 
-	if (Adapter->bBTFWReady == _FALSE || Adapter->registrypriv.mp_mode == 0) {
+	if (Adapter->bBTFWReady == false || Adapter->registrypriv.mp_mode == 0) {
 		/* RTW_INFO("Ignore C2H BT MP Info since not in MP mode\n"); */
 		return;
 	}
@@ -464,9 +464,9 @@ void MPTBT_FwC2hBtMpCtrl(
 		for (i = 0; i < (length - 3); i++)
 			RTW_INFO(" 0x%x ", pExtC2h->buf[i]);
 #endif
-		if ((_FALSE == pMptCtx->bMPh2c_timeout)
-		    && (_FALSE == pMptCtx->MptH2cRspEvent)) {
-			pMptCtx->MptH2cRspEvent = _TRUE;
+		if ((false == pMptCtx->bMPh2c_timeout)
+		    && (false == pMptCtx->MptH2cRspEvent)) {
+			pMptCtx->MptH2cRspEvent = true;
 			_rtw_up_sema(&pMptCtx->MPh2c_Sema);
 		}
 		break;
@@ -481,10 +481,10 @@ void MPTBT_FwC2hBtMpCtrl(
 		for (i = 0; i < (length - 3); i++)
 			RTW_INFO("[MPT], pExtC2h->buf[%d]=0x%02x\n", i, pExtC2h->buf[i]);
 
-		if ((_FALSE == pMptCtx->bMPh2c_timeout)
-		    && (_TRUE == pMptCtx->MptH2cRspEvent)
-		    && (_FALSE == pMptCtx->MptBtC2hEvent)) {
-			pMptCtx->MptBtC2hEvent = _TRUE;
+		if ((false == pMptCtx->bMPh2c_timeout)
+		    && (true == pMptCtx->MptH2cRspEvent)
+		    && (false == pMptCtx->MptBtC2hEvent)) {
+			pMptCtx->MptBtC2hEvent = true;
 			_rtw_up_sema(&pMptCtx->MPh2c_Sema);
 		}
 		break;

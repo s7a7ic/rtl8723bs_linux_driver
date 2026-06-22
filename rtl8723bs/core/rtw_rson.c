@@ -45,9 +45,9 @@ int is_match_bssid(u8 *mac, u8 bssid_array[][6], int num)
 	int i;
 
 	for (i = 0; i < num; i++)
-		if (_rtw_memcmp(mac, bssid_array[i], 6) == _TRUE)
-			return _TRUE;
-	return _FALSE;
+		if (_rtw_memcmp(mac, bssid_array[i], 6) == true)
+			return true;
+	return false;
 }
 
 void init_rtw_rson_data(struct dvobj_priv *dvobj)
@@ -86,17 +86,17 @@ int str2hexbuf(char *str, u8 *hexbuf, int len)
 
 	p = (unsigned char *)str;
 	if ((*p != '0') || (*(p+1) != 'x'))
-		return _FALSE;
+		return false;
 	slen = strlen(str);
 	if (slen > (len*2) + 2)
-		return _FALSE;
+		return false;
 	p += 2;
 	for (i = 0 ; i < len; i++, idx = idx+2) {
 		hexbuf[i] = key_2char2num(p[idx], p[idx + 1]);
 		if (slen <= idx+2)
 			break;
 	}
-	return _TRUE;
+	return true;
 }
 
 int rtw_rson_set_property(_adapter *padapter, char *field, char *value)
@@ -104,21 +104,21 @@ int rtw_rson_set_property(_adapter *padapter, char *field, char *value)
 	struct dvobj_priv *pdvobj = adapter_to_dvobj(padapter);
 	int num = 0;
 
-	if (_rtw_memcmp(field, (u8 *)"ver", 3) == _TRUE)
+	if (_rtw_memcmp(field, (u8 *)"ver", 3) == true)
 		pdvobj->rson_data.ver = rtw_atoi(value);
-	else if (_rtw_memcmp(field, (u8 *)"id", 2) == _TRUE)
+	else if (_rtw_memcmp(field, (u8 *)"id", 2) == true)
 		num = sscanf(value, "%08x",   &(pdvobj->rson_data.id));
-	else if (_rtw_memcmp(field, (u8 *)"hc", 2) == _TRUE)
+	else if (_rtw_memcmp(field, (u8 *)"hc", 2) == true)
 		num = sscanf(value, "%hhu", &(pdvobj->rson_data.hopcnt));
-	else if (_rtw_memcmp(field, (u8 *)"cnt", 3) == _TRUE)
+	else if (_rtw_memcmp(field, (u8 *)"cnt", 3) == true)
 		num = sscanf(value, "%hhu", &(pdvobj->rson_data.connectible));
-	else if (_rtw_memcmp(field, (u8 *)"loading", 2) == _TRUE)
+	else if (_rtw_memcmp(field, (u8 *)"loading", 2) == true)
 		num = sscanf(value, "%hhu", &(pdvobj->rson_data.loading));
-	else if (_rtw_memcmp(field, (u8 *)"res", 2) == _TRUE) {
+	else if (_rtw_memcmp(field, (u8 *)"res", 2) == true) {
 		str2hexbuf(value, pdvobj->rson_data.res, 16);
 		return 1;
 	} else
-		return _FALSE;
+		return false;
 	return num;
 }
 
@@ -131,29 +131,29 @@ int rtw_rson_choose(struct wlan_network **candidate, struct wlan_network *compet
 	s16 comp_score = 0, cand_score = 0;
 	struct rtw_rson_struct rson_cand, rson_comp;
 
-	if (is_match_bssid(competitor->network.MacAddress, rtw_rson_block_bssid, rtw_rson_block_bssid_idx) == _TRUE)
-		return _FALSE;
+	if (is_match_bssid(competitor->network.MacAddress, rtw_rson_block_bssid, rtw_rson_block_bssid_idx) == true)
+		return false;
 
 	if ((competitor == NULL)
-		|| (rtw_get_rson_struct(&(competitor->network), &rson_comp) != _TRUE)
+		|| (rtw_get_rson_struct(&(competitor->network), &rson_comp) != true)
 		|| (rson_comp.id != CONFIG_RTW_REPEATER_SON_ID))
-		return _FALSE;
+		return false;
 
 	comp_score = rtw_cal_rson_score(&rson_comp, competitor->network.Rssi);
 	if (comp_score == RTW_RSON_SCORE_NOTCNNT)
-		return _FALSE;
+		return false;
 
 	if (*candidate == NULL)
-		return _TRUE;
-	if (rtw_get_rson_struct(&((*candidate)->network), &rson_cand) != _TRUE)
-		return _FALSE;
+		return true;
+	if (rtw_get_rson_struct(&((*candidate)->network), &rson_cand) != true)
+		return false;
 
 	cand_score = rtw_cal_rson_score(&rson_cand, (*candidate)->network.Rssi);
 	RTW_INFO("%s: competitor_score=%d,  candidate_score=%d\n", __func__, comp_score, cand_score);
 	if (comp_score - cand_score > RSON_SCORE_DIFF_TH)
-		return _TRUE;
+		return true;
 
-	return _FALSE;
+	return false;
 }
 
 inline u8 rtw_rson_varify_ie(u8 *p)
@@ -169,9 +169,9 @@ inline u8 rtw_rson_varify_ie(u8 *p)
 
 	/*	for (ver == 1)	*/
 	if (ver != 1)
-		return _FALSE;
+		return false;
 
-	return _TRUE;
+	return true;
 }
 
 /*
@@ -193,13 +193,13 @@ int rtw_get_rson_struct(WLAN_BSSID_EX *bssid, struct  rtw_rson_struct *rson_data
 	rson_data->connectible = 0;
 	rson_data->loading = 0;
 	/*	fake root		*/
-	if (is_match_bssid(bssid->MacAddress, rtw_rson_root_bssid, rtw_rson_root_bssid_idx) == _TRUE) {
+	if (is_match_bssid(bssid->MacAddress, rtw_rson_root_bssid, rtw_rson_root_bssid_idx) == true) {
 		rson_data->id = CONFIG_RTW_REPEATER_SON_ID;
 		rson_data->ver = RTW_RSON_VER;
 		rson_data->hopcnt = RTW_RSON_HC_ROOT;
 		rson_data->connectible = RTW_RSON_ALLOWCONNECT;
 		rson_data->loading = 0;
-		return _TRUE;
+		return true;
 	}
 	limit = bssid->IELength - _BEACON_IE_OFFSET_;
 
@@ -208,7 +208,7 @@ int rtw_get_rson_struct(WLAN_BSSID_EX *bssid, struct  rtw_rson_struct *rson_data
 		limit -= len;
 		if ((p == NULL) || (len == 0))
 			break;
-		if (p && (_rtw_memcmp(p + 2, RTW_RSON_OUI, sizeof(RTW_RSON_OUI)) == _TRUE)
+		if (p && (_rtw_memcmp(p + 2, RTW_RSON_OUI, sizeof(RTW_RSON_OUI)) == true)
 			&& rtw_rson_varify_ie(p)) {
 			p = p + 2 + sizeof(RTW_RSON_OUI);
 			rson_data->ver = *p;
@@ -222,7 +222,7 @@ int rtw_get_rson_struct(WLAN_BSSID_EX *bssid, struct  rtw_rson_struct *rson_data
 			p = p + 1;
 			rson_data->loading = *p;
 
-			return _TRUE;
+			return true;
 		}
 	}
 	return -EBADMSG;
@@ -285,7 +285,7 @@ void rtw_rson_join_done(_adapter *padapter)
 	if (!padapter->mlmepriv.cur_network_scanned)
 		return;
 	cur_network = &(padapter->mlmepriv.cur_network_scanned->network);
-	if (rtw_get_rson_struct(cur_network, &rson_data) != _TRUE) {
+	if (rtw_get_rson_struct(cur_network, &rson_data) != true) {
 		RTW_ERR("%s: try to join a improper network(%s)\n", __func__, cur_network->Ssid.Ssid);
 		return;
 	}
@@ -308,35 +308,35 @@ int rtw_rson_isupdate_roamcan(struct mlme_priv *mlme
 	s16 comp_score, cand_score, curr_score;
 
 	if ((competitor == NULL)
-		|| (rtw_get_rson_struct(&(competitor->network), &rson_comp) != _TRUE)
+		|| (rtw_get_rson_struct(&(competitor->network), &rson_comp) != true)
 		|| (rson_comp.id != CONFIG_RTW_REPEATER_SON_ID))
-		return _FALSE;
+		return false;
 
 	if ((!mlme->cur_network_scanned)
 		|| (mlme->cur_network_scanned == competitor)
-		|| (rtw_get_rson_struct(&(mlme->cur_network_scanned->network), &rson_curr)) != _TRUE)
-		return _FALSE;
+		|| (rtw_get_rson_struct(&(mlme->cur_network_scanned->network), &rson_curr)) != true)
+		return false;
 
 	if (rtw_get_passing_time_ms((u32)competitor->last_scanned) >= mlme->roam_scanr_exp_ms)
-		return _FALSE;
+		return false;
 
 	comp_score = rtw_cal_rson_score(&rson_comp, competitor->network.Rssi);
 	curr_score = rtw_cal_rson_score(&rson_curr, mlme->cur_network_scanned->network.Rssi);
 	if (comp_score - curr_score < RSON_SCORE_DIFF_TH)
-		return _FALSE;
+		return false;
 
 	if (*candidate == NULL)
-		return _TRUE;
+		return true;
 
-	if (rtw_get_rson_struct(&((*candidate)->network), &rson_cand) != _TRUE) {
+	if (rtw_get_rson_struct(&((*candidate)->network), &rson_cand) != true) {
 		RTW_ERR("%s : Unable to get rson_struct from candidate(%s -- " MAC_FMT")\n",
 				__func__, (*candidate)->network.Ssid.Ssid, MAC_ARG((*candidate)->network.MacAddress));
-		return _FALSE;
+		return false;
 	}
 	cand_score = rtw_cal_rson_score(&rson_cand, (*candidate)->network.Rssi);
 	RTW_DBG("comp_score=%d , cand_score=%d , curr_score=%d\n", comp_score, cand_score, curr_score);
 	if (cand_score < comp_score)
-		return _TRUE;
+		return true;
 
 #if 0		/*	Handle 11R protocol	*/
 #ifdef CONFIG_RTW_80211R
@@ -360,7 +360,7 @@ int rtw_rson_isupdate_roamcan(struct mlme_priv *mlme
 	}
 #endif
 #endif
-	return _FALSE;
+	return false;
 }
 
 void rtw_rson_show_survey_info(struct seq_file *m, _list *plist, _list *phead)
@@ -372,7 +372,7 @@ void rtw_rson_show_survey_info(struct seq_file *m, _list *plist, _list *phead)
 
 	RTW_PRINT_SEL(m, "%5s  %-17s  %3s  %5s %14s  %10s  %-3s  %5s %32s\n", "index", "bssid", "ch", "id", "hop_cnt", "loading", "RSSI", "score", "ssid");
 	while (1) {
-		if (rtw_end_of_queue_search(phead, plist) == _TRUE)
+		if (rtw_end_of_queue_search(phead, plist) == true)
 			break;
 
 		pnetwork = LIST_CONTAINOR(plist, struct wlan_network, list);
@@ -381,7 +381,7 @@ void rtw_rson_show_survey_info(struct seq_file *m, _list *plist, _list *phead)
 
 		_rtw_memset(&rson_data, 0, sizeof(rson_data));
 		rson_score = 0;
-		if (rtw_get_rson_struct(&(pnetwork->network), &rson_data) == _TRUE)
+		if (rtw_get_rson_struct(&(pnetwork->network), &rson_data) == true)
 			rson_score = rtw_cal_rson_score(&rson_data, pnetwork->network.Rssi);
 		RTW_PRINT_SEL(m, "%5d  "MAC_FMT" %3d  0x%08x %6d %10d   %6d %6d   %32s\n",
 			      ++index,
@@ -411,7 +411,7 @@ u8 rtw_rson_ap_check_sta(_adapter *padapter, u8 *pframe, uint pkt_len, unsigned 
 	struct rtw_rson_struct  rson_target;
 	struct dvobj_priv *pdvobj = adapter_to_dvobj(padapter);
 	int len = 0;
-	u8 ret = _FALSE;
+	u8 ret = false;
 	u8 *p;
 
 #ifndef CONFIG_RTW_REPEATER_SON_ROOT
@@ -422,7 +422,7 @@ u8 rtw_rson_ap_check_sta(_adapter *padapter, u8 *pframe, uint pkt_len, unsigned 
 		if ((p == NULL) || (len == 0))
 			break;
 
-		if (p && (_rtw_memcmp(p + 2, RTW_RSON_OUI, sizeof(RTW_RSON_OUI)) == _TRUE)
+		if (p && (_rtw_memcmp(p + 2, RTW_RSON_OUI, sizeof(RTW_RSON_OUI)) == true)
 			&& rtw_rson_varify_ie(p)) {
 			p = p + 2 + sizeof(RTW_RSON_OUI);
 			rson_target.ver = *p;
@@ -440,14 +440,14 @@ u8 rtw_rson_ap_check_sta(_adapter *padapter, u8 *pframe, uint pkt_len, unsigned 
 	}
 
 	if (rson_target.id == 0)		/*	Normal STA, not a RSON STA	*/
-		ret = _FALSE;
+		ret = false;
 	else if (rson_target.id != pdvobj->rson_data.id) {
-		ret = _TRUE;
+		ret = true;
 		RTW_INFO("%s : Reject AssoReq because RSON ID not match, STA=%08x, our=%08x\n",
 				__func__, rson_target.id, pdvobj->rson_data.id);
 	} else if ((pdvobj->rson_data.hopcnt == RTW_RSON_HC_NOTREADY)
 		|| (pdvobj->rson_data.connectible == RTW_RSON_DENYCONNECT)) {
-		ret = _TRUE;
+		ret = true;
 		RTW_INFO("%s : Reject AssoReq becuase our hopcnt=%d or connectbile=%d\n",
 				__func__, pdvobj->rson_data.hopcnt, pdvobj->rson_data.connectible);
 	}
@@ -496,12 +496,12 @@ void rtw_rson_scan_cmd_hdl(_adapter *padapter, int op)
 	struct mlme_priv *pmlmepriv = &padapter->mlmepriv;
 	u8 val8;
 
-	if (mlmeext_chk_scan_state(pmlmeext, SCAN_DISABLE) != _FALSE)
+	if (mlmeext_chk_scan_state(pmlmeext, SCAN_DISABLE) != false)
 		return;
 	if (op == RSON_SCAN_PROCESS) {
 		padapter->rtw_rson_scanstage = RSON_SCAN_PROCESS;
 		val8 = 0x1e;
-		rtw_hal_set_odm_var(padapter, HAL_ODM_INITIAL_GAIN, &val8, _FALSE);
+		rtw_hal_set_odm_var(padapter, HAL_ODM_INITIAL_GAIN, &val8, false);
 		val8 = 1;
 		rtw_hal_set_hwreg(padapter, HW_VAR_MLME_SITESURVEY, (u8 *)(&val8));
 		issue_probereq(padapter, NULL, NULL);
@@ -512,14 +512,14 @@ void rtw_rson_scan_cmd_hdl(_adapter *padapter, int op)
 		val8 = 0;
 		rtw_hal_set_hwreg(padapter, HW_VAR_MLME_SITESURVEY, (u8 *)(&val8));
 		val8 = 0xff;
-		rtw_hal_set_odm_var(padapter, HAL_ODM_INITIAL_GAIN, &val8, _FALSE);
+		rtw_hal_set_odm_var(padapter, HAL_ODM_INITIAL_GAIN, &val8, false);
 		/*	report_surveydone_event(padapter);*/
-		if (pmlmepriv->to_join == _TRUE) {
-			if (check_fwstate(pmlmepriv, WIFI_ADHOC_STATE) != _TRUE) {
+		if (pmlmepriv->to_join == true) {
+			if (check_fwstate(pmlmepriv, WIFI_ADHOC_STATE) != true) {
 				int s_ret;
 
 				set_fwstate(pmlmepriv, _FW_UNDER_LINKING);
-				pmlmepriv->to_join = _FALSE;
+				pmlmepriv->to_join = false;
 				s_ret = rtw_select_and_join_from_scanned_queue(pmlmepriv);
 				if (s_ret == _SUCCESS)
 					_set_timer(&pmlmepriv->assoc_timer, MAX_JOIN_TIMEOUT);
@@ -539,11 +539,11 @@ void rtw_rson_scan_cmd_hdl(_adapter *padapter, int op)
 							}
 #endif /* CONFIG_INTEL_WIDI */
 							rtw_free_assoc_resources(padapter, 1);
-							rtw_indicate_disconnect(padapter, 0, _FALSE);
+							rtw_indicate_disconnect(padapter, 0, false);
 						} else
-							pmlmepriv->to_join = _TRUE;
+							pmlmepriv->to_join = true;
 					} else
-						rtw_indicate_disconnect(padapter, 0, _FALSE);
+						rtw_indicate_disconnect(padapter, 0, false);
 					_clr_fwstate_(pmlmepriv, _FW_UNDER_LINKING);
 				}
 			}
@@ -561,7 +561,7 @@ void rtw_rson_scan_cmd_hdl(_adapter *padapter, int op)
 						}
 #else
 						receive_disconnect(padapter, pmlmepriv->cur_network.network.MacAddress
-							, WLAN_REASON_ACTIVE_ROAM, _FALSE);
+							, WLAN_REASON_ACTIVE_ROAM, false);
 #endif
 					}
 				}

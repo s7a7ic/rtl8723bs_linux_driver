@@ -89,7 +89,7 @@ static void rtl8723bs_recv_tasklet(void *priv)
 			if ((pattrib->crc_err) || (pattrib->icv_err)) {
 #ifdef CONFIG_MP_INCLUDED
 				if (padapter->registrypriv.mp_mode == 1) {
-					if ((check_fwstate(&padapter->mlmepriv, WIFI_MP_STATE) == _TRUE)) { /* &&(padapter->mppriv.check_mp_pkt == 0)) */
+					if ((check_fwstate(&padapter->mlmepriv, WIFI_MP_STATE) == true)) { /* &&(padapter->mppriv.check_mp_pkt == 0)) */
 						if (pattrib->crc_err == 1)
 							padapter->mppriv.rx_crcerrpktcount++;
 					}
@@ -101,7 +101,7 @@ static void rtl8723bs_recv_tasklet(void *priv)
 				rtw_free_recvframe(precvframe, &precvpriv->free_recv_queue);
 			} else {
 #ifdef CONFIG_RX_PACKET_APPEND_FCS
-				if (check_fwstate(&padapter->mlmepriv, WIFI_MONITOR_STATE) == _FALSE)
+				if (check_fwstate(&padapter->mlmepriv, WIFI_MONITOR_STATE) == false)
 					if ((pattrib->pkt_rpt_type == NORMAL_RX) && rtw_hal_rcr_check(padapter, RCR_APPFCS))
 						pattrib->pkt_len -= IEEE80211_FCS_LEN;
 #endif
@@ -246,7 +246,7 @@ static void rtl8723bs_recv_tasklet(void *priv)
 			if ((pattrib->crc_err) || (pattrib->icv_err)) {
 #ifdef CONFIG_MP_INCLUDED
 				if (padapter->registrypriv.mp_mode == 1) {
-					if ((check_fwstate(&padapter->mlmepriv, WIFI_MP_STATE) == _TRUE)) { /* &&(padapter->mppriv.check_mp_pkt == 0)) */
+					if ((check_fwstate(&padapter->mlmepriv, WIFI_MP_STATE) == true)) { /* &&(padapter->mppriv.check_mp_pkt == 0)) */
 						if (pattrib->crc_err == 1)
 							padapter->mppriv.rx_crcerrpktcount++;
 					}
@@ -284,7 +284,7 @@ static void rtl8723bs_recv_tasklet(void *priv)
 				skb_pull(ppkt, RXDESC_SIZE + pattrib->drvinfo_sz);
 
 #ifdef CONFIG_RX_PACKET_APPEND_FCS
-				if (check_fwstate(&padapter->mlmepriv, WIFI_MONITOR_STATE) == _FALSE) {
+				if (check_fwstate(&padapter->mlmepriv, WIFI_MONITOR_STATE) == false) {
 					if ((pattrib->pkt_rpt_type == NORMAL_RX) && rtw_hal_rcr_check(padapter, RCR_APPFCS)) {
 						recvframe_pull_tail(precvframe, IEEE80211_FCS_LEN);
 						pattrib->pkt_len -= IEEE80211_FCS_LEN;

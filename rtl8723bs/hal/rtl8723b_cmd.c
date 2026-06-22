@@ -17,7 +17,7 @@
 
 static u8 _is_fw_read_cmd_down(_adapter *padapter, u8 msgbox_num)
 {
-	u8	read_down = _FALSE;
+	u8	read_down = false;
 	int	retry_cnts = 100;
 
 	u8 valid;
@@ -27,7 +27,7 @@ static u8 _is_fw_read_cmd_down(_adapter *padapter, u8 msgbox_num)
 	do {
 		valid = rtw_read8(padapter, REG_HMETFR) & BIT(msgbox_num);
 		if (0 == valid)
-			read_down = _TRUE;
+			read_down = true;
 		else
 			rtw_msleep_os(1);
 	} while ((!read_down) && (retry_cnts--));
@@ -296,7 +296,7 @@ static void ConstructNullFunctionData(
 
 	SetSeqNum(pwlanhdr, 0);
 
-	if (bQoS == _TRUE) {
+	if (bQoS == true) {
 		struct rtw_ieee80211_hdr_3addr_qos *pwlanqoshdr;
 
 		set_frame_sub_type(pframe, WIFI_QOS_DATA_NULL);
@@ -507,7 +507,7 @@ void rtl8723b_set_FwPwrMode_cmd(PADAPTER padapter, u8 psmode)
 
 	if (psmode > 0) {
 #ifdef CONFIG_BT_COEXIST
-		if (rtw_btcoex_IsBtControlLps(padapter) == _TRUE) {
+		if (rtw_btcoex_IsBtControlLps(padapter) == true) {
 			PowerState = rtw_btcoex_RpwmVal(padapter);
 			byte5 = rtw_btcoex_LpsVal(padapter);
 
@@ -537,7 +537,7 @@ void rtl8723b_set_FwPwrMode_cmd(PADAPTER padapter, u8 psmode)
 	SET_8723B_H2CCMD_PWRMODE_PARM_BYTE5(u1H2CPwrModeParm, byte5);
 #ifdef CONFIG_LPS_LCLK
 	if (psmode != PS_MODE_ACTIVE) {
-		if (pmlmeext->adaptive_tsf_done == _FALSE && pmlmeext->bcn_cnt > 0) {
+		if (pmlmeext->adaptive_tsf_done == false && pmlmeext->bcn_cnt > 0) {
 			u8 ratio_20_delay, ratio_80_delay;
 
 			/* byte 6 for adaptive_early_32k */
@@ -576,7 +576,7 @@ void rtl8723b_set_FwPwrMode_cmd(PADAPTER padapter, u8 psmode)
 			}
 
 			pmlmeext->bcn_cnt = 0;
-			pmlmeext->adaptive_tsf_done = _TRUE;
+			pmlmeext->adaptive_tsf_done = true;
 
 		} else {
 			/* RTW_INFO("%s(): DrvBcnEarly = %d\n", __func__, pmlmeext->DrvBcnEarly); */
@@ -677,7 +677,7 @@ void rtl8723b_set_FwPwrModeInIPS_cmd(PADAPTER padapter, u8 cmd_param)
 static s32 rtl8723b_set_FwLowPwrLps_cmd(PADAPTER padapter, u8 enable)
 {
 	/* TODO */
-	return _FALSE;
+	return false;
 }
 
 void rtl8723b_download_rsvd_page(PADAPTER padapter, u8 mstatus)
@@ -686,7 +686,7 @@ void rtl8723b_download_rsvd_page(PADAPTER padapter, u8 mstatus)
 	struct mlme_ext_priv	*pmlmeext = &(padapter->mlmeextpriv);
 	struct mlme_ext_info	*pmlmeinfo = &(pmlmeext->mlmext_info);
 	struct pwrctrl_priv *pwrpriv = adapter_to_pwrctl(padapter);
-	BOOLEAN		bcn_valid = _FALSE;
+	BOOLEAN		bcn_valid = false;
 	u8	DLBcnCount = 0;
 	u32 poll = 0;
 	u8 val8;
@@ -696,7 +696,7 @@ void rtl8723b_download_rsvd_page(PADAPTER padapter, u8 mstatus)
 		 FUNC_ADPT_ARG(padapter), get_hw_port(padapter), mstatus);
 
 	if (mstatus == RT_MEDIA_CONNECT) {
-		BOOLEAN bRecover = _FALSE;
+		BOOLEAN bRecover = false;
 		u8 v8, RegFwHwTxQCtrl;
 
 		/* We should set AID, correct TSF, HW seq enable before set JoinBssReport to Fw in 88/92C. */
@@ -719,7 +719,7 @@ void rtl8723b_download_rsvd_page(PADAPTER padapter, u8 mstatus)
 		/* Set FWHW_TXQ_CTRL 0x422[6]=0 to tell Hw the packet is not a real beacon frame. */
 		RegFwHwTxQCtrl = rtw_read8(padapter, REG_FWHW_TXQ_CTRL + 2);
 		if (RegFwHwTxQCtrl & BIT(6))
-			bRecover = _TRUE;
+			bRecover = true;
 
 		/* To tell Hw the packet is not a real beacon frame. */
 		RegFwHwTxQCtrl &= ~BIT(6);
@@ -849,7 +849,7 @@ static void ConstructBtNullFunctionData(
 	set_duration(pwlanhdr, 0);
 	SetSeqNum(pwlanhdr, 0);
 
-	if (bQoS == _TRUE) {
+	if (bQoS == true) {
 		struct rtw_ieee80211_hdr_3addr_qos *pwlanqoshdr;
 
 		set_frame_sub_type(pframe, WIFI_QOS_DATA_NULL);
@@ -935,8 +935,8 @@ static void SetFwRsvdPagePkt_BTCoex(PADAPTER padapter)
 		&ReservedPagePacket[BufIndex],
 		&BTQosNullLength,
 		NULL,
-		_TRUE, 0, 0, _FALSE);
-	rtl8723b_fill_fake_txdesc(padapter, &ReservedPagePacket[BufIndex - TxDescLen], BTQosNullLength, _FALSE, _TRUE, _FALSE);
+		true, 0, 0, false);
+	rtl8723b_fill_fake_txdesc(padapter, &ReservedPagePacket[BufIndex - TxDescLen], BTQosNullLength, false, true, false);
 
 	CurtPktPageNum = (u8)PageNum_128(TxDescLen + BTQosNullLength);
 
@@ -976,8 +976,8 @@ void rtl8723b_download_BTCoex_AP_mode_rsvd_page(PADAPTER padapter)
 	PHAL_DATA_TYPE pHalData;
 	struct mlme_ext_priv *pmlmeext;
 	struct mlme_ext_info *pmlmeinfo;
-	u8 bRecover = _FALSE;
-	u8 bcn_valid = _FALSE;
+	u8 bRecover = false;
+	u8 bcn_valid = false;
 	u8 DLBcnCount = 0;
 	u32 poll = 0;
 	u8 val8, RegFwHwTxQCtrl;
@@ -987,7 +987,7 @@ void rtl8723b_download_BTCoex_AP_mode_rsvd_page(PADAPTER padapter)
 		FUNC_ADPT_ARG(padapter), get_hw_port(padapter), get_fwstate(&padapter->mlmepriv));
 
 #ifdef CONFIG_RTW_DEBUG
-	if (check_fwstate(&padapter->mlmepriv, WIFI_AP_STATE) == _FALSE) {
+	if (check_fwstate(&padapter->mlmepriv, WIFI_AP_STATE) == false) {
 		RTW_INFO(FUNC_ADPT_FMT ": [WARNING] not in AP mode!!\n",
 			 FUNC_ADPT_ARG(padapter));
 	}
@@ -1017,7 +1017,7 @@ void rtl8723b_download_BTCoex_AP_mode_rsvd_page(PADAPTER padapter)
 	/* Set FWHW_TXQ_CTRL 0x422[6]=0 to tell Hw the packet is not a real beacon frame. */
 	RegFwHwTxQCtrl = rtw_read8(padapter, REG_FWHW_TXQ_CTRL + 2);
 	if (RegFwHwTxQCtrl & BIT(6))
-		bRecover = _TRUE;
+		bRecover = true;
 
 	/* To tell Hw the packet is not a real beacon frame. */
 	RegFwHwTxQCtrl &= ~BIT(6);
@@ -1041,7 +1041,7 @@ void rtl8723b_download_BTCoex_AP_mode_rsvd_page(PADAPTER padapter)
 		} while (!bcn_valid && (poll % 10) != 0 && !RTW_CANNOT_RUN(padapter));
 	} while (!bcn_valid && (DLBcnCount <= 100) && !RTW_CANNOT_RUN(padapter));
 
-	if (_TRUE == bcn_valid) {
+	if (true == bcn_valid) {
 		struct pwrctrl_priv *pwrctl = adapter_to_pwrctl(padapter);
 		pwrctl->fw_psmode_iface_id = padapter->iface_id;
 		RTW_INFO(ADPT_FMT": DL RSVD page success! DLBcnCount:%d, poll:%d\n",

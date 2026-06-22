@@ -3574,9 +3574,9 @@ static void halbtc8723b2ant_action_pan_edr_a2dp(IN struct btc_coexist *btcoexist
 	halbtc8723b2ant_coex_table_with_type(btcoexist, NORMAL_EXEC, 17);
 
 	if (wifi_busy)
-		halbtc8723b2ant_ps_tdma(btcoexist, NORMAL_EXEC, TRUE, 35);
+		halbtc8723b2ant_ps_tdma(btcoexist, NORMAL_EXEC, true, 35);
 	else
-		halbtc8723b2ant_ps_tdma(btcoexist, NORMAL_EXEC, TRUE, 36);
+		halbtc8723b2ant_ps_tdma(btcoexist, NORMAL_EXEC, true, 36);
 
 	/* sw mechanism	 */
 	if (BTC_WIFI_BW_HT40 == wifi_bw) {
