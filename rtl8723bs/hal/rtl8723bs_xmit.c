@@ -317,8 +317,7 @@ static s32 xmit_xmitframes(PADAPTER padapter, struct xmit_priv *pxmitpriv)
 							pxmitbuf->priv_data = NULL;
 							enqueue_pending_xmitbuf(pxmitpriv, pxmitbuf);
 							/* can not yield under lock */
-
-							/* rtw_yield_os(); */
+							/* yield(); */
 							if (single_sta_in_queue == false) {
 								/* break the loop in case there is more than one sta in this ac queue */
 								pxmitbuf = NULL;
@@ -416,7 +415,7 @@ static s32 xmit_xmitframes(PADAPTER padapter, struct xmit_priv *pxmitpriv)
 				rtw_free_xmitframe(pxmitpriv, pframe);
 				pxmitbuf->priv_data = NULL;
 				enqueue_pending_xmitbuf(pxmitpriv, pxmitbuf);
-				rtw_yield_os();
+				yield();
 			} else
 				rtw_free_xmitbuf(pxmitpriv, pxmitbuf);
 			pxmitbuf = NULL;
@@ -480,7 +479,7 @@ next:
 #ifdef CONFIG_REDUCE_TX_CPU_LOADING
 			rtw_msleep_os(1);
 #else
-			rtw_yield_os();
+			yield();
 			/* rtw_usleep_os(50); */
 #endif
 		goto next;
