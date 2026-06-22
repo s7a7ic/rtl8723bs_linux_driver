@@ -420,8 +420,6 @@ typedef struct rtw_if_operations {
 #elif defined(CONFIG_GSPI_HCI)
 	#include <drv_types_gspi.h>
 	#define INTF_DATA GSPI_DATA
-#elif defined(CONFIG_PCI_HCI)
-	#include <drv_types_pci.h>
 #endif
 
 #ifdef CONFIG_CONCURRENT_MODE

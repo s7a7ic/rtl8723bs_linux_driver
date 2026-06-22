@@ -2798,15 +2798,6 @@ const struct rtw_proc_hdl adapter_proc_hdls[] = {
 	RTW_PROC_HDL_SSEQ("lck", proc_get_lck_info, proc_set_lck),
 #endif
 
-#ifdef CONFIG_PCI_HCI
-	RTW_PROC_HDL_SSEQ("rx_ring", proc_get_rx_ring, NULL),
-	RTW_PROC_HDL_SSEQ("tx_ring", proc_get_tx_ring, NULL),
-#ifdef DBG_TXBD_DESC_DUMP
-	RTW_PROC_HDL_SSEQ("tx_ring_ext", proc_get_tx_ring_ext, proc_set_tx_ring_ext),
-#endif
-	RTW_PROC_HDL_SSEQ("pci_aspm", proc_get_pci_aspm, NULL),
-#endif
-
 #ifdef CONFIG_WOWLAN
 	RTW_PROC_HDL_SSEQ("wow_pattern_info", proc_get_pattern_info, proc_set_pattern_info),
 	RTW_PROC_HDL_SSEQ("wow_wakeup_event", proc_get_wakeup_event,

@@ -152,8 +152,6 @@ endif
 include $(TopDIR)/hal/phydm/phydm.mk
 
 ########### HAL_RTL8723B #################################
-ifeq ($(CONFIG_RTL8723B), y)
-
 RTL871X = rtl8723b
 MODULE_NAME = 8723bs
 
@@ -180,8 +178,6 @@ _HAL_INTFS_FILES += hal/$(HCI_NAME)_ops.o
 
 ifeq ($(CONFIG_SDIO_HCI), y)
 _HAL_INTFS_FILES +=hal/HalEfuseMask8723B_SDIO.o
-endif
-
 endif
 
 ########### AUTO_CFG  #################################
@@ -462,15 +458,11 @@ $(MODULE_NAME)-y += $(_BTC_FILES)
 
 $(MODULE_NAME)-$(CONFIG_MP_INCLUDED) += core/rtw_mp.o
 
-ifeq ($(CONFIG_RTL8723B), y)
 $(MODULE_NAME)-$(CONFIG_MP_INCLUDED)+= core/rtw_bt_mp.o
-endif
 
 obj-$(CONFIG_RTL8723BS) := $(MODULE_NAME).o
 
 else
-
-export CONFIG_RTL8723BS = m
 
 all: modules
 

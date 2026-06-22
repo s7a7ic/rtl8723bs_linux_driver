@@ -36,13 +36,6 @@
 	#else
 		#define NR_XMITBUFF	(4)
 	#endif /* CONFIG_SINGLE_XMIT_BUF */
-#elif defined (CONFIG_PCI_HCI)
-#ifdef CONFIG_TX_AMSDU
-	#define MAX_XMITBUF_SZ	(3500)
-#else
-	#define MAX_XMITBUF_SZ	(1664)
-#endif
-	#define NR_XMITBUFF	(128)
 #endif
 
 #ifdef USB_XMITBUF_ALIGN_SZ
@@ -157,28 +150,6 @@ enum TXDESC_SC {
 	#define TXDESC_40_BYTES
 #endif
 
-#ifdef CONFIG_TRX_BD_ARCH
-struct tx_buf_desc {
-#ifdef CONFIG_64BIT_DMA
-#define TX_BUFFER_SEG_SIZE	4	/* in unit of DWORD */
-#else
-#define TX_BUFFER_SEG_SIZE	2	/* in unit of DWORD */
-#endif
-	unsigned int dword[TX_BUFFER_SEG_SIZE * (2 << TX_BUFFER_SEG_NUM)];
-} __packed;
-#elif (defined(CONFIG_RTL8192E) || defined(CONFIG_RTL8814A) || defined(CONFIG_RTL8822B)) && defined(CONFIG_PCI_HCI) /* 8192ee or 8814ae */
-/* 8192EE_TODO */
-struct tx_desc {
-	unsigned int txdw0;
-	unsigned int txdw1;
-	unsigned int txdw2;
-	unsigned int txdw3;
-	unsigned int txdw4;
-	unsigned int txdw5;
-	unsigned int txdw6;
-	unsigned int txdw7;
-};
-#else
 struct tx_desc {
 	unsigned int txdw0;
 	unsigned int txdw1;
@@ -208,14 +179,11 @@ struct tx_desc {
 	unsigned int txdw15;
 #endif
 };
-#endif
 
-#ifndef CONFIG_TRX_BD_ARCH
 union txdesc {
 	struct tx_desc txdesc;
 	unsigned int value[TXDESC_SIZE >> 2];
 };
-#endif
 
 struct	hw_xmit	{
 	/* _lock xmit_lock; */
@@ -659,21 +627,7 @@ struct	xmit_priv	{
 extern struct xmit_frame *__rtw_alloc_cmdxmitframe(struct xmit_priv *pxmitpriv,
 		enum cmdbuf_type buf_type);
 #define rtw_alloc_cmdxmitframe(p) __rtw_alloc_cmdxmitframe(p, CMDBUF_RSVD)
-#if defined(CONFIG_RTL8192E) && defined(CONFIG_PCI_HCI)
-extern struct xmit_frame *__rtw_alloc_cmdxmitframe_8192ee(struct xmit_priv *pxmitpriv,
-		enum cmdbuf_type buf_type);
-#define rtw_alloc_bcnxmitframe(p) __rtw_alloc_cmdxmitframe_8192ee(p, CMDBUF_BEACON)
-#elif defined(CONFIG_RTL8822B) && defined(CONFIG_PCI_HCI)
-extern struct xmit_frame *__rtw_alloc_cmdxmitframe_8822be(struct xmit_priv *pxmitpriv,
-		enum cmdbuf_type buf_type);
-#define rtw_alloc_bcnxmitframe(p) __rtw_alloc_cmdxmitframe_8822be(p, CMDBUF_BEACON)
-#elif defined(CONFIG_RTL8821C) && defined(CONFIG_PCI_HCI)
-extern struct xmit_frame *__rtw_alloc_cmdxmitframe_8821ce(struct xmit_priv *pxmitpriv,
-		enum cmdbuf_type buf_type);
-#define rtw_alloc_bcnxmitframe(p) __rtw_alloc_cmdxmitframe_8821ce(p, CMDBUF_BEACON)
-#else
 #define rtw_alloc_bcnxmitframe(p) __rtw_alloc_cmdxmitframe(p, CMDBUF_BEACON)
-#endif
 
 extern struct xmit_buf *rtw_alloc_xmitbuf_ext(struct xmit_priv *pxmitpriv);
 extern s32 rtw_free_xmitbuf_ext(struct xmit_priv *pxmitpriv, struct xmit_buf *pxmitbuf);
