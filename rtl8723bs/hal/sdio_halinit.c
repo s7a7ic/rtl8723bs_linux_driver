@@ -976,7 +976,6 @@ static u32 rtl8723bs_hal_init(PADAPTER padapter)
 #endif /* CONFIG_TX_MCAST2UNI */
 #endif /* CONFIG_CONCURRENT_MODE || CONFIG_TX_MCAST2UNI */
 
-
 	invalidate_cam_all(padapter);
 
 	rtw_hal_set_chnl_bw(padapter, padapter->registrypriv.channel,

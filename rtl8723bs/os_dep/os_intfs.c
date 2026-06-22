@@ -2915,8 +2915,6 @@ int _netdev_open(struct net_device *pnetdev)
 		rtw_cfg80211_init_wiphy(padapter);
 		rtw_cfg80211_init_wdev_data(padapter);
 
-//		rtw_led_control(padapter, LED_CTL_NO_LINK);
-
 		padapter->bup = true;
 		pwrctrlpriv->bips_processing = false;
 
@@ -3080,11 +3078,8 @@ int rtw_ips_pwr_up(_adapter *padapter)
 
 	result = ips_netdrv_open(padapter);
 
-//	rtw_led_control(padapter, LED_CTL_NO_LINK);
-
 	RTW_INFO("<===  rtw_ips_pwr_up.............. in %dms\n", rtw_get_passing_time_ms(start_time));
 	return result;
-
 }
 
 void rtw_ips_pwr_down(_adapter *padapter)
@@ -3190,8 +3185,6 @@ static int netdev_close(struct net_device *pnetdev)
 		rtw_free_assoc_resources(padapter, 1);
 		/* s2-4. */
 		rtw_free_network_queue(padapter, true);
-		/* Close LED */
-//		rtw_led_control(padapter, LED_CTL_POWER_OFF);
 	}
 
 	rtw_scan_abort(padapter);
@@ -3696,9 +3689,6 @@ int rtw_suspend_wow(_adapter *padapter)
 			rtw_netif_stop_queue(pnetdev);
 		rtw_mi_buddy_netif_stop_queue(padapter, true);
 
-		/* 0. Power off LED */
-//		rtw_led_control(padapter, LED_CTL_POWER_OFF);
-
 #if defined(CONFIG_SDIO_HCI) || defined(CONFIG_GSPI_HCI)
 		/* 2.only for SDIO disable interrupt */
 		rtw_intf_stop(padapter);
@@ -3829,8 +3819,6 @@ int rtw_suspend_ap_wow(_adapter *padapter)
 
 	rtw_mi_netif_stop_queue(padapter, false);
 
-	/* 0. Power off LED */
-//	rtw_led_control(padapter, LED_CTL_POWER_OFF);
 #ifdef CONFIG_SDIO_HCI
 	/* 2.only for SDIO disable interrupt*/
 	rtw_intf_stop(padapter);
@@ -3911,7 +3899,6 @@ int rtw_suspend_ap_wow(_adapter *padapter)
 }
 #endif /* #ifdef CONFIG_AP_WOWLAN */
 
-
 int rtw_suspend_normal(_adapter *padapter)
 {
 	struct mlme_priv *pmlmepriv = &padapter->mlmepriv;
@@ -3928,12 +3915,9 @@ int rtw_suspend_normal(_adapter *padapter)
 
 	rtw_mi_suspend_free_assoc_resource(padapter);
 
-//	rtw_led_control(padapter, LED_CTL_POWER_OFF);
-
 	if ((rtw_hal_check_ips_status(padapter) == true)
 	    || (adapter_to_pwrctl(padapter)->rf_pwrstate == rf_off))
 		RTW_PRINT("%s: ### ERROR #### driver in IPS ####ERROR###!!!\n", __FUNCTION__);
-
 
 #ifdef CONFIG_CONCURRENT_MODE
 	rtw_set_drv_stopped(padapter);	/*for stop thread*/

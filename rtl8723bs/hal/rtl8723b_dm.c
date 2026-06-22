@@ -37,53 +37,6 @@ static VOID dm_CheckProtection(IN PADAPTER Adapter)
 #endif
 }
 
-#ifdef CONFIG_SUPPORT_HW_WPS_PBC
-static void dm_CheckPbcGPIO(_adapter *padapter)
-{
-	u8	tmp1byte;
-	u8	bPbcPressed = false;
-
-	if (!padapter->registrypriv.hw_wps_pbc)
-		return;
-
-#ifdef CONFIG_USB_HCI
-	tmp1byte = rtw_read8(padapter, GPIO_IO_SEL);
-	tmp1byte |= (HAL_8192C_HW_GPIO_WPS_BIT);
-	rtw_write8(padapter, GPIO_IO_SEL, tmp1byte);	/* enable GPIO[2] as output mode */
-
-	tmp1byte &= ~(HAL_8192C_HW_GPIO_WPS_BIT);
-	rtw_write8(padapter,  GPIO_IN, tmp1byte);		/* reset the floating voltage level */
-
-	tmp1byte = rtw_read8(padapter, GPIO_IO_SEL);
-	tmp1byte &= ~(HAL_8192C_HW_GPIO_WPS_BIT);
-	rtw_write8(padapter, GPIO_IO_SEL, tmp1byte);	/* enable GPIO[2] as input mode */
-
-	tmp1byte = rtw_read8(padapter, GPIO_IN);
-
-	if (tmp1byte == 0xff)
-		return ;
-
-	if (tmp1byte & HAL_8192C_HW_GPIO_WPS_BIT)
-		bPbcPressed = true;
-#else
-	tmp1byte = rtw_read8(padapter, GPIO_IN);
-
-	if (tmp1byte == 0xff || padapter->init_adpt_in_progress)
-		return ;
-
-	if ((tmp1byte & HAL_8192C_HW_GPIO_WPS_BIT) == 0)
-		bPbcPressed = true;
-#endif
-
-	if (true == bPbcPressed) {
-		/* Here we only set bPbcPressed to true */
-		/* After trigger PBC, the variable will be set to false */
-		RTW_INFO("CheckPbcGPIO - PBC is pressed\n");
-		rtw_request_wps_pbc_event(padapter);
-	}
-}
-#endif /* #ifdef CONFIG_SUPPORT_HW_WPS_PBC */
-
 /*
  * Initialize GPIO setting registers
  *   */
@@ -164,16 +117,6 @@ VOID rtl8723b_HalDmWatchDog(IN PADAPTER Adapter)
 	rtw_phydm_watchdog(Adapter);
 
 skip_dm:
-	/* Check GPIO to determine current RF on/off and Pbc status. */
-	/* Check Hardware Radio ON/OFF or not */
-	/* if(Adapter->MgntInfo.PowerSaveControl.bGpioRfSw) */
-	/* { */
-	/* RTPRINT(FPWR, PWRHW, ("dm_CheckRfCtrlGPIO\n")); */
-	/*	dm_CheckRfCtrlGPIO(Adapter); */
-	/* } */
-#ifdef CONFIG_SUPPORT_HW_WPS_PBC
-	dm_CheckPbcGPIO(Adapter);
-#endif
 	return;
 }
 

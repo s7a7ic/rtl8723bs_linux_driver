@@ -311,8 +311,6 @@ struct hal_ops {
 
 	void	(*GetHwRegHandler)(_adapter *padapter, u8	variable, u8 *val);
 
-
-
 	u8 (*get_hal_def_var_handler)(_adapter *padapter, HAL_DEF_VARIABLE eVariable, PVOID pValue);
 
 	u8(*SetHalDefVarHandler)(_adapter *padapter, HAL_DEF_VARIABLE eVariable, PVOID pValue);

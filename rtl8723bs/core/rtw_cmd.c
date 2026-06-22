@@ -873,10 +873,8 @@ u8 rtw_sitesurvey_cmd(_adapter  *padapter, NDIS_802_11_SSID *ssid, int ssid_num,
 #endif /* CONFIG_SCAN_BACKOP */
 			mlme_set_scan_to_timer(pmlmepriv, SCANNING_TIMEOUT);
 
-//		rtw_led_control(padapter, LED_CTL_SITE_SURVEY);
 	} else
 		_clr_fwstate_(pmlmepriv, _FW_UNDER_SURVEY);
-
 
 	return res;
 }
@@ -1300,8 +1298,6 @@ u8 rtw_joinbss_cmd(_adapter  *padapter, struct wlan_network *pnetwork)
 #ifdef CONFIG_RTW_80211R
 	struct _ft_priv			*pftpriv = &pmlmepriv->ftpriv;
 #endif
-
-//	rtw_led_control(padapter, LED_CTL_START_TO_LINK);
 
 	pcmd = (struct cmd_obj *)rtw_zmalloc(sizeof(struct cmd_obj));
 	if (pcmd == NULL) {

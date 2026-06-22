@@ -160,30 +160,6 @@ static void request_wps_pbc_event(_adapter *padapter)
 
 }
 
-#ifdef CONFIG_SUPPORT_HW_WPS_PBC
-void rtw_request_wps_pbc_event(_adapter *padapter)
-{
-#ifdef RTK_DMP_PLATFORM
-#if (LINUX_VERSION_CODE > KERNEL_VERSION(2, 6, 12))
-	kobject_uevent(&padapter->pnetdev->dev.kobj, KOBJ_NET_PBC);
-#else
-	kobject_hotplug(&padapter->pnetdev->class_dev.kobj, KOBJ_NET_PBC);
-#endif
-#else
-
-	if (padapter->pid[0] == 0) {
-		/*	0 is the default value and it means the application monitors the HW PBC doesn't privde its pid to driver. */
-		return;
-	}
-
-	rtw_signal_process(padapter->pid[0], SIGUSR1);
-
-#endif
-
-//	rtw_led_control(padapter, LED_CTL_START_WPS_BOTTON);
-}
-#endif/* #ifdef CONFIG_SUPPORT_HW_WPS_PBC */
-
 void indicate_wx_scan_complete_event(_adapter *padapter)
 {
 	union iwreq_data wrqu;

@@ -1499,8 +1499,6 @@ void rtw_indicate_connect(_adapter *padapter)
 
 		set_fwstate(pmlmepriv, _FW_LINKED);
 
-//		rtw_led_control(padapter, LED_CTL_LINK);
-
 #ifdef CONFIG_DRVEXT_MODULE
 		if (padapter->drvextpriv.enable_wpa)
 			indicate_l2_connect(padapter);
@@ -1523,7 +1521,6 @@ void rtw_indicate_connect(_adapter *padapter)
 	if (!MLME_IS_AP(padapter) && !MLME_IS_MESH(padapter))
 		rtw_mi_set_scan_deny(padapter, 3000);
 }
-
 
 /*
 *rtw_indicate_disconnect: the caller has to lock pmlmepriv->lock
@@ -1572,8 +1569,6 @@ void rtw_indicate_disconnect(_adapter *padapter, u16 reason, u8 locally_generate
 		rtw_set_ips_deny(padapter, 3000);
 
 		_clr_fwstate_(pmlmepriv, _FW_LINKED);
-
-//		rtw_led_control(padapter, LED_CTL_NO_LINK);
 
 		rtw_clear_scan_deny(padapter);
 	}
