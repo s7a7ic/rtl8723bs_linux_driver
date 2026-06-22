@@ -1134,6 +1134,7 @@ u8 rtw_hal_ops_check(_adapter *padapter)
 		ret = _FAIL;
 	}
 #endif
+
 #if defined(CONFIG_USB_HCI)
 	if (NULL == padapter->hal_func.inirp_init) {
 		rtw_hal_error_msg("inirp_init");
@@ -1145,9 +1146,8 @@ u8 rtw_hal_ops_check(_adapter *padapter)
 	}
 #endif /* #if defined(CONFIG_USB_HCI) */
 
-
 	/*** interrupt hdl section ***/
-#if (defined(CONFIG_USB_HCI) && defined(CONFIG_SUPPORT_USB_INT)
+#if defined(CONFIG_USB_HCI) && defined(CONFIG_SUPPORT_USB_INT)
 	if (NULL == padapter->hal_func.interrupt_handler) {
 		rtw_hal_error_msg("interrupt_handler");
 		ret = _FAIL;
@@ -1164,7 +1164,6 @@ u8 rtw_hal_ops_check(_adapter *padapter)
 		ret = _FAIL;
 	}
 #endif /* defined (CONFIG_SDIO_HCI) || defined (CONFIG_GSPI_HCI) */
-
 
 	/*** DM section ***/
 	if (NULL == padapter->hal_func.dm_init) {
