@@ -40,7 +40,6 @@ RTL871X = rtl8723b
 _PHYDM_FILES += hal/phydm/$(RTL871X)/halhwimg8723b_bb.o\
 								hal/phydm/$(RTL871X)/halhwimg8723b_mac.o\
 								hal/phydm/$(RTL871X)/halhwimg8723b_rf.o\
-								hal/phydm/$(RTL871X)/halhwimg8723b_mp.o\
 								hal/phydm/$(RTL871X)/phydm_regconfig8723b.o\
 								hal/phydm/halrf/$(RTL871X)/halrf_8723b_ce.o\
 								hal/phydm/$(RTL871X)/phydm_rtl8723b.o

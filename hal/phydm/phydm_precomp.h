@@ -108,7 +108,6 @@ rtw_phydm_cfg_phy_para(
 	#include "rtl8723b/hal8723breg.h"
 	#if (DM_ODM_SUPPORT_TYPE == ODM_CE)
 		#include "halrf/rtl8723b/halrf_8723b_ce.h"
-		#include "rtl8723b/halhwimg8723b_mp.h"
 		#include "rtl8723b_hal.h"
 	#endif
 #endif
