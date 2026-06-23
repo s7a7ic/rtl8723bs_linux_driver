@@ -865,13 +865,11 @@ struct dvobj_priv {
 
 	struct rtw_traffic_statistics	traffic_stat;
 
-#ifdef PLATFORM_LINUX
 	_thread_hdl_ rtnl_lock_holder;
 
 	#if defined(RTW_SINGLE_WIPHY)
 	struct wiphy *wiphy;
 	#endif
-#endif /* PLATFORM_LINUX */
 
 #ifdef CONFIG_SWTIMER_BASED_TXBCN
 	_timer txbcn_timer;
@@ -948,7 +946,6 @@ static inline void dev_clr_drv_stopped(struct dvobj_priv *dvobj)
 #define dev_is_surprise_removed(dvobj)	(ATOMIC_READ(&dvobj->bSurpriseRemoved) == true)
 #define dev_is_drv_stopped(dvobj)		(ATOMIC_READ(&dvobj->bDriverStopped) == true)
 
-#ifdef PLATFORM_LINUX
 static struct device *dvobj_to_dev(struct dvobj_priv *dvobj)
 {
 	/* todo: get interface type from dvobj and the return the dev accordingly */
@@ -959,7 +956,6 @@ static struct device *dvobj_to_dev(struct dvobj_priv *dvobj)
 	return &dvobj->intf_data.func->dev;
 #endif
 }
-#endif
 
 _adapter *dvobj_get_port0_adapter(struct dvobj_priv *dvobj);
 _adapter *dvobj_get_unregisterd_adapter(struct dvobj_priv *dvobj);

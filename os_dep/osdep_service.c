@@ -11,13 +11,10 @@
 #define RT_TAG	'1178'
 
 #ifdef DBG_MEMORY_LEAK
-#ifdef PLATFORM_LINUX
 atomic_t _malloc_cnt = ATOMIC_INIT(0);
 atomic_t _malloc_size = ATOMIC_INIT(0);
-#endif
 #endif /* DBG_MEMORY_LEAK */
 
-#if defined(PLATFORM_LINUX)
 /*
 * Translate the OS dependent @param error_code to OS independent RTW_STATUS_CODE
 * @return: one of RTW_STATUS_CODE
@@ -34,12 +31,6 @@ inline int RTW_STATUS_CODE(int error_code)
 		return _FAIL;
 	}
 }
-#else
-inline int RTW_STATUS_CODE(int error_code)
-{
-	return error_code;
-}
-#endif
 
 u32 rtw_atoi(u8 *s)
 {
@@ -66,12 +57,10 @@ inline u8 *_rtw_vmalloc(u32 sz)
 	pbuf = vmalloc(sz);
 
 #ifdef DBG_MEMORY_LEAK
-#ifdef PLATFORM_LINUX
 	if (pbuf != NULL) {
 		atomic_inc(&_malloc_cnt);
 		atomic_add(sz, &_malloc_size);
 	}
-#endif
 #endif /* DBG_MEMORY_LEAK */
 
 	return pbuf;
@@ -173,24 +162,14 @@ inline int _rtw_netif_rx(_nic_hdl ndev, struct sk_buff *skb)
 #ifdef CONFIG_RTW_NAPI
 inline int _rtw_netif_receive_skb(_nic_hdl ndev, struct sk_buff *skb)
 {
-#if defined(PLATFORM_LINUX)
 	skb->dev = ndev;
 	return netif_receive_skb(skb);
-#else
-	rtw_warn_on(1);
-	return -1;
-#endif
 }
 
 #ifdef CONFIG_RTW_GRO
 inline gro_result_t _rtw_napi_gro_receive(struct napi_struct *napi, struct sk_buff *skb)
 {
-#if defined(PLATFORM_LINUX)
 	return napi_gro_receive(napi, skb);
-#else
-	rtw_warn_on(1);
-	return -1;
-#endif
 }
 #endif /* CONFIG_RTW_GRO */
 #endif /* CONFIG_RTW_NAPI */
@@ -1287,15 +1266,10 @@ static int storeToFile(const char *path, u8 *buf, u32 sz)
 */
 int rtw_is_file_readable(const char *path)
 {
-#ifdef PLATFORM_LINUX
 	if (isFileReadable(path, NULL) == 0)
 		return true;
 	else
 		return false;
-#else
-	/* Todo... */
-	return false;
-#endif
 }
 
 /*
@@ -1306,15 +1280,10 @@ int rtw_is_file_readable(const char *path)
 */
 int rtw_is_file_readable_with_size(const char *path, u32 *sz)
 {
-#ifdef PLATFORM_LINUX
 	if (isFileReadable(path, sz) == 0)
 		return true;
 	else
 		return false;
-#else
-	/* Todo... */
-	return false;
-#endif
 }
 
 /*
@@ -1326,13 +1295,8 @@ int rtw_is_file_readable_with_size(const char *path, u32 *sz)
 */
 int rtw_retrieve_from_file(const char *path, u8 *buf, u32 sz)
 {
-#ifdef PLATFORM_LINUX
 	int ret = retriveFromFile(path, buf, sz);
 	return ret >= 0 ? ret : 0;
-#else
-	/* Todo... */
-	return 0;
-#endif
 }
 
 /*
@@ -1344,16 +1308,10 @@ int rtw_retrieve_from_file(const char *path, u8 *buf, u32 sz)
 */
 int rtw_store_to_file(const char *path, u8 *buf, u32 sz)
 {
-#ifdef PLATFORM_LINUX
 	int ret = storeToFile(path, buf, sz);
 	return ret >= 0 ? ret : 0;
-#else
-	/* Todo... */
-	return 0;
-#endif
 }
 
-#ifdef PLATFORM_LINUX
 struct net_device *rtw_alloc_etherdev_with_old_priv(int sizeof_priv, void *old_priv)
 {
 	struct net_device *pnetdev;
@@ -1481,7 +1439,6 @@ int rtw_change_ifname(_adapter *padapter, const char *ifname)
 error:
 	return -1;
 }
-#endif
 
 u64 rtw_modular64(u64 x, u64 y)
 {

@@ -475,15 +475,8 @@ struct	phydm_iot_center {
 
 };
 
-#if (DM_ODM_SUPPORT_TYPE & ODM_WIN)
-	#if (RT_PLATFORM != PLATFORM_LINUX)
-		typedef
-	#endif
+	struct PHY_DM_STRUCT
 
-	struct PHY_DM_STRUCT
-#else/*for AP, CE Team*/
-	struct PHY_DM_STRUCT
-#endif
 {
 	/*Add for different team use temporarily*/
 	struct _ADAPTER		*adapter;		/*For CE/NIC team*/

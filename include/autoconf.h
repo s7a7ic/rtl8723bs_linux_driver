@@ -18,8 +18,6 @@
 #endif
 #define CONFIG_SDIO_HCI
 
-#define PLATFORM_LINUX
-
 /*
  * Wi-Fi Functions Config
  */
