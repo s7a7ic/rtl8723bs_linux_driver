@@ -12,12 +12,10 @@ _PHYDM_FILES := hal/phydm/phydm_debug.o	\
 								hal/phydm/phydm_dig.o\
 								hal/phydm/phydm_pathdiv.o\
 								hal/phydm/phydm_rainfo.o\
-								hal/phydm/phydm_dynamictxpower.o\
 								hal/phydm/phydm_adaptivity.o\
 								hal/phydm/phydm_cfotracking.o\
 								hal/phydm/phydm_noisemonitor.o\
 								hal/phydm/phydm_acs.o\
-								hal/phydm/phydm_dfs.o\
 								hal/phydm/phydm_adc_sampling.o\
 								hal/phydm/phydm_ccx.o\
 								hal/phydm/phydm_psd.o\

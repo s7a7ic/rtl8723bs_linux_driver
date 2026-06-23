@@ -115,53 +115,6 @@ enum phydm_rateid_idx_e {
 	PHYDM_ARFR5_N_3SS		= 14
 };
 
-#if (RATE_ADAPTIVE_SUPPORT == 1)/* 88E RA */
-struct _odm_ra_info_ {
-	u8 rate_id;
-	u32 rate_mask;
-	u32 ra_use_rate;
-	u8 rate_sgi;
-	u8 rssi_sta_ra;
-	u8 pre_rssi_sta_ra;
-	u8 sgi_enable;
-	u8 decision_rate;
-	u8 pre_rate;
-	u8 highest_rate;
-	u8 lowest_rate;
-	u32 nsc_up;
-	u32 nsc_down;
-	u16 RTY[5];
-	u32 TOTAL;
-	u16 DROP;
-	u8 active;
-	u16 rpt_time;
-	u8 ra_waiting_counter;
-	u8 ra_pending_counter;
-	u8 ra_drop_after_down;
-#if 1 /* POWER_TRAINING_ACTIVE == 1 */ /* For compile  pass only~! */
-	u8 pt_active;  /* on or off */
-	u8 pt_try_state;  /* 0 trying state, 1 for decision state */
-	u8 pt_stage;  /* 0~6 */
-	u8 pt_stop_count; /* Stop PT counter */
-	u8 pt_pre_rate;  /* if rate change do PT */
-	u8 pt_pre_rssi; /* if RSSI change 5% do PT */
-	u8 pt_mode_ss;  /* decide whitch rate should do PT */
-	u8 ra_stage;  /* StageRA, decide how many times RA will be done between PT */
-	u8 pt_smooth_factor;
-#endif
-#if (DM_ODM_SUPPORT_TYPE == ODM_AP) &&	((DEV_BUS_TYPE == RT_USB_INTERFACE) || (DEV_BUS_TYPE == RT_SDIO_INTERFACE))
-	u8 rate_down_counter;
-	u8 rate_up_counter;
-	u8 rate_direction;
-	u8 bounding_type;
-	u8 bounding_counter;
-	u8 bounding_learning_time;
-	u8 rate_down_start_time;
-#endif
-};
-#endif
-
-
 struct _rate_adaptive_table_ {
 	u8		firstconnect;
 #if (DM_ODM_SUPPORT_TYPE == ODM_WIN)
@@ -343,11 +296,6 @@ phydm_rssi_lv_dec(
 	void			*p_dm_void,
 	u32			rssi,
 	u8			ratr_state
-);
-
-void
-odm_ra_post_action_on_assoc(
-	void	*p_dm
 );
 
 u8

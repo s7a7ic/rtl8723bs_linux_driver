@@ -141,12 +141,6 @@ struct _sw_antenna_switch_ {
 	u32		pkt_cnt_sw_ant_div_by_ctrl_frame;
 	boolean		is_sw_ant_div_by_ctrl_frame;
 
-#if (DM_ODM_SUPPORT_TYPE == ODM_WIN)
-#if USE_WORKITEM
-	RT_WORK_ITEM	phydm_sw_antenna_switch_workitem;
-#endif
-#endif
-
 	/* AntDect (Before link Antenna Switch check) need to be moved*/
 	u16		single_ant_counter;
 	u16		dual_ant_counter;
@@ -160,42 +154,7 @@ struct _sw_antenna_switch_ {
 	boolean		rssi_ant_dect_result;
 	u8		ant_5g;
 	u8		ant_2g;
-
-
 };
-
-
-#if (DM_ODM_SUPPORT_TYPE & (ODM_AP))
-#if (defined(CONFIG_PHYDM_ANTENNA_DIVERSITY))
-struct _BF_DIV_COEX_ {
-	boolean w_bfer_client[ODM_ASSOCIATE_ENTRY_NUM];
-	boolean w_bfee_client[ODM_ASSOCIATE_ENTRY_NUM];
-	u32	MA_rx_TP[ODM_ASSOCIATE_ENTRY_NUM];
-	u32	MA_rx_TP_DIV[ODM_ASSOCIATE_ENTRY_NUM];
-
-	u8  bd_ccoex_type_wbfer;
-	u8 num_txbfee_client;
-	u8 num_txbfer_client;
-	u8 bdc_try_counter;
-	u8 bdc_hold_counter;
-	u8 bdc_mode;
-	u8 bdc_active_mode;
-	u8 BDC_state;
-	u8 bdc_rx_idle_update_counter;
-	u8 num_client;
-	u8 pre_num_client;
-	u8 num_bf_tar;
-	u8 num_div_tar;
-
-	boolean is_all_div_sta_idle;
-	boolean is_all_bf_sta_idle;
-	boolean bdc_try_flag;
-	boolean BF_pass;
-	boolean DIV_pass;
-};
-#endif
-#endif
-
 
 struct phydm_fat_struct {
 	u8	bssid[6];
@@ -266,7 +225,7 @@ struct phydm_fat_struct {
 	u8	pre_antdiv_rssi;
 	u8	pre_antdiv_tp;
 #endif
-#if (DM_ODM_SUPPORT_TYPE & (ODM_WIN | ODM_CE))
+#if (DM_ODM_SUPPORT_TYPE & (ODM_CE))
 	u32    cck_ctrl_frame_cnt_main;
 	u32    cck_ctrl_frame_cnt_aux;
 	u32    ofdm_ctrl_frame_cnt_main;
@@ -291,8 +250,6 @@ struct phydm_fat_struct {
 /* 1 ============================================================
  * 1  enumeration
  * 1 ============================================================ */
-
-
 
 enum fat_state_e /*Fast antenna training*/
 {
@@ -319,7 +276,6 @@ enum ant_div_type_e {
 /* 1 ============================================================
  * 1  function prototype
  * 1 ============================================================ */
-
 
 void
 odm_stop_antenna_switch_dm(
@@ -415,19 +371,12 @@ odm_update_rx_idle_ant_8723d(
 
 #ifdef CONFIG_S0S1_SW_ANTENNA_DIVERSITY
 
-#if (DM_ODM_SUPPORT_TYPE == ODM_WIN)
-void
-odm_sw_antdiv_callback(
-	struct timer_list		*p_timer
-);
-
 void
 odm_sw_antdiv_workitem_callback(
 	void	*p_context
 );
 
-
-#elif (DM_ODM_SUPPORT_TYPE == ODM_CE)
+#if (DM_ODM_SUPPORT_TYPE == ODM_CE)
 
 void
 odm_sw_antdiv_workitem_callback(

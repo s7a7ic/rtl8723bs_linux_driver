@@ -15,11 +15,9 @@
 #include "phydm_smt_ant.h"
 #include "phydm_antdect.h"
 #include "phydm_rainfo.h"
-#include "phydm_dynamictxpower.h"
 #include "phydm_cfotracking.h"
 #include "phydm_acs.h"
 #include "phydm_adaptivity.h"
-#include "phydm_dfs.h"
 #include "phydm_ccx.h"
 #include "phydm_adc_sampling.h"
 #include "phydm_dynamic_rx_path.h"
@@ -760,11 +758,6 @@ struct	phydm_iot_center {
 	s32			accumulate_pwdb[ODM_ASSOCIATE_ENTRY_NUM];
 #endif
 
-#if (RATE_ADAPTIVE_SUPPORT == 1)
-	u16			currmin_rpt_time;
-	struct _odm_ra_info_   ra_info[ODM_ASSOCIATE_ENTRY_NUM];
-	/*Use mac_id as array index. STA mac_id=0, VWiFi Client mac_id={1, ODM_ASSOCIATE_ENTRY_NUM-1} //YJ,add,120119*/
-#endif
 	boolean		ra_support88e;	/*2012/02/14 MH Add to share 88E ra with other SW team.We need to colelct all support abilit to a proper area.*/
 	boolean		*p_is_driver_stopped;
 	boolean		*p_is_driver_is_going_to_pnp_set_power_sleep;
@@ -840,7 +833,6 @@ struct	phydm_iot_center {
 
 	struct	pkt_process_info				pkt_proc_struct;
 	struct phydm_adaptivity_struct			adaptivity;
-	struct _DFS_STATISTICS		dfs;
 
 	struct _ODM_NOISE_MONITOR_			noise_level;
 

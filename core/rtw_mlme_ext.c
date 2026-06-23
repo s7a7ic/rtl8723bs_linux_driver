@@ -523,42 +523,6 @@ static u8 init_channel_set(_adapter *padapter, u8 ChannelPlan, RT_CHANNEL_INFO *
 		}
 	}
 
-#ifdef CONFIG_IEEE80211_BAND_5GHZ
-	if (b5GBand) {
-		if (ChannelPlan == RTW_CHPLAN_REALTEK_DEFINE)
-			Index5G = RTW_CHANNEL_PLAN_MAP_REALTEK_DEFINE.Index5G;
-		else
-			Index5G = RTW_ChannelPlanMap[ChannelPlan].Index5G;
-
-		for (index = 0; index < CH_LIST_LEN(RTW_ChannelPlan5G[Index5G]); index++) {
-			if (rtw_regsty_is_excl_chs(regsty, CH_LIST_CH(RTW_ChannelPlan5G[Index5G], index)) == true)
-				continue;
-			if (rtw_is_dfs_ch(CH_LIST_CH(RTW_ChannelPlan5G[Index5G], index)))
-				continue;
-
-			if (chanset_size >= MAX_CHANNEL_NUM) {
-				RTW_WARN("chset size can't exceed MAX_CHANNEL_NUM(%u)\n", MAX_CHANNEL_NUM);
-				break;
-			}
-
-			channel_set[chanset_size].ChannelNum = CH_LIST_CH(RTW_ChannelPlan5G[Index5G], index);
-
-			if ((ChannelPlan == RTW_CHPLAN_WORLD_WIDE_5G) /* all channels passive */
-				|| (rtw_is_5g_band1(channel_set[chanset_size].ChannelNum)
-					&& rtw_rd_5g_band1_passive(Index5G)) /* band1 passive */
-				|| (rtw_is_5g_band4(channel_set[chanset_size].ChannelNum)
-					&& rtw_rd_5g_band4_passive(Index5G)) /* band4 passive */
-				|| (rtw_is_dfs_ch(channel_set[chanset_size].ChannelNum)) /* DFS channel(band2, 3) passive */
-			)
-				channel_set[chanset_size].ScanType = SCAN_PASSIVE;
-			else
-				channel_set[chanset_size].ScanType = SCAN_ACTIVE;
-
-			chanset_size++;
-		}
-	}
-#endif /* CONFIG_IEEE80211_BAND_5GHZ */
-
 	if (chanset_size)
 		RTW_INFO(FUNC_ADPT_FMT" ChannelPlan ID:0x%02x, ch num:%d\n"
 			, FUNC_ADPT_ARG(padapter), ChannelPlan, chanset_size);
@@ -748,18 +712,6 @@ bool rtw_choose_shortest_waiting_ch(_adapter *adapter, u8 req_bw, u8 *dec_ch, u8
 				continue;
 
 			if ((d_flags & RTW_CHF_NON_OCP) && rtw_chset_is_ch_non_ocp(rfctl->channel_set, ch, bw, offset))
-				continue;
-
-			if ((d_flags & RTW_CHF_DFS) && rtw_is_dfs_chbw(ch, bw, offset))
-				continue;
-
-			if ((d_flags & RTW_CHF_LONG_CAC) && rtw_is_long_cac_ch(ch, bw, offset, rtw_odm_get_dfs_domain(adapter)))
-				continue;
-
-			if ((d_flags & RTW_CHF_NON_DFS) && !rtw_is_dfs_chbw(ch, bw, offset))
-				continue;
-
-			if ((d_flags & RTW_CHF_NON_LONG_CAC) && !rtw_is_long_cac_ch(ch, bw, offset, rtw_odm_get_dfs_domain(adapter)))
 				continue;
 
 			if (DBG_CHOOSE_SHORTEST_WAITING_CH)
@@ -7215,9 +7167,6 @@ static void process_80211d(PADAPTER padapter, WLAN_BSSID_EX *bssid)
 	while (i < MAX_CHANNEL_NUM && chplan_new[i].ChannelNum != 0) {
 		if (chplan_new[i].ChannelNum == channel) {
 			if (chplan_new[i].ScanType == SCAN_PASSIVE) {
-				/* 5G Bnad 2, 3 (DFS) doesn't change to active scan */
-				if (rtw_is_dfs_ch(channel))
-					break;
 
 				chplan_new[i].ScanType = SCAN_ACTIVE;
 				RTW_INFO("%s: change channel %d scan type from passive to active\n",

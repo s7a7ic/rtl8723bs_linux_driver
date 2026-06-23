@@ -1621,18 +1621,6 @@ int rtw_ch_to_bb_gain_sel(int ch)
 
 	if (ch >= 1 && ch <= 14)
 		sel = BB_GAIN_2G;
-#ifdef CONFIG_IEEE80211_BAND_5GHZ
-	else if (ch >= 36 && ch < 48)
-		sel = BB_GAIN_5GLB1;
-	else if (ch >= 52 && ch <= 64)
-		sel = BB_GAIN_5GLB2;
-	else if (ch >= 100 && ch <= 120)
-		sel = BB_GAIN_5GMB1;
-	else if (ch >= 124 && ch <= 144)
-		sel = BB_GAIN_5GMB2;
-	else if (ch >= 149 && ch <= 177)
-		sel = BB_GAIN_5GHB;
-#endif
 
 	return sel;
 }
@@ -1686,48 +1674,6 @@ void rtw_rf_set_tx_gain_offset(_adapter *adapter, u8 path, s8 offset)
 	}
 	
 	switch (rtw_get_chip_type(adapter)) {
-#ifdef CONFIG_RTL8723D
-	case RTL8723D:
-		write_value = RF_TX_GAIN_OFFSET_8723D(offset);
-		if (path == PPG_8723D_S1)
-			rtw_hal_write_rfreg(adapter, target_path, 0x55, 0x0f8000, write_value);
-		else if (path == PPG_8723D_S0)
-			rtw_hal_write_rfreg(adapter, target_path, 0x65, 0x0f8000, write_value);
-		break;
-#endif /* CONFIG_RTL8723D */
-#ifdef CONFIG_RTL8703B
-	case RTL8703B:
-		write_value = RF_TX_GAIN_OFFSET_8703B(offset);
-		rtw_hal_write_rfreg(adapter, target_path, 0x55, 0x0fc000, write_value);
-		break;
-#endif /* CONFIG_RTL8703B */
-#ifdef CONFIG_RTL8188F
-	case RTL8188F:
-		write_value = RF_TX_GAIN_OFFSET_8188F(offset);
-		rtw_hal_write_rfreg(adapter, target_path, 0x55, 0x0fc000, write_value);
-		break;
-#endif /* CONFIG_RTL8188F */
-#ifdef CONFIG_RTL8192E
-	case RTL8192E:
-		write_value = RF_TX_GAIN_OFFSET_8192E(offset);
-		rtw_hal_write_rfreg(adapter, target_path, 0x55, 0x0f8000, write_value);
-		break;
-#endif /* CONFIG_RTL8188F */
-
-#ifdef CONFIG_RTL8821A
-	case RTL8821:
-		write_value = RF_TX_GAIN_OFFSET_8821A(offset);
-		rtw_hal_write_rfreg(adapter, target_path, 0x55, 0x0f8000, write_value);
-		break;
-#endif /* CONFIG_RTL8821A */
-#if defined(CONFIG_RTL8814A) || defined(CONFIG_RTL8822B) || defined(CONFIG_RTL8821C)
-	case RTL8814A:
-	case RTL8822B:
-	case RTL8821C:
-		RTW_INFO("\nkfree by PhyDM on the sw CH. path %d\n", path);
-		break;
-#endif /* CONFIG_RTL8814A || CONFIG_RTL8822B || CONFIG_RTL8821C */
-
 	default:
 		rtw_warn_on(1);
 		break;
@@ -1762,72 +1708,4 @@ void rtw_rf_apply_tx_gain_offset(_adapter *adapter, u8 ch)
 		total_offset = kfree_offset + tx_pwr_track_offset;
 		rtw_rf_set_tx_gain_offset(adapter, i, total_offset);
 	}
-}
-
-inline u8 rtw_is_5g_band1(u8 ch)
-{
-	if (ch >= 36 && ch <= 48)
-		return 1;
-	return 0;
-}
-
-inline u8 rtw_is_5g_band2(u8 ch)
-{
-	if (ch >= 52 && ch <= 64)
-		return 1;
-	return 0;
-}
-
-inline u8 rtw_is_5g_band3(u8 ch)
-{
-	if (ch >= 100 && ch <= 144)
-		return 1;
-	return 0;
-}
-
-inline u8 rtw_is_5g_band4(u8 ch)
-{
-	if (ch >= 149 && ch <= 177)
-		return 1;
-	return 0;
-}
-
-inline u8 rtw_is_dfs_range(u32 hi, u32 lo)
-{
-	return rtw_is_range_overlap(hi, lo, 5720 + 10, 5260 - 10);
-}
-
-u8 rtw_is_dfs_ch(u8 ch)
-{
-	u32 hi, lo;
-
-	if (!rtw_chbw_to_freq_range(ch, CHANNEL_WIDTH_20, HAL_PRIME_CHNL_OFFSET_DONT_CARE, &hi, &lo))
-		return 0;
-
-	return rtw_is_dfs_range(hi, lo);
-}
-
-u8 rtw_is_dfs_chbw(u8 ch, u8 bw, u8 offset)
-{
-	u32 hi, lo;
-
-	if (!rtw_chbw_to_freq_range(ch, bw, offset, &hi, &lo))
-		return 0;
-
-	return rtw_is_dfs_range(hi, lo);
-}
-
-bool rtw_is_long_cac_range(u32 hi, u32 lo, u8 dfs_region)
-{
-	return (dfs_region == PHYDM_DFS_DOMAIN_ETSI && rtw_is_range_overlap(hi, lo, 5650, 5600)) ? true : false;
-}
-
-bool rtw_is_long_cac_ch(u8 ch, u8 bw, u8 offset, u8 dfs_region)
-{
-	u32 hi, lo;
-
-	if (rtw_chbw_to_freq_range(ch, bw, offset, &hi, &lo) == false)
-		return false;
-
-	return rtw_is_long_cac_range(hi, lo, dfs_region) ? true : false;
 }

@@ -62,21 +62,14 @@ static inline u32 rtw_phydm_ability_get(_adapter *adapter)
 	return rtw_phydm_ability_ops(adapter, HAL_PHYDM_ABILITY_GET, 0);
 }
 
-
 void rtw_odm_init_ic_type(_adapter *adapter);
-
 void rtw_odm_adaptivity_config_msg(void *sel, _adapter *adapter);
-
 bool rtw_odm_adaptivity_needed(_adapter *adapter);
 void rtw_odm_adaptivity_parm_msg(void *sel, _adapter *adapter);
 void rtw_odm_adaptivity_parm_set(_adapter *adapter, s8 th_l2h_ini, s8 th_edcca_hl_diff, s8 th_l2h_ini_mode2, s8 th_edcca_hl_diff_mode2, u8 edcca_enable);
 void rtw_odm_get_perpkt_rssi(void *sel, _adapter *adapter);
 void rtw_odm_acquirespinlock(_adapter *adapter,	enum rt_spinlock_type type);
 void rtw_odm_releasespinlock(_adapter *adapter,	enum rt_spinlock_type type);
-
-u8 rtw_odm_get_dfs_domain(_adapter *adapter);
-u8 rtw_odm_dfs_domain_unknown(_adapter *adapter);
-
 void rtw_odm_parse_rx_phy_status_chinfo(union recv_frame *rframe, u8 *phys);
 
 #endif /* __RTW_ODM_H__ */

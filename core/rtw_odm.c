@@ -207,16 +207,6 @@ void rtw_odm_releasespinlock(_adapter *adapter,	enum rt_spinlock_type type)
 	}
 }
 
-inline u8 rtw_odm_get_dfs_domain(_adapter *adapter)
-{
-	return PHYDM_DFS_DOMAIN_UNKNOWN;
-}
-
-inline u8 rtw_odm_dfs_domain_unknown(_adapter *adapter)
-{
-	return 1;
-}
-
 void rtw_odm_parse_rx_phy_status_chinfo(union recv_frame *rframe, u8 *phys)
 {
 #ifndef DBG_RX_PHYSTATUS_CHINFO

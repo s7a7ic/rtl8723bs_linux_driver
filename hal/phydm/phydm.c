@@ -249,9 +249,6 @@ phydm_common_info_self_update(
 	phydm_traffic_load_decision(p_dm);
 
 	p_dm->phydm_sys_up_time += p_dm->phydm_period;
-
-	p_dm->is_dfs_band = phydm_is_dfs_band(p_dm);
-
 }
 
 void
@@ -284,10 +281,6 @@ phydm_get_structure(
 
 	case	PHYDM_ADAPTIVITY:
 		p_struct = &(p_dm->adaptivity);
-		break;
-
-	case	PHYDM_DFS:
-		p_struct = &(p_dm->dfs);
 		break;
 
 	default:
@@ -559,7 +552,6 @@ void odm_dm_init(struct PHY_DM_STRUCT *p_dm) {
 #endif
 	odm_auto_channel_select_init(p_dm);
 	phydm_path_diversity_init(p_dm);
-	phydm_dynamic_tx_power_init(p_dm);
 #if (PHYDM_LA_MODE_SUPPORT == 1)
 	adc_smp_init(p_dm);
 #endif
@@ -1038,7 +1030,6 @@ phydm_watchdog(
 	phydm_ra_info_watchdog(p_dm);
 	odm_path_diversity(p_dm);
 	odm_cfo_tracking(p_dm);
-	odm_dynamic_tx_power(p_dm);
 	odm_antenna_diversity(p_dm);
 	phydm_adaptive_soml(p_dm);
 #ifdef CONFIG_DYNAMIC_RX_PATH
@@ -1234,21 +1225,13 @@ odm_cmn_info_init(
 	case	ODM_CMNINFO_ADVANCE_OTA:
 		p_dm->p_advance_ota = (u8)value;
 		break;
-		
-#ifdef CONFIG_PHYDM_DFS_MASTER
-	case	ODM_CMNINFO_DFS_REGION_DOMAIN:
-		p_dm->dfs_region_domain = (u8)value;
-		break;
-#endif
 	case	ODM_CMNINFO_SOFT_AP_SPECIAL_SETTING:
 		p_dm->soft_ap_special_setting = (u32)value;
 		break;
-
 	case	ODM_CMNINFO_DPK_EN:
 		/*p_dm->dpk_en = (u1Byte)value;*/
 		halrf_cmn_info_set(p_dm, HALRF_CMNINFO_DPK_EN, (u64)value);
 		break;
-
 	case	ODM_CMNINFO_HP_HWID:
 		p_dm->hp_hw_id = (boolean)value;
 		break;
@@ -1256,11 +1239,8 @@ odm_cmn_info_init(
 	default:
 		/* do nothing */
 		break;
-
 	}
-
 }
-
 
 void
 odm_cmn_info_hook(
@@ -1377,11 +1357,6 @@ odm_cmn_info_hook(
 	case	ODM_CMNINFO_SOUNDING_SEQ:
 		p_dm->p_sounding_seq = (u8 *)p_value;
 		break;
-#ifdef CONFIG_PHYDM_DFS_MASTER
-	case	ODM_CMNINFO_DFS_MASTER_ENABLE:
-		p_dm->dfs_master_enabled = (u8 *)p_value;
-		break;
-#endif
 	case	ODM_CMNINFO_FORCE_TX_ANT_BY_TXDESC:
 		p_dm->dm_fat_table.p_force_tx_ant_by_desc = (u8 *)p_value;
 		break;
@@ -1500,12 +1475,6 @@ odm_cmn_info_update(
 	case	ODM_CMNINFO_POWER_TRAINING:
 		p_dm->is_disable_power_training = (boolean)value;
 		break;
-
-#ifdef CONFIG_PHYDM_DFS_MASTER
-	case	ODM_CMNINFO_DFS_REGION_DOMAIN:
-		p_dm->dfs_region_domain = (u8)value;
-		break;
-#endif
 
 #if 0
 	case	ODM_CMNINFO_OP_MODE:

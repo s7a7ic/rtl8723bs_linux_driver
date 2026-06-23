@@ -719,18 +719,6 @@ void phydm_dig(void *p_dm_void)
 		("is_linked = %d, RSSI = %d, 1stConnect = %d, 1stDisconnect = %d\n",
 		p_dm->is_linked, p_dm->rssi_min, first_connect, first_dis_connect));
 
-#if (DM_ODM_SUPPORT_TYPE & (ODM_AP | ODM_CE))
-	/* Modify lower bound for DFS band */
-	if (p_dm->is_dfs_band) {
-		#if (DM_ODM_SUPPORT_TYPE & (ODM_CE))
-		if (phydm_dfs_master_enabled(p_dm))
-		#endif
-			is_dfs_band = true;
-		
-		PHYDM_DBG(p_dm, DBG_DIG, ("In DFS band\n"));
-	}
-#endif
-
 	is_performance = phydm_dig_performance_mode_decision(p_dm);
 	PHYDM_DBG(p_dm, DBG_DIG,
 		("DIG ((%s)) mode\n", (is_performance ? "Performance" : "Coverage")));

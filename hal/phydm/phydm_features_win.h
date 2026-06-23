@@ -16,34 +16,6 @@
 #ifndef	__PHYDM_FEATURES_WIN_H__
 #define __PHYDM_FEATURES_WIN
 
-#if (RTL8822B_SUPPORT == 1)
-	/*#define PHYDM_PHYSTAUS_SMP_MODE*/
-#endif
-
-/*#define PHYDM_TDMA_DIG_SUPPORT*/
-/*#define PHYDM_LNA_SAT_CHK_SUPPORT*/
-
-#if (RTL8822B_SUPPORT == 1)
-	#define	PHYDM_POWER_TRAINING_SUPPORT
-#endif
-
-#if (RTL8822B_SUPPORT == 1)
-	#define	PHYDM_TXA_CALIBRATION
-#endif
-
-#if (RTL8188E_SUPPORT == 1 || RTL8192E_SUPPORT == 1)
-	#define	PHYDM_PRIMARY_CCA
-#endif
-
-#if (RTL8188F_SUPPORT == 1 || RTL8710B_SUPPORT == 1 || RTL8821C_SUPPORT == 1 || RTL8822B_SUPPORT == 1)
-	#define	PHYDM_DC_CANCELLATION
-#endif
-
-#if (RTL8822B_SUPPORT == 1 || RTL8197F_SUPPORT == 1)
-	/*#define	CONFIG_ADAPTIVE_SOML*/
-#endif
-
-
 /*Antenna Diversity*/
 #define	CONFIG_PHYDM_ANTENNA_DIVERSITY
 #ifdef CONFIG_PHYDM_ANTENNA_DIVERSITY
@@ -52,22 +24,9 @@
 		#define	CONFIG_S0S1_SW_ANTENNA_DIVERSITY
 	#endif
 
-	/* --[SmtAnt]-----------------------------------------*/
-	#if (RTL8821A_SUPPORT == 1)
-		/*#define	CONFIG_HL_SMART_ANTENNA_TYPE1*/
-		#define	CONFIG_FAT_PATCH
-	#endif
-	
-	#if (RTL8822B_SUPPORT == 1)
-		/*#define CONFIG_HL_SMART_ANTENNA_TYPE2*/
-	#endif
-	
 	#if (defined(CONFIG_HL_SMART_ANTENNA_TYPE1) || defined(CONFIG_HL_SMART_ANTENNA_TYPE2))
 		#define	CONFIG_HL_SMART_ANTENNA
 	#endif
-
-	/* --------------------------------------------------*/
-
 #endif
 
 /*[SmartAntenna]*/
@@ -76,14 +35,6 @@
 		/*#define	CONFIG_CUMITEK_SMART_ANTENNA*/
 #endif
 	/* --------------------------------------------------*/
-
-#if (RTL8822B_SUPPORT == 1)
-	/*#define	CONFIG_DYNAMIC_RX_PATH*/
-#endif
-
-#if (RTL8188E_SUPPORT == 1 || RTL8192E_SUPPORT == 1)
-	#define	CONFIG_RECEIVER_BLOCKING
-#endif
 
 /*#define PHYDM_DIG_MODE_DECISION_SUPPORT	*/
 #define	CONFIG_PSD_TOOL
