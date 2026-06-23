@@ -70,9 +70,6 @@ static void rtl8723bs_recv_tasklet(void *priv)
 
 			/* fix Hardware RX data error, drop whole recv_buffer */
 			if (!rtw_hal_rcr_check(padapter, RCR_ACRC32) && pattrib->crc_err) {
-#if !(MP_DRIVER == 1)
-				RTW_INFO("%s()-%d: RX Warning! rx CRC ERROR !!\n", __FUNCTION__, __LINE__);
-#endif
 				rtw_free_recvframe(precvframe, &precvpriv->free_recv_queue);
 				break;
 			}

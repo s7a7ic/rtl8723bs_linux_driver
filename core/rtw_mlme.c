@@ -2949,13 +2949,6 @@ void rtw_dynamic_check_timer_handlder(void *ctx)
 	struct dvobj_priv *pdvobj = (struct dvobj_priv *)ctx;
 	_adapter *adapter = dvobj_get_primary_adapter(pdvobj);
 
-#if (MP_DRIVER == 1)
-	if (adapter->registrypriv.mp_mode == 1 && adapter->mppriv.mp_dm == 0) { /* for MP ODM dynamic Tx power tracking */
-		/* RTW_INFO("%s mp_dm =0 return\n", __func__); */
-		goto exit;
-	}
-#endif
-
 	if (!adapter)
 		goto exit;
 

@@ -1032,13 +1032,6 @@ static u32 rtl8723bs_hal_init(PADAPTER padapter)
 #endif /* CONFIG_XMIT_ACK	 */
 
 	/*	pHalData->PreRpwmVal = SdioLocalCmd52Read1Byte(padapter, SDIO_REG_HRPWM1) & 0x80; */
-
-#if (MP_DRIVER == 1)
-	if (padapter->registrypriv.mp_mode == 1) {
-		padapter->mppriv.channel = pHalData->current_channel;
-		MPT_InitializeAdapter(padapter, padapter->mppriv.channel);
-	} else
-#endif /* #if (MP_DRIVER == 1) */
 	{
 		pwrctrlpriv->rf_pwrstate = rf_on;
 

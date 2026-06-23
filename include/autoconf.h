@@ -117,7 +117,6 @@
  * Auto Config Section
  */
 
-#define MP_DRIVER	0
 #undef CONFIG_MP_IWPRIV_SUPPORT
 
 #ifdef CONFIG_POWER_SAVING

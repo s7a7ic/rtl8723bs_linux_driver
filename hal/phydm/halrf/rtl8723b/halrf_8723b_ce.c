@@ -260,15 +260,6 @@ odm_tx_pwr_track_set_pwr_8723b(
 	struct odm_rf_calibration_structure	*p_rf_calibrate_info = &(p_dm->rf_calibrate_info);
 
 	if (*(p_dm->p_mp_mode) == true) {
-#if (DM_ODM_SUPPORT_TYPE & (ODM_WIN | ODM_CE))
-#if (DM_ODM_SUPPORT_TYPE & ODM_WIN)
-#if (MP_DRIVER == 1)
-		PMPT_CONTEXT p_mpt_ctx = &(adapter->mpt_ctx);
-
-		tx_rate = mpt_to_mgnt_rate(p_mpt_ctx->mpt_rate_index);
-#endif
-#endif
-#endif
 	} else {
 		u16	rate	 = *(p_dm->p_forced_data_rate);
 
@@ -475,15 +466,6 @@ get_delta_swing_table_8723b(
 	u8			channel		 = *p_dm->p_channel;
 
 	if (*(p_dm->p_mp_mode) == true) {
-#if (DM_ODM_SUPPORT_TYPE & (ODM_WIN | ODM_CE))
-#if (DM_ODM_SUPPORT_TYPE & ODM_WIN)
-#if (MP_DRIVER == 1)
-		PMPT_CONTEXT p_mpt_ctx = &(adapter->mpt_ctx);
-
-		tx_rate = mpt_to_mgnt_rate(p_mpt_ctx->mpt_rate_index);
-#endif
-#endif
-#endif
 	} else {
 		u16	rate	 = *(p_dm->p_forced_data_rate);
 
