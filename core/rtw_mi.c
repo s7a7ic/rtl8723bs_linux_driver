@@ -1077,7 +1077,7 @@ static u8 _rtw_mi_tx_beacon_hdl(_adapter *adapter, void *data)
 	) {
 		adapter->mlmepriv.update_bcn = true;
 #ifndef CONFIG_INTERRUPT_BASED_TXBCN
-#if defined(CONFIG_USB_HCI) || defined(CONFIG_SDIO_HCI) || defined(CONFIG_GSPI_HCI)
+#if defined(CONFIG_SDIO_HCI) || defined(CONFIG_GSPI_HCI)
 		tx_beacon_hdl(adapter, NULL);
 #endif
 #endif

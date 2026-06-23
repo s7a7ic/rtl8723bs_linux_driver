@@ -75,9 +75,6 @@ void rtl8723b_InitHalDm(IN PADAPTER Adapter)
 	PHAL_DATA_TYPE	pHalData = GET_HAL_DATA(Adapter);
 	struct PHY_DM_STRUCT		*pDM_Odm = &(pHalData->odmpriv);
 
-#ifdef CONFIG_USB_HCI
-	dm_InitGPIOSetting(Adapter);
-#endif
 	odm_dm_init(pDM_Odm);
 }
 

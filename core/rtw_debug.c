@@ -118,33 +118,6 @@ void dump_drv_cfg(void *sel)
 	RTW_PRINT_SEL(sel, "CONFIG_RTW_WIFI_HAL\n");
 #endif
 
-#ifdef CONFIG_USB_HCI
-#ifdef CONFIG_SUPPORT_USB_INT
-	RTW_PRINT_SEL(sel, "CONFIG_SUPPORT_USB_INT\n");
-#endif
-#ifdef CONFIG_USB_INTERRUPT_IN_PIPE
-	RTW_PRINT_SEL(sel, "CONFIG_USB_INTERRUPT_IN_PIPE\n");
-#endif
-#ifdef CONFIG_USB_TX_AGGREGATION
-	RTW_PRINT_SEL(sel, "CONFIG_USB_TX_AGGREGATION\n");
-#endif
-#ifdef CONFIG_USB_RX_AGGREGATION
-	RTW_PRINT_SEL(sel, "CONFIG_USB_RX_AGGREGATION\n");
-#endif
-#ifdef CONFIG_USE_USB_BUFFER_ALLOC_TX
-	RTW_PRINT_SEL(sel, "CONFIG_USE_USB_BUFFER_ALLOC_TX\n");
-#endif
-#ifdef CONFIG_USE_USB_BUFFER_ALLOC_RX
-	RTW_PRINT_SEL(sel, "CONFIG_USE_USB_BUFFER_ALLOC_RX\n");
-#endif
-#ifdef CONFIG_PREALLOC_RECV_SKB
-	RTW_PRINT_SEL(sel, "CONFIG_PREALLOC_RECV_SKB\n");
-#endif
-#ifdef CONFIG_FIX_NR_BULKIN_BUFFER
-	RTW_PRINT_SEL(sel, "CONFIG_FIX_NR_BULKIN_BUFFER\n");
-#endif
-#endif /*CONFIG_USB_HCI*/
-
 #ifdef CONFIG_SDIO_HCI
 #ifdef CONFIG_TX_AGGREGATION
 	RTW_PRINT_SEL(sel, "CONFIG_TX_AGGREGATION\n");
@@ -1465,10 +1438,6 @@ int proc_get_trx_info(struct seq_file *m, void *v)
 	}
 
 	rtw_hal_get_hwreg(padapter, HW_VAR_DUMP_MAC_TXFIFO, (u8 *)m);
-
-#ifdef CONFIG_USB_HCI
-	RTW_PRINT_SEL(m, "rx_urb_pending_cn=%d\n", ATOMIC_READ(&(precvpriv->rx_pending_cnt)));
-#endif
 
 	dump_rx_bh_tk(m, &GET_PRIMARY_ADAPTER(padapter)->recvpriv);
 

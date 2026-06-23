@@ -403,11 +403,6 @@ typedef struct hal_com_data {
 
 	u16	EEPROMVID;
 	u16	EEPROMSVID;
-#ifdef CONFIG_USB_HCI
-	u8	EEPROMUsbSwitch;
-	u16	EEPROMPID;
-	u16	EEPROMSDID;
-#endif
 
 	u8	EEPROMCustomerID;
 	u8	EEPROMSubCustomerID;

@@ -87,11 +87,6 @@ bool rtw_IOL_applied(ADAPTER *adapter)
 	if (1 == adapter->registrypriv.fw_iol)
 		return true;
 
-#ifdef CONFIG_USB_HCI
-	if ((2 == adapter->registrypriv.fw_iol) && (IS_FULL_SPEED_USB(adapter)))
-		return true;
-#endif
-
 	return false;
 }
 

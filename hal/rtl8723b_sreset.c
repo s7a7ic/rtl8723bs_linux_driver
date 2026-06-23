@@ -25,38 +25,6 @@ void rtl8723b_sreset_xmit_status_check(_adapter *padapter)
 		rtw_hal_sreset_reset(padapter);
 	}
 
-#ifdef CONFIG_USB_HCI
-	/* total xmit irp = 4 */
-	/* RTW_INFO("==>%s free_xmitbuf_cnt(%d),txirp_cnt(%d)\n",__FUNCTION__,pxmitpriv->free_xmitbuf_cnt,pxmitpriv->txirp_cnt); */
-	/* if(pxmitpriv->txirp_cnt == NR_XMITBUFF+1) */
-	current_time = rtw_get_current_time();
-
-	if (0 == pxmitpriv->free_xmitbuf_cnt || 0 == pxmitpriv->free_xmit_extbuf_cnt) {
-
-		diff_time = rtw_get_passing_time_ms(psrtpriv->last_tx_time);
-
-		if (diff_time > 2000) {
-			if (psrtpriv->last_tx_complete_time == 0)
-				psrtpriv->last_tx_complete_time = current_time;
-			else {
-				diff_time = rtw_get_passing_time_ms(psrtpriv->last_tx_complete_time);
-				if (diff_time > 4000) {
-					u32 ability = 0;
-
-					/* padapter->Wifi_Error_Status = WIFI_TX_HANG; */
-					ability = rtw_phydm_ability_get(padapter);
-
-					RTW_INFO("%s tx hang %s\n", __FUNCTION__,
-						(ability & ODM_BB_ADAPTIVITY) ? "ODM_BB_ADAPTIVITY" : "");
-
-					if (!(ability & ODM_BB_ADAPTIVITY))
-						rtw_hal_sreset_reset(padapter);
-				}
-			}
-		}
-	}
-#endif /*  #ifdef CONFIG_USB_HCI */
-
 	if (psrtpriv->dbg_trigger_point == SRESET_TGP_XMIT_STATUS) {
 		psrtpriv->dbg_trigger_point = SRESET_TGP_NULL;
 		rtw_hal_sreset_reset(padapter);

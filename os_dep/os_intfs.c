@@ -40,18 +40,15 @@ int rtw_soft_ap = 0;
 		int rtw_ips_mode = IPS_NORMAL;
 	#endif /*CONFIG_IPS_LEVEL_2*/
 
-	#ifdef CONFIG_USB_HCI
-		int rtw_lps_level = LPS_NORMAL; /*USB default LPS level*/
-	#else /*SDIO,PCIE*/
-		#if defined(CONFIG_LPS_PG)
-			/*int rtw_lps_level = LPS_PG;*//*FW not support yet*/
-			int rtw_lps_level = LPS_LCLK;
-		#elif defined(CONFIG_LPS_LCLK)
-			int rtw_lps_level = LPS_LCLK;
-		#else
-			int rtw_lps_level = LPS_NORMAL;
-		#endif
-	#endif/*CONFIG_USB_HCI*/
+	#if defined(CONFIG_LPS_PG)
+		/*int rtw_lps_level = LPS_PG;*//*FW not support yet*/
+		int rtw_lps_level = LPS_LCLK;
+	#elif defined(CONFIG_LPS_LCLK)
+		int rtw_lps_level = LPS_LCLK;
+	#else
+		int rtw_lps_level = LPS_NORMAL;
+	#endif
+
 #else /* !CONFIG_POWER_SAVING */
 	int rtw_power_mgnt = PS_MODE_ACTIVE;
 	int rtw_ips_mode = IPS_NONE;
@@ -286,11 +283,7 @@ int rtw_hwpwrp_detect = 1;
 int rtw_hwpwrp_detect = 0; /* HW power  ping detect 0:disable , 1:enable */
 #endif
 
-#ifdef CONFIG_USB_HCI
-int rtw_hw_wps_pbc = 1;
-#else
 int rtw_hw_wps_pbc = 0;
-#endif
 
 #ifdef CONFIG_TX_MCAST2UNI
 int rtw_mc2u_disable = 0;

@@ -22,20 +22,6 @@
 	#if defined(CONFIG_GSPI_HCI)
 		#define NR_XMITBUFF	(128)
 	#endif
-
-#elif defined (CONFIG_USB_HCI)
-
-	#ifdef CONFIG_USB_TX_AGGREGATION
-		#define MAX_XMITBUF_SZ	(20480)	/* 20k */
-	#else
-		#define MAX_XMITBUF_SZ	(2048)
-	#endif
-
-	#ifdef CONFIG_SINGLE_XMIT_BUF
-		#define NR_XMITBUFF	(1)
-	#else
-		#define NR_XMITBUFF	(4)
-	#endif /* CONFIG_SINGLE_XMIT_BUF */
 #endif
 
 #ifdef USB_XMITBUF_ALIGN_SZ

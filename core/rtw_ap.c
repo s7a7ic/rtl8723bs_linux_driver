@@ -1504,7 +1504,7 @@ update_beacon:
 		/*update_beacon(padapter, _TIM_IE_, NULL, true);*/
 
 #if !defined(CONFIG_INTERRUPT_BASED_TXBCN)
-#if defined(CONFIG_USB_HCI) || defined(CONFIG_SDIO_HCI) || defined(CONFIG_GSPI_HCI)
+#if defined(CONFIG_SDIO_HCI) || defined(CONFIG_GSPI_HCI)
 #ifdef CONFIG_SWTIMER_BASED_TXBCN
 		if (pdvobj->nr_ap_if == 1) {
 			RTW_INFO("start SW BCN TIMER!\n");
@@ -2724,7 +2724,7 @@ void _update_beacon(_adapter *padapter, u8 ie_id, u8 *oui, u8 tx, const char *ta
 	_exit_critical_bh(&pmlmepriv->bcn_update_lock, &irqL);
 
 #ifndef CONFIG_INTERRUPT_BASED_TXBCN
-#if defined(CONFIG_USB_HCI) || defined(CONFIG_SDIO_HCI) || defined(CONFIG_GSPI_HCI)
+#if defined(CONFIG_SDIO_HCI) || defined(CONFIG_GSPI_HCI)
 	if (tx) {
 		/* send_beacon(padapter); */ /* send_beacon must execute on TSR level */
 		if (0)

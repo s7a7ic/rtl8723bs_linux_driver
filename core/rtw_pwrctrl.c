@@ -1111,16 +1111,7 @@ void LPS_Leave(PADAPTER padapter, const char *msg)
 
 void rtw_wow_lps_level_decide(_adapter *adapter, u8 wow_en)
 {
-#if defined(CONFIG_USB_HCI) && defined(CONFIG_LPS_LCLK)
-	struct dvobj_priv *dvobj = adapter_to_dvobj(adapter);
-	struct pwrctrl_priv *pwrpriv = dvobj_to_pwrctl(dvobj);
 
-	if (wow_en) {
-		pwrpriv->lps_level_bk = pwrpriv->lps_level;
-		pwrpriv->lps_level = LPS_LCLK;
-	} else
-		pwrpriv->lps_level = pwrpriv->lps_level_bk;
-#endif
 }
 #endif
 

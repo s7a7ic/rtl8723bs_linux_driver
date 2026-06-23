@@ -89,15 +89,6 @@
 	#include <linux/fs.h>
 #endif
 
-#ifdef CONFIG_USB_HCI
-	#include <linux/usb.h>
-	#if (LINUX_VERSION_CODE < KERNEL_VERSION(2, 6, 21))
-		#include <linux/usb_ch9.h>
-	#else
-		#include <linux/usb/ch9.h>
-	#endif
-#endif
-
 #ifdef CONFIG_BT_COEXIST_SOCKET_TRX
 	#include <net/sock.h>
 	#include <net/tcp.h>
