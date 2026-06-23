@@ -381,7 +381,7 @@ ccflags-y += -DCONFIG_RTW_DEBUG
 ccflags-y += -DRTW_LOG_LEVEL=$(CONFIG_RTW_LOG_LEVEL)
 endif
 
-ccflags-y += -DDM_ODM_SUPPORT_TYPE=0x04
+ccflags-y += -DDM_ODM_SUPPORT_TYPE=0x04 # ODM_CE
 
 ifeq ($(CONFIG_PLATFORM_ARM_PC), y)
 ccflags-y += -DCONFIG_LITTLE_ENDIAN

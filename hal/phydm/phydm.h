@@ -21,7 +21,6 @@
 #include "phydm_adaptivity.h"
 #include "phydm_dfs.h"
 #include "phydm_ccx.h"
-//#include "txbf/phydm_hal_txbf_api.h"
 #include "phydm_adc_sampling.h"
 #include "phydm_dynamic_rx_path.h"
 #include "phydm_psd.h"
@@ -32,7 +31,6 @@
 #include "phydm_math_lib.h"
 #include "phydm_noisemonitor.h"
 #include "phydm_api.h"
-#include "phydm_pow_train.h"
 
 /*HALRF header*/
 #include "halrf/halrf_iqk.h"
@@ -115,7 +113,6 @@ struct phydm_phystatus_statistic {
 };
 
 struct phydm_phystatus_avg {
-	
 	/*[CCK]*/
 	u8		rssi_cck_avg;
 	/*[OFDM]*/
@@ -891,9 +888,6 @@ struct	phydm_iot_center {
 	struct _hal_rf_						rf_table; 		/*for HALRF function*/
 	struct odm_rf_calibration_structure		rf_calibrate_info;
 	struct odm_power_trim_data			power_trim_data;	
-#if (RTL8822B_SUPPORT == 1)
-	struct drp_rtl8822b_struct			phydm_rtl8822b;
-#endif
 
 #ifdef CONFIG_PSD_TOOL
 	struct _PHYDM_PSD_					dm_psd_table;
@@ -930,19 +924,7 @@ struct	phydm_iot_center {
 #ifdef PHYDM_POWER_TRAINING_SUPPORT
 	struct	phydm_pow_train_stuc			pow_train_table;
 #endif
-/*==========================================================*/
-
-#if (DM_ODM_SUPPORT_TYPE & ODM_WIN)
-
-#if (RT_PLATFORM != PLATFORM_LINUX)
-}PHY_DM_STRUCT;		/*DM_Dynamic_Mechanism_Structure*/
-#else
 };
-#endif
-
-#else	/*for AP,CE Team*/
-};
-#endif
 
 enum phydm_adv_ota {
 	PHYDM_PATHB_1RCCA = BIT(0),
@@ -1163,22 +1145,6 @@ void
 odm_release_all_timers(
 	struct PHY_DM_STRUCT	*p_dm
 );
-
-
-#if (DM_ODM_SUPPORT_TYPE == ODM_WIN)
-void odm_init_all_work_items(struct PHY_DM_STRUCT	*p_dm);
-void odm_free_all_work_items(struct PHY_DM_STRUCT	*p_dm);
-
-/*2012/01/12 MH Check afapter status. Temp fix BSOD.*/
-
-#define	HAL_ADAPTER_STS_CHK(p_dm) do {\
-		if (p_dm->adapter == NULL) { \
-			\
-			return;\
-		} \
-	} while (0)
-
-#endif	/*#if (DM_ODM_SUPPORT_TYPE == ODM_WIN)*/
 
 void *
 phydm_get_structure(

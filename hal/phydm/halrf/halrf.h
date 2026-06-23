@@ -65,7 +65,6 @@
 						(p_dm->support_ic_type == ODM_RTL8822B)? IQK_VERSION_8822B :\
 						(p_dm->support_ic_type == ODM_RTL8821C)? IQK_VERSION_8821C :"unknown"
 
-
 #define HALRF_LCK_VER	(p_dm->support_ic_type == ODM_RTL8188E)? LCK_VERSION_8188E :\
 						(p_dm->support_ic_type == ODM_RTL8192E)? LCK_VERSION_8192E :\
 						(p_dm->support_ic_type == ODM_RTL8723B)? LCK_VERSION_8723B :\
@@ -117,7 +116,6 @@ enum phydm_lna_set {
 	phydm_lna_enable		= 1,
 };
 
-
 /*============================================================*/
 /* structure */
 /*============================================================*/
@@ -152,23 +150,8 @@ void halrf_basic_profile(
 	char			*output,
 	u32			*_out_len
 );
-#if (RTL8822B_SUPPORT == 1 || RTL8821C_SUPPORT == 1)
-void halrf_iqk_info_dump(
-	void *p_dm_void,
-	u32 *_used,
-	char *output,
-	u32 *_out_len
-);
 
-void
-halrf_iqk_hwtx_check(
-	void *p_dm_void,
-	boolean		is_check
-);
-#endif
-
-void
-halrf_support_ability_debug(
+void halrf_support_ability_debug(
 	void		*p_dm_void,
 	char		input[][16],
 	u32		*_used,
@@ -176,68 +159,57 @@ halrf_support_ability_debug(
 	u32		*_out_len
 );
 
-void
-halrf_cmn_info_init(
+void halrf_cmn_info_init(
 	void		*p_dm_void,
 	enum halrf_cmninfo_init_e	cmn_info,
 	u32		value
 );
 
-void
-halrf_cmn_info_hook(
+void halrf_cmn_info_hook(
 	void		*p_dm_void,
 	u32		cmn_info,
 	void		*p_value
 );
 
-void
-halrf_cmn_info_set(
+void halrf_cmn_info_set(
 	void		*p_dm_void,
 	u32			cmn_info,
 	u64			value
 );
 
-u64
-halrf_cmn_info_get(
+u64 halrf_cmn_info_get(
 	void		*p_dm_void,
 	u32			cmn_info
 );
 
-void
-halrf_watchdog(
+void halrf_watchdog(
 	void			*p_dm_void
 );
 
-void
-halrf_supportability_init(
+void halrf_supportability_init(
 	void		*p_dm_void
 );
 
-void
-halrf_init(
+void halrf_init(
 	void			*p_dm_void
 );
 
-void
-halrf_iqk_trigger(
+void halrf_iqk_trigger(
 	void			*p_dm_void,
 	boolean		is_recovery
 );
 
-void
-halrf_segment_iqk_trigger(
+void halrf_segment_iqk_trigger(
 	void			*p_dm_void,
 	boolean		clear,
 	boolean		segment_iqk
 );
 
-void
-halrf_lck_trigger(
+void halrf_lck_trigger(
 	void			*p_dm_void
 );
 
-void
-halrf_iqk_debug(
+void halrf_iqk_debug(
 	void		*p_dm_void,
 	u32		*const dm_value,
 	u32		*_used,
@@ -245,43 +217,31 @@ halrf_iqk_debug(
 	u32		*_out_len
 );
 
-void
-phydm_get_iqk_cfir(
+void phydm_get_iqk_cfir(
 	void		*p_dm_void,
 	u8 idx,
 	u8 path,
 	boolean debug
 );
 
-void 
-halrf_iqk_xym_read(
+void halrf_iqk_xym_read(
 	void *p_dm_void,
 	u8 path,
 	u8 xym_type
- );
+);
 
-void
-halrf_rf_lna_setting(
+void halrf_rf_lna_setting(
 	void	*p_dm_void,
 	enum phydm_lna_set type
 );
 
-
-void
-halrf_do_imr_test(
+void halrf_do_imr_test(
 	void	*p_dm_void,
 	u8 data
 );
 
-u32
-halrf_psd_log2base(
+u32 halrf_psd_log2base(
 	IN u32 val
 );
 
-
-#if (RTL8822B_SUPPORT == 1 || RTL8821C_SUPPORT == 1)
-void halrf_iqk_dbg(void	*p_dm_void);
 #endif
-#endif
-
-

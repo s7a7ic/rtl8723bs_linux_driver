@@ -120,38 +120,8 @@ odm_fa_threshold_check(
 
 }
 
-void
-phydm_set_big_jump_step(
-	void			*p_dm_void,
-	u8			current_igi
-)
-{
-#if (RTL8822B_SUPPORT == 1 || RTL8197F_SUPPORT == 1)
-	struct PHY_DM_STRUCT	*p_dm = (struct PHY_DM_STRUCT *)p_dm_void;
-	struct phydm_dig_struct	*p_dig_t = &p_dm->dm_dig_table;
-	u8		step1[8] = {24, 30, 40, 50, 60, 70, 80, 90};
-	u8		i;
-
-	if (p_dig_t->enable_adjust_big_jump == 0)
-		return;
-
-	for (i = 0; i <= p_dig_t->big_jump_step1; i++) {
-		if ((current_igi + step1[i]) > p_dig_t->big_jump_lmt[p_dig_t->agc_table_idx]) {
-			if (i != 0)
-				i = i - 1;
-			break;
-		} else if (i == p_dig_t->big_jump_step1)
-			break;
-	}
-	if (p_dm->support_ic_type & ODM_RTL8822B)
-		odm_set_bb_reg(p_dm, 0x8c8, 0xe, i);
-	else if (p_dm->support_ic_type & ODM_RTL8197F)
-		odm_set_bb_reg(p_dm, ODM_REG_BB_AGC_SET_2_11N, 0xe, i);
-
-	PHYDM_DBG(p_dm, DBG_DIG,
-		("phydm_set_big_jump_step(): bigjump = %d (ori = 0x%x), LMT=0x%x\n",
-		i, p_dig_t->big_jump_step1, p_dig_t->big_jump_lmt[p_dig_t->agc_table_idx]));
-#endif
+void phydm_set_big_jump_step(void *p_dm_void, u8 current_igi) {
+/* deadcode */
 }
 
 void
@@ -177,12 +147,6 @@ odm_write_dig(
 	}
 
 	if (p_dig_t->cur_ig_value != current_igi) {
-
-		#if (RTL8822B_SUPPORT == 1 || RTL8197F_SUPPORT == 1)
-		/* Modify big jump step for 8822B and 8197F */
-		if (p_dm->support_ic_type & (ODM_RTL8822B | ODM_RTL8197F))
-			phydm_set_big_jump_step(p_dm, current_igi);
-		#endif
 
 		#if (ODM_PHY_STATUS_NEW_TYPE_SUPPORT == 1)
 		/* Set IGI value of CCK for new CCK AGC */
@@ -357,10 +321,7 @@ odm_pause_dig(
 
 }
 
-boolean
-odm_dig_abort(
-	void			*p_dm_void
-)
+boolean odm_dig_abort(void *p_dm_void)
 {
 	struct PHY_DM_STRUCT	*p_dm = (struct PHY_DM_STRUCT *)p_dm_void;
 	struct phydm_dig_struct	*p_dig_t = &p_dm->dm_dig_table;
@@ -400,10 +361,7 @@ odm_dig_abort(
 	return false;
 }
 
-void
-phydm_dig_init(
-	void		*p_dm_void
-)
+void phydm_dig_init(void *p_dm_void)
 {
 	struct PHY_DM_STRUCT		*p_dm = (struct PHY_DM_STRUCT *)p_dm_void;
 	struct phydm_dig_struct		*p_dig_t = &p_dm->dm_dig_table;
@@ -436,25 +394,6 @@ phydm_dig_init(
 	p_dig_t->rx_gain_range_max = DIG_MAX_BALANCE_MODE;
 	p_dig_t->rx_gain_range_min = p_dig_t->cur_ig_value;
 
-#if (RTL8822B_SUPPORT == 1 || RTL8197F_SUPPORT == 1)
-	p_dig_t->enable_adjust_big_jump = 1;
-	if (p_dm->support_ic_type & ODM_RTL8822B)
-		ret_value = odm_get_bb_reg(p_dm, 0x8c8, MASKLWORD);
-	else if (p_dm->support_ic_type & ODM_RTL8197F)
-		ret_value = odm_get_bb_reg(p_dm, 0xc74, MASKLWORD);
-
-	p_dig_t->big_jump_step1 = (u8)(ret_value & 0xe) >> 1;
-	p_dig_t->big_jump_step2 = (u8)(ret_value & 0x30) >> 4;
-	p_dig_t->big_jump_step3 = (u8)(ret_value & 0xc0) >> 6;
-
-	if (p_dm->support_ic_type & (ODM_RTL8822B | ODM_RTL8197F)) {
-		for (i = 0; i < sizeof(p_dig_t->big_jump_lmt); i++) {
-			if (p_dig_t->big_jump_lmt[i] == 0)
-				p_dig_t->big_jump_lmt[i] = 0x64;		/* Set -10dBm as default value */
-		}
-	}
-#endif
-
 	p_dm->pre_rssi_min = 0;
 
 #ifdef PHYDM_TDMA_DIG_SUPPORT
@@ -462,10 +401,7 @@ phydm_dig_init(
 #endif
 }
 
-boolean
-phydm_dig_performance_mode_decision(
-	struct PHY_DM_STRUCT		*p_dm
-)
+boolean phydm_dig_performance_mode_decision(struct PHY_DM_STRUCT *p_dm)
 {
 	boolean	is_performance = true;
 
@@ -488,8 +424,7 @@ phydm_dig_performance_mode_decision(
 	return is_performance;
 }
 
-void
-phydm_dig_abs_boundary_decision(
+void phydm_dig_abs_boundary_decision(
 	struct PHY_DM_STRUCT		*p_dm,
 	boolean	is_performance,
 	boolean	is_dfs_band
@@ -544,11 +479,9 @@ phydm_dig_abs_boundary_decision(
 		p_dig_t->dm_dig_max,
 		p_dig_t->dm_dig_min,
 		p_dig_t->dig_max_of_min));
-
 }
 
-void
-phydm_dig_dym_boundary_decision(
+void phydm_dig_dym_boundary_decision(
 	struct PHY_DM_STRUCT		*p_dm,
 	boolean	is_performance
 )
@@ -595,8 +528,7 @@ phydm_dig_dym_boundary_decision(
 		p_dig_t->rx_gain_range_max, p_dig_t->rx_gain_range_min));
 }
 
-void
-phydm_dig_abnormal_case(
+void phydm_dig_abnormal_case(
 	struct PHY_DM_STRUCT		*p_dm,
 	u8	current_igi,
 	boolean	is_performance,
@@ -629,8 +561,7 @@ phydm_dig_abnormal_case(
 
 }
 
-u8
-phydm_dig_current_igi_by_fa_th(
+u8 phydm_dig_current_igi_by_fa_th(
 	struct PHY_DM_STRUCT		*p_dm,
 	u8			current_igi,
 	u32			false_alm_cnt,
@@ -653,8 +584,7 @@ phydm_dig_current_igi_by_fa_th(
 
 }
 
-u8
-phydm_dig_igi_start_value(
+u8 phydm_dig_igi_start_value(
 	struct PHY_DM_STRUCT		*p_dm,
 	boolean	is_performance,
 	u8		current_igi,
@@ -753,10 +683,7 @@ phydm_dig_igi_start_value(
 
 }
 
-void
-phydm_dig(
-	void		*p_dm_void
-)
+void phydm_dig(void *p_dm_void)
 {
 	struct PHY_DM_STRUCT	*p_dm = (struct PHY_DM_STRUCT *)p_dm_void;
 	struct phydm_dig_struct	*p_dig_t = &p_dm->dm_dig_table;

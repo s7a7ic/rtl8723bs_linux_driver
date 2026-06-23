@@ -27,7 +27,6 @@ _PHYDM_FILES := hal/phydm/phydm_debug.o	\
 								hal/phydm/phydm_auto_dbg.o\
 								hal/phydm/phydm_math_lib.o\
 								hal/phydm/phydm_api.o\
-								hal/phydm/phydm_pow_train.o\
 								hal/phydm/halrf/halrf.o\
 								hal/phydm/halrf/halphyrf_ce.o\
 								hal/phydm/halrf/halrf_powertracking_ce.o\
