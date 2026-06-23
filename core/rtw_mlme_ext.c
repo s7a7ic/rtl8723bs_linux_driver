@@ -9825,12 +9825,12 @@ operation_by_state:
 		* HW register and DM setting for enter scan
 		*/
 
-		rtw_phydm_ability_backup(padapter);
+//		rtw_phydm_ability_backup(padapter);
 
 		sitesurvey_set_igi(padapter);
 
 		/* config dynamic functions for off channel */
-		rtw_phydm_func_for_offchannel(padapter);
+		//rtw_phydm_func_for_offchannel(padapter);
 		/* set MSR to no link state */
 		sitesurvey_set_msr(padapter, true);
 
@@ -10021,7 +10021,7 @@ operation_by_state:
 		rtw_hal_set_hwreg(padapter, HW_VAR_MLME_SITESURVEY, (u8 *)(&val8));
 
 		/* turn on phy-dynamic functions */
-		rtw_phydm_ability_restore(padapter);
+//		rtw_phydm_ability_restore(padapter);
 
 		sitesurvey_set_igi(padapter);
 

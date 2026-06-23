@@ -4075,7 +4075,7 @@ void rx_query_phy_status(
 		psta->curr_rx_rate = pattrib->data_rate;
 	pkt_info.data_rate = pattrib->data_rate;
 
-	odm_phy_status_query(&pHalData->odmpriv, p_phy_info, pphy_status, &pkt_info);
+	//odm_phy_status_query(&pHalData->odmpriv, p_phy_info, pphy_status, &pkt_info);
 
 	{
 		precvframe->u.hdr.psta = NULL;
@@ -4094,7 +4094,7 @@ void rx_query_phy_status(
 		}
 	}
 
-	rtw_odm_parse_rx_phy_status_chinfo(precvframe, pphy_status);
+	//rtw_odm_parse_rx_phy_status_chinfo(precvframe, pphy_status);
 }
 /*
 * Increase and check if the continual_no_rx_packet of this @param pmlmepriv is larger than MAX_CONTINUAL_NORXPACKET_COUNT

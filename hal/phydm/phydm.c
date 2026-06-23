@@ -118,7 +118,6 @@ phydm_common_info_self_init(
 	phydm_init_debug_setting(p_dm);
 #endif
 	phydm_init_trx_antenna_setting(p_dm);
-	phydm_init_soft_ml_setting(p_dm);
 
 	p_dm->phydm_period = PHYDM_WATCH_DOG_PERIOD;
 	p_dm->phydm_sys_up_time = 0;
@@ -546,7 +545,6 @@ void odm_dm_init(struct PHY_DM_STRUCT *p_dm) {
 	phydm_get_pa_bias_offset(p_dm);
 #endif
 	odm_antenna_diversity_init(p_dm);
-	phydm_adaptive_soml_init(p_dm);
 #ifdef CONFIG_DYNAMIC_RX_PATH
 	phydm_dynamic_rx_path_init(p_dm);
 #endif
@@ -561,11 +559,6 @@ void odm_dm_init(struct PHY_DM_STRUCT *p_dm) {
 	#ifdef CONFIG_PSD_TOOL
 	phydm_psd_init(p_dm);
 	#endif
-	
-	#ifdef CONFIG_SMART_ANTENNA
-	phydm_smt_ant_init(p_dm);
-	#endif
-
 }
 
 void
@@ -606,7 +599,6 @@ phydm_support_ability_debug(
 		PHYDM_SNPRINTF((output + used, out_len - used, "04. (( %s ))RSSI_MNTR\n", ((p_dm->support_ability & ODM_BB_RSSI_MONITOR) ? ("V") : ("."))));
 		PHYDM_SNPRINTF((output + used, out_len - used, "05. (( %s ))CCK_PD\n", ((p_dm->support_ability & ODM_BB_CCK_PD) ? ("V") : ("."))));
 		PHYDM_SNPRINTF((output + used, out_len - used, "06. (( %s ))ANT_DIV\n", ((p_dm->support_ability & ODM_BB_ANT_DIV) ? ("V") : ("."))));
-		PHYDM_SNPRINTF((output + used, out_len - used, "07. (( %s ))SMT_ANT\n", ((p_dm->support_ability & ODM_BB_SMT_ANT) ? ("V") : ("."))));
 		PHYDM_SNPRINTF((output + used, out_len - used, "08. (( %s ))PWR_TRAIN\n", ((p_dm->support_ability & ODM_BB_PWR_TRAIN) ? ("V") : ("."))));
 		PHYDM_SNPRINTF((output + used, out_len - used, "09. (( %s ))RA\n", ((p_dm->support_ability & ODM_BB_RATE_ADAPTIVE) ? ("V") : ("."))));
 		PHYDM_SNPRINTF((output + used, out_len - used, "10. (( %s ))PATH_DIV\n", ((p_dm->support_ability & ODM_BB_PATH_DIV) ? ("V") : ("."))));
@@ -616,7 +608,6 @@ phydm_support_ability_debug(
 		PHYDM_SNPRINTF((output + used, out_len - used, "14. (( %s ))CFO_TRACK\n", ((p_dm->support_ability & ODM_BB_CFO_TRACKING) ? ("V") : ("."))));
 		PHYDM_SNPRINTF((output + used, out_len - used, "15. (( %s ))ENV_MONITOR\n", ((p_dm->support_ability & ODM_BB_ENV_MONITOR) ? ("V") : ("."))));
 		PHYDM_SNPRINTF((output + used, out_len - used, "16. (( %s ))PRI_CCA\n", ((p_dm->support_ability & ODM_BB_PRIMARY_CCA) ? ("V") : ("."))));
-		PHYDM_SNPRINTF((output + used, out_len - used, "17. (( %s ))ADPTV_SOML\n", ((p_dm->support_ability & ODM_BB_ADAPTIVE_SOML) ? ("V") : ("."))));
 		/*PHYDM_SNPRINTF((output + used, out_len - used, "18. (( %s ))TBD\n", ((p_dm->support_ability & ODM_BB_TBD) ? ("V") : ("."))));*/
 		/*PHYDM_SNPRINTF((output + used, out_len - used, "19. (( %s ))TBD\n", ((p_dm->support_ability & ODM_BB_TBD) ? ("V") : ("."))));*/
 		PHYDM_SNPRINTF((output + used, out_len - used, "20. (( %s ))DYN_RX_PATH\n", ((p_dm->support_ability & ODM_BB_DYNAMIC_RX_PATH) ? ("V") : ("."))));
@@ -1021,7 +1012,6 @@ phydm_watchdog(
 	#endif
 	{
 		odm_false_alarm_counter_statistics(p_dm);
-		phydm_noisy_detection(p_dm);
 		phydm_dig(p_dm);
 		phydm_cck_pd_th(p_dm);
 	}
@@ -1031,7 +1021,6 @@ phydm_watchdog(
 	odm_path_diversity(p_dm);
 	odm_cfo_tracking(p_dm);
 	odm_antenna_diversity(p_dm);
-	phydm_adaptive_soml(p_dm);
 #ifdef CONFIG_DYNAMIC_RX_PATH
 	phydm_dynamic_rx_path(p_dm);
 #endif
@@ -1613,8 +1602,6 @@ odm_init_all_timers(
 	odm_ant_div_timers(p_dm, INIT_ANTDIV_TIMMER);
 #endif
 
-	phydm_adaptive_soml_timers(p_dm, INIT_SOML_TIMMER);
-
 #ifdef PHYDM_LNA_SAT_CHK_SUPPORT
 	phydm_lna_sat_chk_timers(p_dm, INIT_LNA_SAT_CHK_TIMMER);
 #endif
@@ -1633,8 +1620,6 @@ odm_cancel_all_timers(
 	odm_ant_div_timers(p_dm, CANCEL_ANTDIV_TIMMER);
 #endif
 
-	phydm_adaptive_soml_timers(p_dm, CANCEL_SOML_TIMMER);
-
 #ifdef PHYDM_LNA_SAT_CHK_SUPPORT
 	phydm_lna_sat_chk_timers(p_dm, CANCEL_LNA_SAT_CHK_TIMMER);
 #endif
@@ -1652,7 +1637,6 @@ odm_release_all_timers(
 #if (defined(CONFIG_PHYDM_ANTENNA_DIVERSITY))
 	odm_ant_div_timers(p_dm, RELEASE_ANTDIV_TIMMER);
 #endif
-	phydm_adaptive_soml_timers(p_dm, RELEASE_SOML_TIMMER);
 
 #ifdef PHYDM_LNA_SAT_CHK_SUPPORT
 	phydm_lna_sat_chk_timers(p_dm, RELEASE_LNA_SAT_CHK_TIMMER);
@@ -1666,28 +1650,6 @@ odm_release_all_timers(
 /* 3============================================================
  * 3 Tx Power Tracking
  * 3============================================================ */
-
-#if (DM_ODM_SUPPORT_TYPE == ODM_AP)
-void
-odm_init_all_threads(
-	struct PHY_DM_STRUCT	*p_dm
-)
-{
-#ifdef TPT_THREAD
-	k_tpt_task_init(p_dm->priv);
-#endif
-}
-
-void
-odm_stop_all_threads(
-	struct PHY_DM_STRUCT	*p_dm
-)
-{
-#ifdef TPT_THREAD
-	k_tpt_task_stop(p_dm->priv);
-#endif
-}
-#endif
 
 #if (DM_ODM_SUPPORT_TYPE == ODM_CE)
 /* Justin: According to the current RRSI to adjust Response Frame TX power, 2012/11/05 */
@@ -1771,7 +1733,6 @@ void odm_dtc(struct PHY_DM_STRUCT *p_dm)
 }
 
 #endif /* #if (DM_ODM_SUPPORT_TYPE == ODM_CE) */
-
 
 /*<20170126, BB-Kevin>8188F D-CUT DC cancellation and 8821C*/
 void
@@ -1899,10 +1860,7 @@ phydm_dc_cancellation(
 #endif
 }
 
-void
-phydm_receiver_blocking(
-	void *p_dm_void
-)
+void phydm_receiver_blocking(void *p_dm_void)
 {
 #ifdef CONFIG_RECEIVER_BLOCKING
 	struct PHY_DM_STRUCT		*p_dm = (struct PHY_DM_STRUCT *)p_dm_void;
@@ -1948,6 +1906,5 @@ phydm_receiver_blocking(
 		odm_set_bb_reg(p_dm, 0xc40, 0x1f000000, 0x1f);
 		p_dm->is_receiver_blocking_en = false;
 	}
-
 #endif
 }

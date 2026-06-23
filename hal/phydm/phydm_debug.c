@@ -2323,22 +2323,7 @@ void phydm_cmd_parser(
 		break;
 
 	case PHYDM_ADAPTIVE_SOML:
-
-#ifdef CONFIG_ADAPTIVE_SOML
-		for (i = 0; i < 8; i++) {
-			if (input[i + 1]) {
-				PHYDM_SSCANF(input[i + 1], DCMD_DECIMAL, &var1[i]);
-				input_idx++;
-			}
-		}
-
-		if (input_idx >= 1)
-			phydm_soml_debug(p_dm, (u32 *)var1, &used, output, &out_len);
-
-#else
 		PHYDM_SNPRINTF((output + used, out_len - used, "Not Support IC"));
-#endif
-
 		break;
 
 	case PHYDM_PSD:
