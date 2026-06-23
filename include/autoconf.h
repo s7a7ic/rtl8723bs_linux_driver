@@ -117,18 +117,8 @@
  * Auto Config Section
  */
 
-#ifdef CONFIG_MP_INCLUDED
-	#define MP_DRIVER	1
-	#define CONFIG_MP_IWPRIV_SUPPORT
-	/* disable unnecessary functions for MP */
-	/* #undef CONFIG_POWER_SAVING */
-	/* #undef CONFIG_BT_COEXIST */
-	/* #undef CONFIG_ANTENNA_DIVERSITY */
-	/* #undef SUPPORT_HW_RFOFF_DETECTED */
-#else /* !CONFIG_MP_INCLUDED */
-	#define MP_DRIVER	0
-	#undef CONFIG_MP_IWPRIV_SUPPORT
-#endif /* !CONFIG_MP_INCLUDED */
+#define MP_DRIVER	0
+#undef CONFIG_MP_IWPRIV_SUPPORT
 
 #ifdef CONFIG_POWER_SAVING
 	#define CONFIG_IPS

@@ -2087,14 +2087,6 @@ static int cfg80211_rtw_scan(struct wiphy *wiphy
 	RTW_INFO(FUNC_ADPT_FMT"%s\n", FUNC_ADPT_ARG(padapter)
 		, wdev == wiphy_to_pd_wdev(wiphy) ? " PD" : "");
 
-#ifdef CONFIG_MP_INCLUDED
-	if (rtw_mp_mode_check(padapter)) {
-		RTW_INFO("MP mode block Scan request\n");
-		ret = -EPERM;
-		goto exit;
-	}
-#endif
-
 #ifdef CONFIG_RTW_REPEATER_SON
 	if (padapter->rtw_rson_scanstage == RSON_SCAN_PROCESS) {
 		RTW_INFO(FUNC_ADPT_FMT" blocking scan for under rson scanning process\n", FUNC_ADPT_ARG(padapter));

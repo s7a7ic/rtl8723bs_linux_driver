@@ -2906,11 +2906,6 @@ PHY_GetTxPowerLimit(_adapter *adapter
 	u8 final_bw = bw, final_cch = cch;
 	_irqL irqL;
 
-#ifdef CONFIG_MP_INCLUDED
-	/* MP mode channel don't use secondary channel */
-	if (rtw_mp_mode_check(adapter) == true)
-		no_sc = true;
-#endif
 	if (IS_CCK_RATE(rate)) {
 		tlrs = TXPWR_LMT_RS_CCK;
 		rs = CCK;

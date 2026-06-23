@@ -54,7 +54,6 @@ CONFIG_RTL8723B = y
 ######################### Interface ###########################
 CONFIG_SDIO_HCI = y
 ########################## Features ###########################
-CONFIG_MP_INCLUDED = y
 CONFIG_POWER_SAVING = n
 CONFIG_HW_PWRP_DETECTION = n
 CONFIG_WIFI_TEST = n
@@ -123,10 +122,6 @@ _OS_INTFS_FILES :=	os_dep/osdep_service.o \
 			os_dep/rtw_android.o \
 			os_dep/rtw_proc.o
 
-ifeq ($(CONFIG_MP_INCLUDED), y)
-_OS_INTFS_FILES += os_dep/ioctl_mp.o
-endif
-
 ifeq ($(CONFIG_SDIO_HCI), y)
 _OS_INTFS_FILES += os_dep/$(HCI_NAME)_ops_linux.o
 endif
@@ -138,7 +133,6 @@ _HAL_INTFS_FILES :=	hal/hal_intf.o \
 			hal/hal_dm.o \
 			hal/hal_btcoex_wifionly.o \
 			hal/hal_btcoex.o \
-			hal/hal_mp.o \
 			hal/hal_$(HCI_NAME).o
 
 _BTC_FILES += hal/HalBtc8723bWifiOnly.o
@@ -186,11 +180,6 @@ $(shell cp $(TopDIR)/autoconf_$(RTL871X)_$(HCI_NAME)_linux.h $(TopDIR)/include/a
 endif
 
 ########### END OF PATH  #################################
-
-ifeq ($(CONFIG_MP_INCLUDED), y)
-#MODULE_NAME := $(MODULE_NAME)_mp
-ccflags-y += -DCONFIG_MP_INCLUDED
-endif
 
 ifeq ($(CONFIG_POWER_SAVING), y)
 ccflags-y += -DCONFIG_POWER_SAVING
@@ -449,10 +438,6 @@ $(MODULE_NAME)-y += $(_OS_INTFS_FILES)
 $(MODULE_NAME)-y += $(_HAL_INTFS_FILES)
 $(MODULE_NAME)-y += $(_PHYDM_FILES)
 $(MODULE_NAME)-y += $(_BTC_FILES)
-
-$(MODULE_NAME)-$(CONFIG_MP_INCLUDED) += core/rtw_mp.o
-
-$(MODULE_NAME)-$(CONFIG_MP_INCLUDED)+= core/rtw_bt_mp.o
 
 obj-$(CONFIG_RTL8723BS) := $(MODULE_NAME).o
 

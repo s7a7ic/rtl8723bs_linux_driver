@@ -134,7 +134,7 @@ struct oid_obj_priv {
 	NDIS_STATUS(*oidfuns)(struct oid_par_priv *poid_par_priv);
 };
 
-#if (defined(CONFIG_MP_INCLUDED) && defined(_RTW_MP_IOCTL_C_))
+#if defined(_RTW_MP_IOCTL_C_)
 static NDIS_STATUS oid_null_function(struct oid_par_priv *poid_par_priv)
 {
 	return NDIS_STATUS_SUCCESS;
