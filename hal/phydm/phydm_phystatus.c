@@ -2359,10 +2359,6 @@ phydm_process_rssi_for_dm_new_type(
 		odm_process_rssi_for_ant_div(p_dm, p_phy_info, p_pktinfo);
 #endif
 
-#ifdef CONFIG_DYNAMIC_RX_PATH
-	phydm_process_phy_status_for_dynamic_rx_path(p_dm, p_phy_info, p_pktinfo);
-#endif
-
 	if (p_pktinfo->is_packet_to_self || p_pktinfo->is_packet_beacon) {
 
 		p_dm->rx_rate = p_pktinfo->data_rate;

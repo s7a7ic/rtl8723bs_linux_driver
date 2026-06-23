@@ -18,7 +18,6 @@
 #include "phydm_adaptivity.h"
 #include "phydm_ccx.h"
 #include "phydm_adc_sampling.h"
-#include "phydm_dynamic_rx_path.h"
 #include "phydm_psd.h"
 #include "phydm_primary_cca.h"
 #include "phydm_cck_pd.h"
@@ -869,10 +868,6 @@ struct	phydm_iot_center {
 
 #if (PHYDM_LA_MODE_SUPPORT == 1)
 	struct _RT_ADCSMP					adcsmp;
-#endif
-
-#ifdef CONFIG_DYNAMIC_RX_PATH
-	struct _DYNAMIC_RX_PATH_			dm_drp_table;
 #endif
 
 	struct _IQK_INFORMATION				IQK_info;

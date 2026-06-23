@@ -545,9 +545,6 @@ void odm_dm_init(struct PHY_DM_STRUCT *p_dm) {
 	phydm_get_pa_bias_offset(p_dm);
 #endif
 	odm_antenna_diversity_init(p_dm);
-#ifdef CONFIG_DYNAMIC_RX_PATH
-	phydm_dynamic_rx_path_init(p_dm);
-#endif
 	odm_auto_channel_select_init(p_dm);
 	phydm_path_diversity_init(p_dm);
 #if (PHYDM_LA_MODE_SUPPORT == 1)
@@ -679,16 +676,6 @@ phydm_watchdog_lps(
 	odm_antenna_diversity(p_dm); /*enable AntDiv in PS mode, request from SD4 Jeff*/
 	#endif
 	phydm_common_info_self_reset(p_dm);
-#endif
-}
-
-void
-phydm_watchdog_mp(
-	struct PHY_DM_STRUCT		*p_dm
-)
-{
-#ifdef CONFIG_DYNAMIC_RX_PATH
-	phydm_dynamic_rx_path_caller(p_dm);
 #endif
 }
 
@@ -1021,9 +1008,6 @@ phydm_watchdog(
 	odm_path_diversity(p_dm);
 	odm_cfo_tracking(p_dm);
 	odm_antenna_diversity(p_dm);
-#ifdef CONFIG_DYNAMIC_RX_PATH
-	phydm_dynamic_rx_path(p_dm);
-#endif
 
 	halrf_watchdog(p_dm);
 	phydm_primary_cca(p_dm);
@@ -1593,10 +1577,7 @@ phydm_cmn_info_query(
 	}
 }
 
-void
-odm_init_all_timers(
-	struct PHY_DM_STRUCT	*p_dm
-)
+void odm_init_all_timers(struct PHY_DM_STRUCT *p_dm)
 {
 #if (defined(CONFIG_PHYDM_ANTENNA_DIVERSITY))
 	odm_ant_div_timers(p_dm, INIT_ANTDIV_TIMMER);
@@ -1605,16 +1586,9 @@ odm_init_all_timers(
 #ifdef PHYDM_LNA_SAT_CHK_SUPPORT
 	phydm_lna_sat_chk_timers(p_dm, INIT_LNA_SAT_CHK_TIMMER);
 #endif
-
-#ifdef CONFIG_DYNAMIC_RX_PATH
-	phydm_dynamic_rx_path_timers(p_dm, INIT_DRP_TIMMER);
-#endif
 }
 
-void
-odm_cancel_all_timers(
-	struct PHY_DM_STRUCT	*p_dm
-)
+void odm_cancel_all_timers(struct PHY_DM_STRUCT *p_dm)
 {
 #if (defined(CONFIG_PHYDM_ANTENNA_DIVERSITY))
 	odm_ant_div_timers(p_dm, CANCEL_ANTDIV_TIMMER);
@@ -1622,10 +1596,6 @@ odm_cancel_all_timers(
 
 #ifdef PHYDM_LNA_SAT_CHK_SUPPORT
 	phydm_lna_sat_chk_timers(p_dm, CANCEL_LNA_SAT_CHK_TIMMER);
-#endif
-
-#ifdef CONFIG_DYNAMIC_RX_PATH
-	phydm_dynamic_rx_path_timers(p_dm, CANCEL_DRP_TIMMER);
 #endif
 }
 
@@ -1640,10 +1610,6 @@ odm_release_all_timers(
 
 #ifdef PHYDM_LNA_SAT_CHK_SUPPORT
 	phydm_lna_sat_chk_timers(p_dm, RELEASE_LNA_SAT_CHK_TIMMER);
-#endif
-
-#ifdef CONFIG_DYNAMIC_RX_PATH
-	phydm_dynamic_rx_path_timers(p_dm, RELEASE_DRP_TIMMER);
 #endif
 }
 
