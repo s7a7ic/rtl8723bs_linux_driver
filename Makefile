@@ -142,7 +142,7 @@ _BTC_FILES += 			hal/HalBtc8723b1Ant.o \
 				hal/HalBtc8723b2Ant.o
 endif
 
-include hal/phydm/phydm.mk
+include $(TopDIR)/hal/phydm/phydm.mk
 
 ########### HAL_RTL8723B #################################
 RTL871X = rtl8723b
