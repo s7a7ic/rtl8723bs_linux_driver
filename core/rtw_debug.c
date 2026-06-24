@@ -38,6 +38,12 @@ void dump_drv_version(void *sel)
 
 void dump_drv_cfg(void *sel)
 {
+#if (LINUX_VERSION_CODE >= KERNEL_VERSION(2, 6, 24))
+	char *kernel_version = utsname()->release;
+
+	RTW_PRINT_SEL(sel, "\nKernel Version: %s\n", kernel_version);
+#endif
+
 	RTW_PRINT_SEL(sel, "Driver Version: %s\n", DRIVERVERSION);
 	RTW_PRINT_SEL(sel, "------------------------------------------------\n");
 	RTW_PRINT_SEL(sel, "CFG80211\n");
@@ -132,7 +138,7 @@ void dump_drv_cfg(void *sel)
 	RTW_PRINT_SEL(sel, "\n=== RECV-INFO ===\n");
 	RTW_PRINT_SEL(sel, "NR_RECVFRAME = %d\n", NR_RECVFRAME);
 	RTW_PRINT_SEL(sel, "NR_RECVBUFF = %d\n", NR_RECVBUFF);
-//	RTW_PRINT_SEL(sel, "MAX_RECVBUF_SZ = %d\n", MAX_RECVBUF_SZ);
+	RTW_PRINT_SEL(sel, "MAX_RECVBUF_SZ = %d\n", MAX_RECVBUF_SZ);
 }
 
 void dump_log_level(void *sel)

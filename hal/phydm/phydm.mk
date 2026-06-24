@@ -2,6 +2,8 @@ ccflags-y += -I$(src)/hal/phydm
 
 _PHYDM_FILES := hal/phydm/phydm_debug.o	\
 								hal/phydm/phydm_antdiv.o\
+								hal/phydm/phydm_soml.o\
+								hal/phydm/phydm_smt_ant.o\
 								hal/phydm/phydm_antdect.o\
 								hal/phydm/phydm_interface.o\
 								hal/phydm/phydm_phystatus.o\
@@ -12,6 +14,7 @@ _PHYDM_FILES := hal/phydm/phydm_debug.o	\
 								hal/phydm/phydm_rainfo.o\
 								hal/phydm/phydm_adaptivity.o\
 								hal/phydm/phydm_cfotracking.o\
+								hal/phydm/phydm_noisemonitor.o\
 								hal/phydm/phydm_acs.o\
 								hal/phydm/phydm_adc_sampling.o\
 								hal/phydm/phydm_ccx.o\

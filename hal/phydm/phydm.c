@@ -118,6 +118,7 @@ phydm_common_info_self_init(
 	phydm_init_debug_setting(p_dm);
 #endif
 	phydm_init_trx_antenna_setting(p_dm);
+	phydm_init_soft_ml_setting(p_dm);
 
 	p_dm->phydm_period = PHYDM_WATCH_DOG_PERIOD;
 	p_dm->phydm_sys_up_time = 0;
@@ -350,104 +351,6 @@ u64 phydm_supportability_init_ce(void *p_dm_void) {
 }
 #endif
 
-#if (DM_ODM_SUPPORT_TYPE & (ODM_AP))
-u64
-phydm_supportability_init_ap(
-	void		*p_dm_void
-)
-{
-	struct PHY_DM_STRUCT		*p_dm = (struct PHY_DM_STRUCT *)p_dm_void;
-	u64			support_ability = 0;
-
-	switch (p_dm->support_ic_type) {
-
-	/*---------------N Series--------------------*/
-	#if (RTL8723B_SUPPORT == 1)
-	case	ODM_RTL8723B:
-		support_ability |=
-			ODM_BB_DIG				|
-			ODM_BB_RA_MASK			|
-			ODM_BB_FA_CNT			|
-			ODM_BB_RSSI_MONITOR		|
-			ODM_BB_CCK_PD			|
-			/*ODM_BB_PWR_TRAIN		|*/
-			ODM_BB_RATE_ADAPTIVE	|
-			ODM_BB_CFO_TRACKING		|
-			ODM_BB_ENV_MONITOR;
-		break;
-	#endif
-
-	default:
-		support_ability |=
-			ODM_BB_DIG				|
-			ODM_BB_RA_MASK			|
-			ODM_BB_FA_CNT			|
-			ODM_BB_RSSI_MONITOR		|
-			ODM_BB_CCK_PD			|
-			/*ODM_BB_PWR_TRAIN		|*/
-			ODM_BB_RATE_ADAPTIVE	|
-			ODM_BB_CFO_TRACKING		|
-			ODM_BB_ENV_MONITOR;
-
-			dbg_print("[Warning] Supportability Init Warning !!!\n");
-		break;
-	}
-
-	#if 0
-	/*[Config Antenna Diveristy]*/
-	if (*(p_dm->p_enable_antdiv))
-		support_ability |= ODM_BB_ANT_DIV;
-	
-	/*[Config Adaptivity]*/
-	if (*(p_dm->p_enable_adaptivity))
-		support_ability |= ODM_BB_ADAPTIVITY;
-	#endif
-
-	return support_ability;
-}
-#endif
-
-#if (DM_ODM_SUPPORT_TYPE & (ODM_IOT))
-u64
-phydm_supportability_init_iot(
-	void		*p_dm_void
-)
-{
-	struct PHY_DM_STRUCT		*p_dm = (struct PHY_DM_STRUCT *)p_dm_void;
-	u64			support_ability = 0;
-
-	switch (p_dm->support_ic_type) {
-
-	default:
-		support_ability |=
-			ODM_BB_DIG				|
-			ODM_BB_RA_MASK			|
-			/*ODM_BB_DYNAMIC_TXPWR	|*/
-			ODM_BB_FA_CNT			|
-			ODM_BB_RSSI_MONITOR		|
-			ODM_BB_CCK_PD			|
-			/*ODM_BB_PWR_TRAIN		|*/
-			ODM_BB_RATE_ADAPTIVE	|
-			ODM_BB_CFO_TRACKING		|
-			ODM_BB_ENV_MONITOR;
-
-			dbg_print("[Warning] Supportability Init Warning !!!\n");
-		break;
-
-	}
-	
-	/*[Config Antenna Diveristy]*/
-	if (*(p_dm->p_enable_antdiv))
-		support_ability |= ODM_BB_ANT_DIV;
-	
-	/*[Config Adaptivity]*/
-	if (*(p_dm->p_enable_adaptivity))
-		support_ability |= ODM_BB_ADAPTIVITY;
-	
-	return support_ability;
-}
-#endif
-
 void phydm_fwoffload_ability_init(
 	struct PHY_DM_STRUCT *p_dm,
 	enum phydm_offload_ability offload_ability
@@ -545,6 +448,10 @@ void odm_dm_init(struct PHY_DM_STRUCT *p_dm) {
 	phydm_get_pa_bias_offset(p_dm);
 #endif
 	odm_antenna_diversity_init(p_dm);
+	phydm_adaptive_soml_init(p_dm);
+#ifdef CONFIG_DYNAMIC_RX_PATH
+	phydm_dynamic_rx_path_init(p_dm);
+#endif
 	odm_auto_channel_select_init(p_dm);
 	phydm_path_diversity_init(p_dm);
 #if (PHYDM_LA_MODE_SUPPORT == 1)
@@ -556,6 +463,11 @@ void odm_dm_init(struct PHY_DM_STRUCT *p_dm) {
 	#ifdef CONFIG_PSD_TOOL
 	phydm_psd_init(p_dm);
 	#endif
+	
+	#ifdef CONFIG_SMART_ANTENNA
+	phydm_smt_ant_init(p_dm);
+	#endif
+
 }
 
 void
@@ -596,6 +508,7 @@ phydm_support_ability_debug(
 		PHYDM_SNPRINTF((output + used, out_len - used, "04. (( %s ))RSSI_MNTR\n", ((p_dm->support_ability & ODM_BB_RSSI_MONITOR) ? ("V") : ("."))));
 		PHYDM_SNPRINTF((output + used, out_len - used, "05. (( %s ))CCK_PD\n", ((p_dm->support_ability & ODM_BB_CCK_PD) ? ("V") : ("."))));
 		PHYDM_SNPRINTF((output + used, out_len - used, "06. (( %s ))ANT_DIV\n", ((p_dm->support_ability & ODM_BB_ANT_DIV) ? ("V") : ("."))));
+		PHYDM_SNPRINTF((output + used, out_len - used, "07. (( %s ))SMT_ANT\n", ((p_dm->support_ability & ODM_BB_SMT_ANT) ? ("V") : ("."))));
 		PHYDM_SNPRINTF((output + used, out_len - used, "08. (( %s ))PWR_TRAIN\n", ((p_dm->support_ability & ODM_BB_PWR_TRAIN) ? ("V") : ("."))));
 		PHYDM_SNPRINTF((output + used, out_len - used, "09. (( %s ))RA\n", ((p_dm->support_ability & ODM_BB_RATE_ADAPTIVE) ? ("V") : ("."))));
 		PHYDM_SNPRINTF((output + used, out_len - used, "10. (( %s ))PATH_DIV\n", ((p_dm->support_ability & ODM_BB_PATH_DIV) ? ("V") : ("."))));
@@ -605,6 +518,7 @@ phydm_support_ability_debug(
 		PHYDM_SNPRINTF((output + used, out_len - used, "14. (( %s ))CFO_TRACK\n", ((p_dm->support_ability & ODM_BB_CFO_TRACKING) ? ("V") : ("."))));
 		PHYDM_SNPRINTF((output + used, out_len - used, "15. (( %s ))ENV_MONITOR\n", ((p_dm->support_ability & ODM_BB_ENV_MONITOR) ? ("V") : ("."))));
 		PHYDM_SNPRINTF((output + used, out_len - used, "16. (( %s ))PRI_CCA\n", ((p_dm->support_ability & ODM_BB_PRIMARY_CCA) ? ("V") : ("."))));
+		PHYDM_SNPRINTF((output + used, out_len - used, "17. (( %s ))ADPTV_SOML\n", ((p_dm->support_ability & ODM_BB_ADAPTIVE_SOML) ? ("V") : ("."))));
 		/*PHYDM_SNPRINTF((output + used, out_len - used, "18. (( %s ))TBD\n", ((p_dm->support_ability & ODM_BB_TBD) ? ("V") : ("."))));*/
 		/*PHYDM_SNPRINTF((output + used, out_len - used, "19. (( %s ))TBD\n", ((p_dm->support_ability & ODM_BB_TBD) ? ("V") : ("."))));*/
 		PHYDM_SNPRINTF((output + used, out_len - used, "20. (( %s ))DYN_RX_PATH\n", ((p_dm->support_ability & ODM_BB_DYNAMIC_RX_PATH) ? ("V") : ("."))));
@@ -999,6 +913,7 @@ phydm_watchdog(
 	#endif
 	{
 		odm_false_alarm_counter_statistics(p_dm);
+		phydm_noisy_detection(p_dm);
 		phydm_dig(p_dm);
 		phydm_cck_pd_th(p_dm);
 	}
@@ -1008,6 +923,10 @@ phydm_watchdog(
 	odm_path_diversity(p_dm);
 	odm_cfo_tracking(p_dm);
 	odm_antenna_diversity(p_dm);
+	phydm_adaptive_soml(p_dm);
+#ifdef CONFIG_DYNAMIC_RX_PATH
+	phydm_dynamic_rx_path(p_dm);
+#endif
 
 	halrf_watchdog(p_dm);
 	phydm_primary_cca(p_dm);
@@ -1172,11 +1091,6 @@ odm_cmn_info_init(
 	case	ODM_CMNINFO_DOMAIN_CODE_5G:
 		p_dm->odm_regulation_5g = (u8)value;
 		break;
-#if (DM_ODM_SUPPORT_TYPE &  (ODM_AP))
-	case	ODM_CMNINFO_CONFIG_BB_RF:
-		p_dm->config_bbrf = (boolean)value;
-		break;
-#endif
 	case	ODM_CMNINFO_IQKPAOFF:
 		p_dm->rf_calibrate_info.is_iqk_pa_off = (boolean)value;
 		break;
@@ -1583,6 +1497,8 @@ void odm_init_all_timers(struct PHY_DM_STRUCT *p_dm)
 	odm_ant_div_timers(p_dm, INIT_ANTDIV_TIMMER);
 #endif
 
+	phydm_adaptive_soml_timers(p_dm, INIT_SOML_TIMMER);
+
 #ifdef PHYDM_LNA_SAT_CHK_SUPPORT
 	phydm_lna_sat_chk_timers(p_dm, INIT_LNA_SAT_CHK_TIMMER);
 #endif
@@ -1593,6 +1509,8 @@ void odm_cancel_all_timers(struct PHY_DM_STRUCT *p_dm)
 #if (defined(CONFIG_PHYDM_ANTENNA_DIVERSITY))
 	odm_ant_div_timers(p_dm, CANCEL_ANTDIV_TIMMER);
 #endif
+
+	phydm_adaptive_soml_timers(p_dm, CANCEL_SOML_TIMMER);
 
 #ifdef PHYDM_LNA_SAT_CHK_SUPPORT
 	phydm_lna_sat_chk_timers(p_dm, CANCEL_LNA_SAT_CHK_TIMMER);
@@ -1607,6 +1525,7 @@ odm_release_all_timers(
 #if (defined(CONFIG_PHYDM_ANTENNA_DIVERSITY))
 	odm_ant_div_timers(p_dm, RELEASE_ANTDIV_TIMMER);
 #endif
+	phydm_adaptive_soml_timers(p_dm, RELEASE_SOML_TIMMER);
 
 #ifdef PHYDM_LNA_SAT_CHK_SUPPORT
 	phydm_lna_sat_chk_timers(p_dm, RELEASE_LNA_SAT_CHK_TIMMER);

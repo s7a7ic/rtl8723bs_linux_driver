@@ -11,6 +11,8 @@
 #include "phydm_dig.h"
 #include "phydm_pathdiv.h"
 #include "phydm_antdiv.h"
+#include "phydm_soml.h"
+#include "phydm_smt_ant.h"
 #include "phydm_antdect.h"
 #include "phydm_rainfo.h"
 #include "phydm_cfotracking.h"
@@ -24,14 +26,19 @@
 #include "phydm_rssi_monitor.h"
 #include "phydm_auto_dbg.h"
 #include "phydm_math_lib.h"
+#include "phydm_noisemonitor.h"
 #include "phydm_api.h"
 
 /*HALRF header*/
 #include "halrf/halrf_iqk.h"
 #include "halrf/halrf.h"
 #include "halrf/halrf_powertracking.h"
-#if (DM_ODM_SUPPORT_TYPE & (ODM_CE))
+#if (DM_ODM_SUPPORT_TYPE & (ODM_AP))
+	#include "halrf/halphyrf_ap.h"
+#elif(DM_ODM_SUPPORT_TYPE & (ODM_CE))
 	#include "halrf/halphyrf_ce.h"
+#elif (DM_ODM_SUPPORT_TYPE & (ODM_WIN))
+	#include "halrf/halphyrf_win.h"
 #endif
 
 extern const u16 phy_rate_table[28];
@@ -816,9 +823,16 @@ struct	phydm_iot_center {
 	struct	phydm_bt_info				bt_info_table;
 #endif
 
-	struct pkt_process_info				pkt_proc_struct;
+	struct	pkt_process_info				pkt_proc_struct;
 	struct phydm_adaptivity_struct			adaptivity;
+
+	struct _ODM_NOISE_MONITOR_			noise_level;
+
 	struct _odm_phy_dbg_info_				phy_dbg_info;
+
+#ifdef CONFIG_ADAPTIVE_SOML
+	struct adaptive_soml					dm_soml_table;
+#endif
 
 #if (defined(CONFIG_PHYDM_ANTENNA_DIVERSITY))
 	#if (DM_ODM_SUPPORT_TYPE & (ODM_AP))
@@ -828,6 +842,10 @@ struct	phydm_iot_center {
 	#if (defined(CONFIG_HL_SMART_ANTENNA))
 	struct smt_ant_honbo					dm_sat_table;
 	#endif
+#endif
+
+#if (defined(CONFIG_SMART_ANTENNA))
+	struct smt_ant						smtant_table;
 #endif
 
 	struct phydm_fat_struct				dm_fat_table;
