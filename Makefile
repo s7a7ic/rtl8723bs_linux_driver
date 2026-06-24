@@ -142,7 +142,7 @@ _BTC_FILES += 			hal/HalBtc8723b1Ant.o \
 				hal/HalBtc8723b2Ant.o
 endif
 
-include $(TopDIR)/hal/phydm/phydm.mk
+include hal/phydm/phydm.mk
 
 ########### HAL_RTL8723B #################################
 RTL871X = rtl8723b
@@ -507,7 +507,7 @@ clean:
 	cd hal ; rm -fr *.mod.c *.mod *.o .*.cmd *.ko
 	cd core ; rm -fr *.mod.c *.mod *.o .*.cmd *.ko
 	cd os_dep ; rm -fr *.mod.c *.mod *.o .*.cmd *.ko
-	rm -fr Module.symvers ; rm -fr Module.markers ; rm -fr modules.order
+	rm -fr Module.symvers ; rm -fr Module.markers ; rm -fr modules.order ; rm -fr .module-common.o
 	rm -fr *.mod.c *.mod *.o .*.cmd *.ko *~
 	rm -fr .tmp_versions
 endif
