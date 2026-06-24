@@ -28,61 +28,10 @@ void configure_txpower_track(
 {
 	struct PHY_DM_STRUCT		*p_dm = (struct PHY_DM_STRUCT *)p_dm_void;
 
-#if RTL8192E_SUPPORT
-	if (p_dm->support_ic_type == ODM_RTL8192E)
-		configure_txpower_track_8192e(p_config);
-#endif
-#if RTL8821A_SUPPORT
-	if (p_dm->support_ic_type == ODM_RTL8821)
-		configure_txpower_track_8821a(p_config);
-#endif
-#if RTL8812A_SUPPORT
-	if (p_dm->support_ic_type == ODM_RTL8812)
-		configure_txpower_track_8812a(p_config);
-#endif
-#if RTL8188E_SUPPORT
-	if (p_dm->support_ic_type == ODM_RTL8188E)
-		configure_txpower_track_8188e(p_config);
-#endif
-
 #if RTL8723B_SUPPORT
 	if (p_dm->support_ic_type == ODM_RTL8723B)
 		configure_txpower_track_8723b(p_config);
 #endif
-
-#if RTL8814A_SUPPORT
-	if (p_dm->support_ic_type == ODM_RTL8814A)
-		configure_txpower_track_8814a(p_config);
-#endif
-
-#if RTL8703B_SUPPORT
-	if (p_dm->support_ic_type == ODM_RTL8703B)
-		configure_txpower_track_8703b(p_config);
-#endif
-
-#if RTL8188F_SUPPORT
-	if (p_dm->support_ic_type == ODM_RTL8188F)
-		configure_txpower_track_8188f(p_config);
-#endif
-#if RTL8723D_SUPPORT
-	if (p_dm->support_ic_type == ODM_RTL8723D)
-		configure_txpower_track_8723d(p_config);
-#endif
-/* JJ ADD 20161014 */
-#if RTL8710B_SUPPORT
-	if (p_dm->support_ic_type == ODM_RTL8710B)
-		configure_txpower_track_8710b(p_config);
-#endif
-
-#if RTL8822B_SUPPORT
-	if (p_dm->support_ic_type == ODM_RTL8822B)
-		configure_txpower_track_8822b(p_config);
-#endif
-#if RTL8821C_SUPPORT
-	if (p_dm->support_ic_type == ODM_RTL8821C)
-		configure_txpower_track_8821c(p_config);
-#endif
-
 }
 
 /* **********************************************************************
@@ -212,9 +161,6 @@ odm_txpowertracking_callback_thermal_meter(
 	if (p_dm->support_ic_type & ODM_RTL8814A)	/*for 8814 path C & D*/
 		(*c.get_delta_swing_table8814only)(p_dm, (u8 **)&delta_swing_table_idx_tup_c, (u8 **)&delta_swing_table_idx_tdown_c,
 			(u8 **)&delta_swing_table_idx_tup_d, (u8 **)&delta_swing_table_idx_tdown_d);
-	/* JJ ADD 20161014 */
-	if (p_dm->support_ic_type & (ODM_RTL8703B | ODM_RTL8723D | ODM_RTL8710B))	/*for Xtal Offset*/
-		(*c.get_delta_swing_xtal_table)(p_dm, (s8 **)&delta_swing_table_xtal_up, (s8 **)&delta_swing_table_xtal_down);
 
 	p_rf_calibrate_info->txpowertracking_callback_cnt++;	/*cosa add for debug*/
 	p_rf_calibrate_info->is_txpowertracking_init = true;
@@ -252,23 +198,6 @@ odm_txpowertracking_callback_thermal_meter(
 		thermal_value = 0;
 	else
 		thermal_value = thermal_value_temp;
-
-	/*add log by zhao he, check c80/c94/c14/ca0 value*/
-	if (p_dm->support_ic_type == ODM_RTL8723D) {
-		regc80 = odm_get_bb_reg(p_dm, 0xc80, MASKDWORD);
-		regcd0 = odm_get_bb_reg(p_dm, 0xcd0, MASKDWORD);
-		regcd4 = odm_get_bb_reg(p_dm, 0xcd4, MASKDWORD);
-		regab4 = odm_get_bb_reg(p_dm, 0xab4, 0x000007FF);
-		ODM_RT_TRACE(p_dm, ODM_COMP_CALIBRATION, ODM_DBG_LOUD, ("0xc80 = 0x%x 0xcd0 = 0x%x 0xcd4 = 0x%x 0xab4 = 0x%x\n", regc80, regcd0, regcd4, regab4));
-	}
-	/* JJ ADD 20161014 */
-	if (p_dm->support_ic_type == ODM_RTL8710B) {
-		regc80 = odm_get_bb_reg(p_dm, 0xc80, MASKDWORD);
-		regcd0 = odm_get_bb_reg(p_dm, 0xcd0, MASKDWORD);
-		regcd4 = odm_get_bb_reg(p_dm, 0xcd4, MASKDWORD);
-		regab4 = odm_get_bb_reg(p_dm, 0xab4, 0x000007FF);
-		ODM_RT_TRACE(p_dm, ODM_COMP_CALIBRATION, ODM_DBG_LOUD, ("0xc80 = 0x%x 0xcd0 = 0x%x 0xcd4 = 0x%x 0xab4 = 0x%x\n", regc80, regcd0, regcd4, regab4));
-	}
 
 	if (!p_rf_calibrate_info->txpowertrack_control)
 		return;
@@ -435,16 +364,6 @@ odm_txpowertracking_callback_thermal_meter(
 					break;
 				}
 			}
-			/* JJ ADD 20161014 */
-			if (p_dm->support_ic_type & (ODM_RTL8703B | ODM_RTL8723D | ODM_RTL8710B)) {
-				/*Save xtal_offset from Xtal table*/
-				p_rf_calibrate_info->xtal_offset_last = p_rf_calibrate_info->xtal_offset;	/*recording last Xtal offset*/
-				ODM_RT_TRACE(p_dm, ODM_COMP_TX_PWR_TRACK, ODM_DBG_LOUD,
-					("[Xtal] delta_swing_table_xtal_up[%d] = %d\n", delta, delta_swing_table_xtal_up[delta]));
-				p_rf_calibrate_info->xtal_offset = delta_swing_table_xtal_up[delta];
-				xtal_offset_eanble = (p_rf_calibrate_info->xtal_offset_last != p_rf_calibrate_info->xtal_offset);
-			}
-
 		} else {
 			for (p = RF_PATH_A; p < c.rf_path_count; p++) {
 				p_rf_calibrate_info->delta_power_index_last[p] = p_rf_calibrate_info->delta_power_index[p];	/*recording poer index offset*/
@@ -487,16 +406,6 @@ odm_txpowertracking_callback_thermal_meter(
 					break;
 				}
 			}
-			/* JJ ADD 20161014 */
-			if (p_dm->support_ic_type & (ODM_RTL8703B | ODM_RTL8723D | ODM_RTL8710B)) {
-				/*Save xtal_offset from Xtal table*/
-				p_rf_calibrate_info->xtal_offset_last = p_rf_calibrate_info->xtal_offset;	/*recording last Xtal offset*/
-				ODM_RT_TRACE(p_dm, ODM_COMP_TX_PWR_TRACK, ODM_DBG_LOUD,
-					("[Xtal] delta_swing_table_xtal_down[%d] = %d\n", delta, delta_swing_table_xtal_down[delta]));
-				p_rf_calibrate_info->xtal_offset = delta_swing_table_xtal_down[delta];
-				xtal_offset_eanble = (p_rf_calibrate_info->xtal_offset_last != p_rf_calibrate_info->xtal_offset);
-			}
-
 		}
 
 		for (p = RF_PATH_A; p < c.rf_path_count; p++) {
@@ -689,7 +598,6 @@ odm_txpowertracking_callback_thermal_meter(
 		p_rf_calibrate_info->thermal_value = thermal_value;         /*Record last Power Tracking Thermal value*/
 
 	}
-
 
 	if (p_dm->support_ic_type == ODM_RTL8703B || p_dm->support_ic_type == ODM_RTL8723D || p_dm->support_ic_type == ODM_RTL8710B) {/* JJ ADD 20161014 */
 

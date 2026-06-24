@@ -277,32 +277,23 @@ enum phydm_ctrl_info_rate {
 #define	HT_RATE_NUM		32
 #define	VHT_RATE_NUM		40
 
-#if (DM_ODM_SUPPORT_TYPE == ODM_WIN)
-	#define ODM_NUM_RATE_IDX (ODM_RATEVHTSS4MCS9+1)
-#else
-	#if (RTL8192E_SUPPORT == 1) || (RTL8197F_SUPPORT == 1)
-		#define ODM_NUM_RATE_IDX (ODM_RATEMCS15+1)
-	#elif (RTL8723B_SUPPORT == 1) || (RTL8188E_SUPPORT == 1) || (RTL8188F_SUPPORT == 1)
-		#define ODM_NUM_RATE_IDX (ODM_RATEMCS7+1)
-	#elif (RTL8821A_SUPPORT == 1) || (RTL8881A_SUPPORT == 1)
-		#define ODM_NUM_RATE_IDX (ODM_RATEVHTSS1MCS9+1)
-	#elif (RTL8812A_SUPPORT == 1)
-		#define ODM_NUM_RATE_IDX (ODM_RATEVHTSS2MCS9+1)
-	#elif (RTL8814A_SUPPORT == 1)
-		#define ODM_NUM_RATE_IDX (ODM_RATEVHTSS3MCS9+1)
-	#else
-		#define ODM_NUM_RATE_IDX (ODM_RATEVHTSS4MCS9+1)
-	#endif
-#endif
-
-#if (DM_ODM_SUPPORT_TYPE == ODM_WIN)
-	#define CONFIG_SFW_SUPPORTED
-#endif
+//#if (RTL8192E_SUPPORT == 1) || (RTL8197F_SUPPORT == 1)
+//	#define ODM_NUM_RATE_IDX (ODM_RATEMCS15+1)
+//#elif (RTL8723B_SUPPORT == 1) || (RTL8188E_SUPPORT == 1) || (RTL8188F_SUPPORT == 1)
+	#define ODM_NUM_RATE_IDX (ODM_RATEMCS7+1)
+//#elif (RTL8821A_SUPPORT == 1) || (RTL8881A_SUPPORT == 1)
+//	#define ODM_NUM_RATE_IDX (ODM_RATEVHTSS1MCS9+1)
+//#elif (RTL8812A_SUPPORT == 1)
+//	#define ODM_NUM_RATE_IDX (ODM_RATEVHTSS2MCS9+1)
+//#elif (RTL8814A_SUPPORT == 1)
+//	#define ODM_NUM_RATE_IDX (ODM_RATEVHTSS3MCS9+1)
+//#else
+//	#define ODM_NUM_RATE_IDX (ODM_RATEVHTSS4MCS9+1)
+//#endif
 
 /* 1 ============================================================
  * 1  enumeration
  * 1 ============================================================ */
-
 
 /*	ODM_CMNINFO_INTERFACE */
 enum odm_interface_e {
@@ -405,66 +396,19 @@ enum phydm_ic_e {
 
 #else /*ODM_CE*/
 
-	#if ((RTL8188E_SUPPORT == 1) || \
-	(RTL8723B_SUPPORT == 1) || (RTL8192E_SUPPORT == 1) || (RTL8195A_SUPPORT == 1) || (RTL8703B_SUPPORT == 1) || \
-	(RTL8188F_SUPPORT == 1) || (RTL8723D_SUPPORT == 1) || (RTL8197F_SUPPORT == 1) || (RTL8710B_SUPPORT == 1))
-		#define ODM_IC_11N_SERIES_SUPPORT			1
-		#define ODM_IC_11AC_SERIES_SUPPORT		0
-	#else
-		#define ODM_IC_11N_SERIES_SUPPORT			0
-		#define ODM_IC_11AC_SERIES_SUPPORT		1
-	#endif
+	#define ODM_IC_11N_SERIES_SUPPORT			1
+	#define ODM_IC_11AC_SERIES_SUPPORT		0
+
 #endif
 
 /*===IC SS Compile Flag, prepare for code size reduction==============*/
-#if ((RTL8188E_SUPPORT == 1) || (RTL8188F_SUPPORT == 1) || (RTL8723B_SUPPORT == 1) || (RTL8703B_SUPPORT == 1) ||\
-	(RTL8723D_SUPPORT == 1) || (RTL8881A_SUPPORT == 1) || (RTL8821A_SUPPORT == 1) || (RTL8821C_SUPPORT == 1) ||\
-	(RTL8195A_SUPPORT == 1) || (RTL8710B_SUPPORT == 1))
-	
 	#define PHYDM_COMPILE_IC_1SS
-#endif
-
-#if ((RTL8192E_SUPPORT == 1) || (RTL8197F_SUPPORT == 1) || (RTL8812A_SUPPORT == 1) || (RTL8822B_SUPPORT == 1))
-	#define PHYDM_COMPILE_IC_2SS
-#endif
-
-/*#define PHYDM_COMPILE_IC_3SS*/
-
-#if ((RTL8814B_SUPPORT == 1) || (RTL8814A_SUPPORT == 1))
-	#define PHYDM_COMPILE_IC_4SS
-#endif
 
 /*==[ABOVE N-SS COMPILE FLAG]=============================*/
-#if (defined(PHYDM_COMPILE_IC_1SS) || defined(PHYDM_COMPILE_IC_2SS) || defined(PHYDM_COMPILE_IC_3SS) || defined(PHYDM_COMPILE_IC_4SS))
 	#define PHYDM_COMPILE_ABOVE_1SS
-#endif
-
-#if (defined(PHYDM_COMPILE_IC_2SS) || defined(PHYDM_COMPILE_IC_3SS) || defined(PHYDM_COMPILE_IC_4SS))
-	#define PHYDM_COMPILE_ABOVE_2SS
-#endif
-
-#if (defined(PHYDM_COMPILE_IC_3SS) || defined(PHYDM_COMPILE_IC_4SS))
-	#define PHYDM_COMPILE_ABOVE_3SS
-#endif
-
-#if (defined(PHYDM_COMPILE_IC_4SS))
-	#define PHYDM_COMPILE_ABOVE_4SS
-#endif
 
 /*========[New Phy-Status Support] =========================================================================]*/
-#if (RTL8824B_SUPPORT == 1)
-	#define ODM_PHY_STATUS_NEW_TYPE_SUPPORT			2
-#elif ((RTL8197F_SUPPORT == 1) || (RTL8723D_SUPPORT == 1) || (RTL8822B_SUPPORT == 1) || (RTL8821C_SUPPORT == 1) || (RTL8710B_SUPPORT == 1) )
-	#define ODM_PHY_STATUS_NEW_TYPE_SUPPORT			1
-#else
 	#define ODM_PHY_STATUS_NEW_TYPE_SUPPORT			0
-#endif
-
-/*==================================================================================================]*/
-
-#if ((RTL8822B_SUPPORT == 1) || (RTL8197F_SUPPORT == 1) || (RTL8821C_SUPPORT == 1))
-#define PHYDM_COMMON_API_SUPPORT
-#endif
 
 /* ODM_CMNINFO_CUT_VER */
 enum odm_cut_version_e {
