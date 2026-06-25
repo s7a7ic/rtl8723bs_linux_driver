@@ -20,7 +20,7 @@ void phydm_set_crystal_cap(
 	crystal_cap = crystal_cap & 0x3F;
 	p_cfo_track->crystal_cap = crystal_cap;
 
-	#if (RTL8703B_SUPPORT == 1) || (RTL8723B_SUPPORT == 1) || (RTL8192E_SUPPORT == 1) || (RTL8821A_SUPPORT == 1) || (RTL8723D_SUPPORT == 1)
+	#if (RTL8723B_SUPPORT == 1)
 	if ((p_dm->support_ic_type & (ODM_RTL8703B | ODM_RTL8723B | ODM_RTL8192E | ODM_RTL8821 | ODM_RTL8723D))) {
 	
 		/* 0x2C[23:18] = 0x2C[17:12] = crystal_cap */
@@ -112,10 +112,7 @@ odm_cfo_tracking_reset(
 #endif
 }
 
-void
-phydm_cfo_tracking_init(
-	void					*p_dm_void
-)
+void phydm_cfo_tracking_init(void *p_dm_void)
 {
 	struct PHY_DM_STRUCT					*p_dm = (struct PHY_DM_STRUCT *)p_dm_void;
 	struct phydm_cfo_track_struct				*p_cfo_track = (struct phydm_cfo_track_struct *)phydm_get_structure(p_dm, PHYDM_CFOTRACK);
@@ -125,24 +122,9 @@ phydm_cfo_tracking_init(
 	p_cfo_track->is_adjust = true;
 	PHYDM_DBG(p_dm, DBG_CFO_TRK, ("ODM_CfoTracking_init()=========>\n"));
 	PHYDM_DBG(p_dm, DBG_CFO_TRK, ("ODM_CfoTracking_init(): is_atc_status = %d, crystal_cap = 0x%x\n", p_cfo_track->is_atc_status, p_cfo_track->def_x_cap));
-
-#if RTL8822B_SUPPORT
-	/* Crystal cap. control by WiFi */
-	if (p_dm->support_ic_type & ODM_RTL8822B)
-		odm_set_bb_reg(p_dm, 0x10, 0x40, 0x1);
-#endif
-
-#if RTL8821C_SUPPORT
-	/* Crystal cap. control by WiFi */
-	if (p_dm->support_ic_type & ODM_RTL8821C)
-		odm_set_bb_reg(p_dm, 0x10, 0x40, 0x1);
-#endif
 }
 
-void
-odm_cfo_tracking(
-	void					*p_dm_void
-)
+void odm_cfo_tracking(void *p_dm_void)
 {
 	struct PHY_DM_STRUCT					*p_dm = (struct PHY_DM_STRUCT *)p_dm_void;
 	struct phydm_cfo_track_struct				*p_cfo_track = (struct phydm_cfo_track_struct *)phydm_get_structure(p_dm, PHYDM_CFOTRACK);

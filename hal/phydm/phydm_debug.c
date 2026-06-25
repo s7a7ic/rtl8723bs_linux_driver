@@ -1076,14 +1076,6 @@ phydm_basic_dbg_message
 		PHYDM_DBG(p_dm, ODM_COMP_COMMON, ("CFO_avg = ((%d kHz)) , CFO_tracking = ((%s%d))\n",
 			p_cfo_track->CFO_ave_pre, ((p_cfo_track->crystal_cap > p_cfo_track->def_x_cap) ? "+" : "-"), tmp_val_u1));
 
-		/* Condition number */
-	#if (RTL8822B_SUPPORT == 1)
-		if (p_dm->support_ic_type == ODM_RTL8822B) {
-			tmp_val = phydm_get_condition_number_8822B(p_dm);
-			PHYDM_DBG(p_dm, ODM_COMP_COMMON, ("Condi_Num=((%d))\n", tmp_val));
-		}
-	#endif
-
 	} else
 		PHYDM_DBG(p_dm, ODM_COMP_COMMON, ("No Link !!!\n"));
 
@@ -1885,10 +1877,6 @@ void phydm_cmd_parser(
 		break;
 		
 	case PHYDM_RF_IQK_INFO:
-		#if (RTL8822B_SUPPORT == 1 || RTL8821C_SUPPORT == 1)
-		if (p_dm->support_ic_type & (ODM_RTL8822B | ODM_RTL8821C))
-			halrf_iqk_info_dump(p_dm, &used, output, &out_len);
-		#endif
 		break;
 
 	case PHYDM_IQK:
@@ -2228,11 +2216,7 @@ void phydm_cmd_parser(
 
 		if (input_idx >= 1) {
 
-#if (RTL8821A_SUPPORT == 1)
-			phydm_set_ext_switch(p_dm, (u32 *)var1, &used, output, &out_len);
-#else
 			PHYDM_SNPRINTF((output + used, out_len - used, "Not Support IC"));
-#endif
 		}
 
 		break;
