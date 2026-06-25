@@ -7,11 +7,6 @@
 #ifndef __HAL_COM_PHYCFG_H__
 #define __HAL_COM_PHYCFG_H__
 
-#define		PathA                     			0x0	/* Useless */
-#define		PathB			0x1
-#define		PathC			0x2
-#define		PathD			0x3
-
 typedef enum _RF_TX_NUM {
 	RF_1TX = 0,
 	RF_2TX,

@@ -15,18 +15,12 @@
  * 3. RF register 0x00-2E
  * 4. Bit Mask for BB/RF register
  * 5. Other defintion for BB/RF R/W
- *   */
+ */
 
 /*
  * 1. PMAC duplicate register due to connection: RF_Mode, TRxRN, NumOf L-STF
  * 1. Page1(0x100)
- *   */
-#define		rPMAC_Reset					0x100
-#define		rPMAC_TxStart					0x104
-#define		rPMAC_TxLegacySIG				0x108
-#define		rPMAC_TxHTSIG1				0x10c
-#define		rPMAC_TxHTSIG2				0x110
-#define		rPMAC_PHYDebug				0x114
+ */
 #define		rPMAC_TxPacketNum				0x118
 #define		rPMAC_TxIdle					0x11c
 #define		rPMAC_TxMACHeader0			0x120
@@ -49,16 +43,7 @@
 #define		rPMAC_CCKCRxRC32OK			0x188
 #define		rPMAC_TxStatus					0x18c
 
-/*
- * 2. Page2(0x200)
- *
- * The following two definition are only used for USB interface. */
-#define		RF_BB_CMD_ADDR				0x02c0	/* RF/BB read/write command address. */
-#define		RF_BB_CMD_DATA				0x02c4	/* RF/BB read/write command data. */
-
-/*
- * 3. Page8(0x800)
- *   */
+/* 3. Page8(0x800) */
 #define		rFPGA0_RFMOD				0x800	/* RF mode & CCK TxSC */ /* RF BW Setting?? */
 
 #define		rFPGA0_TxInfo				0x804	/* Status report?? */
@@ -118,9 +103,7 @@
 #define		rFPGA0_XAB_RFInterfaceRB		0x8e0	/* Useless now */ /* RF Interface Readback Value */
 #define		rFPGA0_XCD_RFInterfaceRB		0x8e4	/* Useless now */
 
-/*
- * 4. Page9(0x900)
- *   */
+/* 4. Page9(0x900) */
 #define	rFPGA1_RFMOD				0x900	/* RF mode & OFDM TxSC */ /* RF BW Setting?? */
 #define	rFPGA1_TxBlock				0x904	/* Useless now */
 #define	rFPGA1_DebugSelect			0x908	/* Useless now */
@@ -131,8 +114,8 @@
 
 /*
  * 5. PageA(0xA00)
- *
- * Set Control channel to upper or lower. These settings are required only for 40MHz */
+ * Set Control channel to upper or lower. These settings are required only for 40MHz
+ */
 #define		rCCK0_System				0xa00
 
 #define		rCCK0_AFESetting			0xa04	/* Disable init gain now */ /* Select RX path by RSSI */
@@ -155,9 +138,7 @@
 #define		rCCK0_FACounterLower      	0xa5c  /* 0xa5b */
 #define		rCCK0_FACounterUpper      	0xa58  /* 0xa5c */
 
-/*
- * PageB(0xB00)
- *   */
+/* PageB(0xB00) */
 #define rPdp_AntA						0xb00
 #define rPdp_AntA_4						0xb04
 #define rPdp_AntA_8						0xb08
@@ -191,8 +172,6 @@
 
 #define rConfig_Pmpd_AntB				0xb98
 
-#define rBndB							0xba0
-
 #define rAPK							0xbd8
 #define rPm_Rx0_AntA					0xbdc
 #define rPm_Rx1_AntA					0xbe0
@@ -202,9 +181,8 @@
 #define rPm_Rx1_AntB					0xbf0
 #define rPm_Rx2_AntB					0xbf4
 #define rPm_Rx3_AntB					0xbf8
-/*
- * 6. PageC(0xC00)
- *   */
+
+/* 6. PageC(0xC00) */
 #define		rOFDM0_LSTF				0xc00
 
 #define		rOFDM0_TRxPathEnable		0xc04
@@ -265,9 +243,7 @@
 #define		rOFDM0_FrameSync				0xcf0
 #define		rOFDM0_DFSReport				0xcf4
 
-/*
- * 7. PageD(0xD00)
- *   */
+/* 7. PageD(0xD00) */
 #define		rOFDM1_LSTF					0xd00
 #define		rOFDM1_TRxPathEnable			0xd04
 
@@ -300,10 +276,7 @@
 #define		rOFDM_RxEVMCSI				0xdd8
 #define		rOFDM_SIGReport				0xddc
 
-
-/*
- * 8. PageE(0xE00)
- *   */
+/* 8. PageE(0xE00) */
 #define		rTxAGC_A_Rate18_06			0xe00
 #define		rTxAGC_A_Rate54_24			0xe04
 #define		rTxAGC_A_CCK1_Mcs32			0xe08
@@ -361,37 +334,7 @@
 #define		rSleep						0xee0
 #define		rPMPD_ANAEN				0xeec
 
-/*
- * 7. RF Register 0x00-0x2E (RF 8256)
- * RF-0222D 0x00-3F
- *
- * Zebra1 */
-#define		rZebra1_HSSIEnable				0x0	/* Useless now */
-#define		rZebra1_TRxEnable1				0x1
-#define		rZebra1_TRxEnable2				0x2
-#define		rZebra1_AGC					0x4
-#define		rZebra1_ChargePump			0x5
-#define		rZebra1_Channel				0x7	/* RF channel switch */
-
-/* #endif */
-#define		rZebra1_TxGain					0x8	/* Useless now */
-#define		rZebra1_TxLPF					0x9
-#define		rZebra1_RxLPF					0xb
-#define		rZebra1_RxHPFCorner			0xc
-
-/* Zebra4 */
-#define		rGlobalCtrl						0	/* Useless now */
-#define		rRTL8256_TxLPF					19
-#define		rRTL8256_RxLPF					11
-
-/* RTL8258 */
-#define		rRTL8258_TxLPF					0x11	/* Useless now */
-#define		rRTL8258_RxLPF					0x13
-#define		rRTL8258_RSSILPF				0xa
-
-/*
- * RL6052 Register definition
- *   */
+/* RL6052 Register definition */
 #define		RF_AC						0x00	/*  */
 
 #define		RF_IQADJ_G1				0x01	/*  */
@@ -470,10 +413,7 @@
 #define	RF_WE_LUT					0xEF
 #define	RF_S0S1					0xB0
 
-/*
- * Bit Mask
- *
- * 1. Page1(0x100) */
+/* Bit Mask - 1. Page1(0x100) */
 #define		bBBResetB						0x100	/* Useless now? */
 #define		bGlobalResetB					0x200
 #define		bOFDMTxStart					0x4
@@ -1019,53 +959,7 @@
 #define		bUChCfg				0x7000000
 #define		bUpdEqz			0x8000000
 
-/* Rx Pseduo noise */
-#define		bRxPesudoNoiseOn		0x20000000	/* Useless */
-#define		bRxPesudoNoise_A		0xff
-#define		bRxPesudoNoise_B		0xff00
-#define		bRxPesudoNoise_C		0xff0000
-#define		bRxPesudoNoise_D		0xff000000
-#define		bPesudoNoiseState_A	0xffff
-#define		bPesudoNoiseState_B	0xffff0000
-#define		bPesudoNoiseState_C	0xffff
-#define		bPesudoNoiseState_D	0xffff0000
-
-/* 7. RF Register
- * Zebra1 */
-#define		bZebra1_HSSIEnable		0x8		/* Useless */
-#define		bZebra1_TRxControl		0xc00
-#define		bZebra1_TRxGainSetting	0x07f
-#define		bZebra1_RxCorner		0xc00
-#define		bZebra1_TxChargePump	0x38
-#define		bZebra1_RxChargePump	0x7
-#define		bZebra1_ChannelNum	0xf80
-#define		bZebra1_TxLPFBW		0x400
-#define		bZebra1_RxLPFBW		0x600
-
-/* Zebra4 */
-#define		bRTL8256RegModeCtrl1	0x100	/* Useless */
-#define		bRTL8256RegModeCtrl0	0x40
-#define		bRTL8256_TxLPFBW		0x18
-#define		bRTL8256_RxLPFBW		0x600
-
-/* RTL8258 */
-#define		bRTL8258_TxLPFBW		0xc	/* Useless */
-#define		bRTL8258_RxLPFBW		0xc00
-#define		bRTL8258_RSSILPFBW	0xc0
-
-
-/*
- * Other Definition
- *   */
-
-/* byte endable for sb_write */
-#define		bByte0				0x1	/* Useless */
-#define		bByte1				0x2
-#define		bByte2				0x4
-#define		bByte3				0x8
-#define		bWord0				0x3
-#define		bWord1				0xc
-#define		bDWord				0xf
+/* Other Definition */
 
 /* for PutRegsetting & GetRegSetting BitMask */
 #define		bMaskByte0			0xff	/* Reg 0xc50 rOFDM0_XAAGCCore~0xC6f */
@@ -1081,12 +975,8 @@
 #define		bMaskOFDM_D		0xffc00000
 #define		bMaskCCK			0x3f3f3f3f
 
-
 #define		bEnable			0x1	/* Useless */
 #define		bDisable		0x0
-
-#define		LeftAntenna		0x0	/* Useless */
-#define		RightAntenna	0x1
 
 #define		tCheckTxStatus		500   /* 500ms */ /* Useless */
 #define		tUpdateRxCounter	100   /* 100ms */
@@ -1109,14 +999,5 @@
  * #define bMaxItem_PHY_11B          0x16
  * #define bMaxItem_OFDM_PHY0        0x29
  * #define bMaxItem_OFDM_PHY1        0x0 */
-
-#define		bPMACControl		0x0		/* Useless */
-#define		bWMACControl		0x1
-#define		bWNICControl		0x2
-
-#define		PathA			0x0	/* Useless */
-#define		PathB			0x1
-#define		PathC			0x2
-#define		PathD			0x3
 
 #endif
