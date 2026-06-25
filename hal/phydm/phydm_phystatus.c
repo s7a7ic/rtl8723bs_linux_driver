@@ -659,10 +659,6 @@ void phydm_process_rssi_for_dm(
 		odm_process_rssi_for_ant_div(p_dm, p_phy_info, p_pktinfo);
 #endif
 	}
-#if (defined(CONFIG_PATH_DIVERSITY))
-	else if (p_dm->support_ability & ODM_BB_PATH_DIV)
-		phydm_process_rssi_for_path_div(p_dm, p_phy_info, p_pktinfo);
-#endif
 	/* -----------------Smart Antenna Debug Message------------------ */
 
 	undecorated_smoothed_cck =  p_sta->rssi_stat.rssi_cck;

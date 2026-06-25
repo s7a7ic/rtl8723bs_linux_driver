@@ -6,8 +6,7 @@
  ******************************************************************************/
 #include "phydm_precomp.h"
 
-void
-phydm_set_crystal_cap(
+void phydm_set_crystal_cap(
 	void					*p_dm_void,
 	u8					crystal_cap
 )
@@ -21,52 +20,18 @@ phydm_set_crystal_cap(
 	crystal_cap = crystal_cap & 0x3F;
 	p_cfo_track->crystal_cap = crystal_cap;
 
-	if (p_dm->support_ic_type & (ODM_RTL8188E | ODM_RTL8188F)) {
-		#if (RTL8188E_SUPPORT == 1) || (RTL8188F_SUPPORT == 1)
-		/* write 0x24[22:17] = 0x24[16:11] = crystal_cap */
-		odm_set_bb_reg(p_dm, REG_AFE_XTAL_CTRL, 0x007ff800, (crystal_cap | (crystal_cap << 6)));
-		#endif
-	}
-	#if (RTL8812A_SUPPORT == 1)
-	else if (p_dm->support_ic_type & ODM_RTL8812) {
-	
-		/* write 0x2C[30:25] = 0x2C[24:19] = crystal_cap */
-		odm_set_bb_reg(p_dm, REG_MAC_PHY_CTRL, 0x7FF80000, (crystal_cap | (crystal_cap << 6)));
-		
-	} 
-	#endif
 	#if (RTL8703B_SUPPORT == 1) || (RTL8723B_SUPPORT == 1) || (RTL8192E_SUPPORT == 1) || (RTL8821A_SUPPORT == 1) || (RTL8723D_SUPPORT == 1)
-	else if ((p_dm->support_ic_type & (ODM_RTL8703B | ODM_RTL8723B | ODM_RTL8192E | ODM_RTL8821 | ODM_RTL8723D))) {
+	if ((p_dm->support_ic_type & (ODM_RTL8703B | ODM_RTL8723B | ODM_RTL8192E | ODM_RTL8821 | ODM_RTL8723D))) {
 	
 		/* 0x2C[23:18] = 0x2C[17:12] = crystal_cap */
 		odm_set_bb_reg(p_dm, REG_MAC_PHY_CTRL, 0x00FFF000, (crystal_cap | (crystal_cap << 6)));
 		
 	}
 	#endif
-	#if (RTL8814A_SUPPORT == 1)	
-	else if (p_dm->support_ic_type & ODM_RTL8814A) {
-	
-		/* write 0x2C[26:21] = 0x2C[20:15] = crystal_cap */
-		odm_set_bb_reg(p_dm, REG_MAC_PHY_CTRL, 0x07FF8000, (crystal_cap | (crystal_cap << 6)));
-		
-	}
-	#endif
-	#if (RTL8822B_SUPPORT == 1) || (RTL8821C_SUPPORT == 1) || (RTL8197F_SUPPORT == 1)
-	else if (p_dm->support_ic_type & (ODM_RTL8822B | ODM_RTL8821C | ODM_RTL8197F)) {
-	
-		/* write 0x24[30:25] = 0x28[6:1] = crystal_cap */
-		odm_set_bb_reg(p_dm, REG_AFE_XTAL_CTRL, 0x7e000000, crystal_cap);
-		odm_set_bb_reg(p_dm, REG_AFE_PLL_CTRL, 0x7e, crystal_cap);
-		
-	}
-	#endif
 	PHYDM_DBG(p_dm, DBG_CFO_TRK, ("Set rystal_cap = 0x%x\n", p_cfo_track->crystal_cap));
 }
 
-u8
-odm_get_default_crytaltal_cap(
-	void					*p_dm_void
-)
+u8 odm_get_default_crytaltal_cap(void *p_dm_void)
 {
 	struct PHY_DM_STRUCT					*p_dm = (struct PHY_DM_STRUCT *)p_dm_void;
 	u8						crystal_cap = 0x20;

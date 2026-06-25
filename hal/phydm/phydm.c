@@ -330,8 +330,6 @@ void odm_dm_init(struct PHY_DM_STRUCT *p_dm)
 	phydm_dynamic_rx_path_init(p_dm);
 #endif
 	odm_auto_channel_select_init(p_dm);
-	phydm_path_diversity_init(p_dm);
-
 	#ifdef CONFIG_PSD_TOOL
 	phydm_psd_init(p_dm);
 	#endif
@@ -404,8 +402,6 @@ void phydm_support_ability_debug(
 
 		if (dm_value[1] == 1) { /* enable */
 			p_dm->support_ability |= (one << dm_value[0]);
-			if (BIT(dm_value[0]) & ODM_BB_PATH_DIV)
-				phydm_path_diversity_init(p_dm);
 		} else if (dm_value[1] == 2)	/* disable */
 			p_dm->support_ability &= ~(one << dm_value[0]);
 		else
@@ -749,7 +745,6 @@ void phydm_watchdog(struct PHY_DM_STRUCT *p_dm)
 
 	phydm_adaptivity(p_dm);
 	phydm_ra_info_watchdog(p_dm);
-	odm_path_diversity(p_dm);
 	odm_cfo_tracking(p_dm);
 	odm_antenna_diversity(p_dm);
 #ifdef CONFIG_DYNAMIC_RX_PATH

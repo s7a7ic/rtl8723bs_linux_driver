@@ -9,7 +9,6 @@
 
 #include "phydm_pre_define.h"
 #include "phydm_dig.h"
-#include "phydm_pathdiv.h"
 #include "phydm_antdiv.h"
 #include "phydm_rainfo.h"
 #include "phydm_cfotracking.h"
@@ -786,11 +785,6 @@ struct	phydm_iot_center {
 #endif
 
 	struct _IQK_INFORMATION				IQK_info;
-
-#if (defined(CONFIG_PATH_DIVERSITY))
-	struct _ODM_PATH_DIVERSITY_			dm_path_div;
-#endif
-
 	struct	phydm_pause_lv				pause_lv_table;	
 	struct	phydm_api_stuc 				api_table;
 #ifdef PHYDM_POWER_TRAINING_SUPPORT
