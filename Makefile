@@ -69,11 +69,9 @@ CONFIG_RTW_ADAPTIVITY_MODE = normal
 CONFIG_SIGNAL_SCALE_MAPPING = n
 CONFIG_80211W = n
 CONFIG_REDUCE_TX_CPU_LOADING = n
-CONFIG_WIFI_MONITOR = n
 CONFIG_APPEND_VENDOR_IE_ENABLE = n
 CONFIG_RTW_NAPI = y
 CONFIG_RTW_GRO = y
-CONFIG_RTW_IPCAM_APPLICATION = n
 CONFIG_RTW_WIFI_HAL = y
 ########################## Debug ###########################
 CONFIG_RTW_DEBUG = y
@@ -321,23 +319,12 @@ ifeq ($(CONFIG_REDUCE_TX_CPU_LOADING), y)
 ccflags-y += -DCONFIG_REDUCE_TX_CPU_LOADING
 endif
 
-ifeq ($(CONFIG_WIFI_MONITOR), y)
-ccflags-y += -DCONFIG_WIFI_MONITOR
-endif
-
 ifeq ($(CONFIG_RTW_NAPI), y)
 ccflags-y += -DCONFIG_RTW_NAPI
 endif
 
 ifeq ($(CONFIG_RTW_GRO), y)
 ccflags-y += -DCONFIG_RTW_GRO
-endif
-
-ifeq ($(CONFIG_RTW_IPCAM_APPLICATION), y)
-ccflags-y += -DCONFIG_RTW_IPCAM_APPLICATION
-ifeq ($(CONFIG_WIFI_MONITOR), n)
-ccflags-y += -DCONFIG_WIFI_MONITOR
-endif
 endif
 
 ifeq ($(CONFIG_RTW_WIFI_HAL), y)
