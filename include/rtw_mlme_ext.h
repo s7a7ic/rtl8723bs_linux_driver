@@ -639,10 +639,6 @@ struct mlme_ext_priv {
 	_timer		survey_timer;
 	_timer		link_timer;
 
-#ifdef CONFIG_RTW_REPEATER_SON
-	_timer		rson_scan_timer;
-#endif
-
 	systime last_scan_time;
 	u8	scan_abort;
 	u8	tx_rate; /* TXRATE when USERATE is set. */
@@ -1010,9 +1006,6 @@ void linked_status_chk(_adapter *padapter, u8 from_timer);
 void _linked_info_dump(_adapter *padapter);
 
 void survey_timer_hdl(void *ctx);
-#ifdef CONFIG_RTW_REPEATER_SON
-void rson_timer_hdl(void *ctx);
-#endif
 void link_timer_hdl(void *ctx);
 void addba_timer_hdl(void *ctx);
 #ifdef CONFIG_IEEE80211W

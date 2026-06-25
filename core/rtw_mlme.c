@@ -2716,12 +2716,6 @@ static int rtw_check_roaming_candidate(struct mlme_priv *mlme
 	int updated = false;
 	_adapter *adapter = container_of(mlme, _adapter, mlmepriv);
 
-#if defined(CONFIG_RTW_REPEATER_SON) &&  (!defined(CONFIG_RTW_REPEATER_SON_ROOT))
-	if (rtw_rson_isupdate_roamcan(mlme, candidate, competitor))
-		goto  update;
-	goto exit;
-#endif
-
 	if (is_same_ess(&competitor->network, &mlme->cur_network.network) == false)
 		goto exit;
 
@@ -2816,36 +2810,13 @@ int rtw_select_roaming_candidate(struct mlme_priv *mlme)
 
 	if (candidate == NULL) {
 	/*	if parent note lost the path to root and there is no other cadidate, report disconnection	*/
-#if defined(CONFIG_RTW_REPEATER_SON) &&  (!defined(CONFIG_RTW_REPEATER_SON_ROOT))
-		struct rtw_rson_struct  rson_curr;
-		u8 rson_score;
-
-		rtw_get_rson_struct(&(mlme->cur_network_scanned->network), &rson_curr);
-		rson_score = rtw_cal_rson_score(&rson_curr, mlme->cur_network_scanned->network.Rssi);
-		if (check_fwstate(mlme, _FW_LINKED)
-			&& ((rson_score == RTW_RSON_SCORE_NOTCNNT)
-			|| (rson_score == RTW_RSON_SCORE_NOTSUP)))
-			receive_disconnect(adapter, mlme->cur_network_scanned->network.MacAddress
-								, WLAN_REASON_EXPIRATION_CHK, false);
-#endif
 		RTW_INFO("%s: return _FAIL(candidate == NULL)\n", __FUNCTION__);
 		ret = _FAIL;
 		goto exit;
 	} else {
-#if defined(CONFIG_RTW_REPEATER_SON) &&  (!defined(CONFIG_RTW_REPEATER_SON_ROOT))
-		struct rtw_rson_struct  rson_curr;
-		u8 rson_score;
-
-		rtw_get_rson_struct(&(candidate->network), &rson_curr);
-		rson_score = rtw_cal_rson_score(&rson_curr, candidate->network.Rssi);
-		RTW_INFO("%s: candidate: %s("MAC_FMT", ch:%u) rson_score:%d\n", __FUNCTION__,
-			candidate->network.Ssid.Ssid, MAC_ARG(candidate->network.MacAddress),
-			 candidate->network.Configuration.DSConfig, rson_score);
-#else
 		RTW_INFO("%s: candidate: %s("MAC_FMT", ch:%u)\n", __FUNCTION__,
 			candidate->network.Ssid.Ssid, MAC_ARG(candidate->network.MacAddress),
 			 candidate->network.Configuration.DSConfig);
-#endif
 		mlme->roam_network = candidate;
 
 		if (_rtw_memcmp(candidate->network.MacAddress, mlme->roam_tgt_addr, ETH_ALEN) == true)
@@ -2870,25 +2841,6 @@ static int rtw_check_join_candidate(struct mlme_priv *mlme
 {
 	int updated = false;
 	_adapter *adapter = container_of(mlme, _adapter, mlmepriv);
-
-#if defined(CONFIG_RTW_REPEATER_SON) &&  (!defined(CONFIG_RTW_REPEATER_SON_ROOT))
-	s16 rson_score;
-	struct rtw_rson_struct  rson_data;
-
-	if (rtw_rson_choose(candidate, competitor)) {
-		*candidate = competitor;
-		rtw_get_rson_struct(&((*candidate)->network), &rson_data);
-		rson_score = rtw_cal_rson_score(&rson_data, (*candidate)->network.Rssi);
-		RTW_INFO("[assoc_ssid:%s] new candidate: %s("MAC_FMT", ch%u) rson_score:%d\n",
-			 mlme->assoc_ssid.Ssid,
-			 (*candidate)->network.Ssid.Ssid,
-			 MAC_ARG((*candidate)->network.MacAddress),
-			 (*candidate)->network.Configuration.DSConfig,
-			 rson_score);
-		return true;
-	}
-	return false;
-#endif
 
 	/* check bssid, if needed */
 	if (mlme->assoc_by_bssid == true) {

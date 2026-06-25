@@ -100,10 +100,6 @@ typedef struct _ADAPTER _adapter, ADAPTER, *PADAPTER;
 	#include <rtw_btcoex.h>
 #endif /* CONFIG_BT_COEXIST */
 
-#ifdef CONFIG_RTW_REPEATER_SON
-	#include <rtw_rson.h>
-#endif /*CONFIG_RTW_REPEATER_SON */
-
 #define SPEC_DEV_ID_NONE BIT(0)
 #define SPEC_DEV_ID_DISABLE_HT BIT(1)
 #define SPEC_DEV_ID_ENABLE_PS BIT(2)
@@ -819,10 +815,6 @@ struct dvobj_priv {
 	u8 nr_ap_if; /* total interface s number of ap/go mode. */
 	u16 inter_bcn_space; /* unit:ms */
 	_queue	ap_if_q;
-#ifdef CONFIG_RTW_REPEATER_SON
-	struct rtw_rson_struct  rson_data;
-#endif
-
 #endif
 
 	struct macid_ctl_t macid_ctl;
@@ -1043,10 +1035,6 @@ struct _ADAPTER {
 #ifdef CONFIG_TDLS
 	struct tdls_info	tdlsinfo;
 #endif /* CONFIG_TDLS */
-
-#ifdef CONFIG_RTW_REPEATER_SON
-	u8	rtw_rson_scanstage;
-#endif
 
 #ifdef CONFIG_BT_COEXIST_SOCKET_TRX
 	struct bt_coex_info coex_info;

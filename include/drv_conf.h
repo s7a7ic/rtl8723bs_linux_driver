@@ -9,23 +9,6 @@
 #include "autoconf.h"
 #include "hal_ic_cfg.h"
 
-#ifdef CONFIG_RTW_REPEATER_SON
-	#ifndef CONFIG_AP
-		#define CONFIG_AP
-	#endif
-	#ifndef CONFIG_CONCURRENT_MODE
-		#define CONFIG_CONCURRENT_MODE
-	#endif
-	#ifndef CONFIG_RTW_REPEATER_SON_ID
-		#define CONFIG_RTW_REPEATER_SON_ID			0x02040608
-	#endif
-	//#define CONFIG_RTW_REPEATER_SON_ROOT
-	#ifndef CONFIG_RTW_REPEATER_SON_ROOT
-		#define CONFIG_LAYER2_ROAMING_ACTIVE
-	#endif
-	#undef CONFIG_POWER_SAVING
-#endif
-
 /*
 #if defined(CONFIG_HAS_EARLYSUSPEND) && defined(CONFIG_RESUME_IN_WORKQUEUE)
 	#warning "You have CONFIG_HAS_EARLYSUSPEND enabled in your system, we disable CONFIG_RESUME_IN_WORKQUEUE automatically"

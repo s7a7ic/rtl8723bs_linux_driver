@@ -75,7 +75,6 @@ CONFIG_APPEND_VENDOR_IE_ENABLE = n
 CONFIG_RTW_NAPI = y
 CONFIG_RTW_GRO = y
 CONFIG_RTW_IPCAM_APPLICATION = n
-CONFIG_RTW_REPEATER_SON = n
 CONFIG_RTW_WIFI_HAL = y
 ########################## Debug ###########################
 CONFIG_RTW_DEBUG = y
@@ -339,10 +338,6 @@ ifeq ($(CONFIG_RTW_GRO), y)
 ccflags-y += -DCONFIG_RTW_GRO
 endif
 
-ifeq ($(CONFIG_RTW_REPEATER_SON), y)
-ccflags-y += -DCONFIG_RTW_REPEATER_SON
-endif
-
 ifeq ($(CONFIG_RTW_IPCAM_APPLICATION), y)
 ccflags-y += -DCONFIG_RTW_IPCAM_APPLICATION
 ifeq ($(CONFIG_WIFI_MONITOR), n)
@@ -412,7 +407,6 @@ rtk_core :=	core/rtw_cmd.o \
 		core/rtw_sta_mgt.o \
 		core/rtw_ap.o \
 		core/rtw_xmit.o	\
-		core/rtw_rson.o \
 		core/rtw_tdls.o \
 		core/rtw_sreset.o \
 		core/rtw_btcoex_wifionly.o \
