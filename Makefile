@@ -58,7 +58,6 @@ CONFIG_POWER_SAVING = n
 CONFIG_HW_PWRP_DETECTION = n
 CONFIG_WIFI_TEST = n
 CONFIG_BT_COEXIST = y
-CONFIG_INTEL_WIDI = n
 CONFIG_EFUSE_CONFIG_FILE = y
 CONFIG_EXT_CLK = n
 CONFIG_LOAD_PHY_PARA_FROM_FILE = y
@@ -195,10 +194,6 @@ endif
 
 ifeq ($(CONFIG_BT_COEXIST), y)
 ccflags-y += -DCONFIG_BT_COEXIST
-endif
-
-ifeq ($(CONFIG_INTEL_WIDI), y)
-ccflags-y += -DCONFIG_INTEL_WIDI
 endif
 
 ifeq ($(CONFIG_EFUSE_CONFIG_FILE), y)
@@ -430,8 +425,6 @@ rtk_core += core/rtw_sdio.o
 endif
 
 $(MODULE_NAME)-y += $(rtk_core)
-
-$(MODULE_NAME)-$(CONFIG_INTEL_WIDI) += core/rtw_intel_widi.o
 
 $(MODULE_NAME)-y += $(_OS_INTFS_FILES)
 $(MODULE_NAME)-y += $(_HAL_INTFS_FILES)
