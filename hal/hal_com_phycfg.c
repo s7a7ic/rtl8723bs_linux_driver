@@ -3487,42 +3487,11 @@ PHY_SetTxPowerIndex(
 	IN	u8				Rate
 )
 {
-	if (IS_HARDWARE_TYPE_8814A(pAdapter)) {
-#if (RTL8814A_SUPPORT == 1)
-		PHY_SetTxPowerIndex_8814A(pAdapter, PowerIndex, RFPath, Rate);
-#endif
-	} else if (IS_HARDWARE_TYPE_JAGUAR(pAdapter)) {
-#if ((RTL8812A_SUPPORT == 1) || (RTL8821A_SUPPORT == 1))
-		PHY_SetTxPowerIndex_8812A(pAdapter, PowerIndex, RFPath, Rate);
-#endif
-	} else if (IS_HARDWARE_TYPE_8723B(pAdapter)) {
+  if (IS_HARDWARE_TYPE_8723B(pAdapter)) {
 #if (RTL8723B_SUPPORT == 1)
 		PHY_SetTxPowerIndex_8723B(pAdapter, PowerIndex, RFPath, Rate);
 #endif
-	} else if (IS_HARDWARE_TYPE_8703B(pAdapter)) {
-#if (RTL8703B_SUPPORT == 1)
-		PHY_SetTxPowerIndex_8703B(pAdapter, PowerIndex, RFPath, Rate);
-#endif
-	} else if (IS_HARDWARE_TYPE_8723D(pAdapter)) {
-#if (RTL8723D_SUPPORT == 1)
-		PHY_SetTxPowerIndex_8723D(pAdapter, PowerIndex, RFPath, Rate);
-#endif
-	} else if (IS_HARDWARE_TYPE_8192E(pAdapter)) {
-#if (RTL8192E_SUPPORT == 1)
-		PHY_SetTxPowerIndex_8192E(pAdapter, PowerIndex, RFPath, Rate);
-#endif
-	} else if (IS_HARDWARE_TYPE_8188E(pAdapter)) {
-#if (RTL8188E_SUPPORT == 1)
-		PHY_SetTxPowerIndex_8188E(pAdapter, PowerIndex, RFPath, Rate);
-#endif
-	} else if (IS_HARDWARE_TYPE_8188F(pAdapter)) {
-#if (RTL8188F_SUPPORT == 1)
-		PHY_SetTxPowerIndex_8188F(pAdapter, PowerIndex, RFPath, Rate);
-#endif
-	} else if (IS_HARDWARE_TYPE_8822B(pAdapter))
-		rtw_hal_set_tx_power_index(pAdapter, PowerIndex, RFPath, Rate);
-	else if (IS_HARDWARE_TYPE_8821C(pAdapter))
-		rtw_hal_set_tx_power_index(pAdapter, PowerIndex, RFPath, Rate);
+	}
 }
 
 void dump_tx_power_idx_title(void *sel, _adapter *adapter)

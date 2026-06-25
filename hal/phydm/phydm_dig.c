@@ -6,10 +6,7 @@
  ******************************************************************************/
 #include "phydm_precomp.h"
 
-boolean
-phydm_dig_go_up_check(
-	void		*p_dm_void
-)
+boolean phydm_dig_go_up_check(void *p_dm_void)
 {
 	struct PHY_DM_STRUCT		*p_dm = (struct PHY_DM_STRUCT *)p_dm_void;
 	struct _CCX_INFO			*ccx_info = &p_dm->dm_ccx_info;
@@ -631,12 +628,6 @@ u8 phydm_dig_igi_start_value(
 					("DFS band: one shot IGI to 0x%x most\n", p_dig_t->rx_gain_range_max));
 			} else
 				current_igi = p_dig_t->rx_gain_range_min;
-#if (DM_ODM_SUPPORT_TYPE & (ODM_WIN | ODM_CE))
-#if (RTL8812A_SUPPORT == 1)
-			if (p_dm->support_ic_type == ODM_RTL8812)
-				odm_config_bb_with_header_file(p_dm, CONFIG_BB_AGC_TAB_DIFF);
-#endif
-#endif
 			PHYDM_DBG(p_dm, DBG_DIG,
 				("First connect case: IGI does on-shot to 0x%x\n", current_igi));
 		} else {
@@ -1647,4 +1638,3 @@ phydm_dig_debug(
 	*_used = used;
 	*_out_len = out_len;
 }
-
