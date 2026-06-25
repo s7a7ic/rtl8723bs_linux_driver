@@ -3579,18 +3579,6 @@ static void rtl8723b_fill_default_txdesc(
 		SET_TX_DESC_USB_TXAGG_NUM_8723B(pbuf, pxmitframe->agg_num);
 #endif
 
-#ifdef CONFIG_TDLS
-#ifdef CONFIG_XMIT_ACK
-		/* CCX-TXRPT ack for xmit mgmt frames. */
-		if (pxmitframe->ack_report) {
-#ifdef DBG_CCX
-			RTW_INFO("%s set spe_rpt\n", __func__);
-#endif
-			SET_TX_DESC_SPE_RPT_8723B(pbuf, 1);
-			SET_TX_DESC_SW_DEFINE_8723B(pbuf, (u8)(GET_PRIMARY_ADAPTER(padapter)->xmitpriv.seq_no));
-		}
-#endif /* CONFIG_XMIT_ACK */
-#endif
 	} else if (pxmitframe->frame_tag == MGNT_FRAMETAG) {
 
 		SET_TX_DESC_MACID_8723B(pbuf, pattrib->mac_id);
@@ -4659,11 +4647,6 @@ u8 SetHwReg8723B(PADAPTER padapter, u8 variable, u8 *val)
 			 __func__, rtw_read8(padapter, 0x4e));
 	}
 	break;
-#endif
-#if defined(CONFIG_TDLS) && defined(CONFIG_TDLS_CH_SW)
-	case HW_VAR_TDLS_BCN_EARLY_C2H_RPT:
-		rtl8723b_set_BcnEarly_C2H_Rpt_cmd(padapter, *val);
-		break;
 #endif
 	default:
 		ret = SetHwReg(padapter, variable, val);

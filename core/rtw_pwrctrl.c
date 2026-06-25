@@ -538,10 +538,6 @@ u8 PS_RDY_CHECK(_adapter *padapter)
 		|| MLME_IS_MESH(padapter)
 		|| check_fwstate(pmlmepriv, WIFI_ADHOC_MASTER_STATE | WIFI_ADHOC_STATE)
 		|| rtw_is_scan_deny(padapter)
-		#ifdef CONFIG_TDLS
-		/* TDLS link is established. */
-		|| (padapter->tdlsinfo.link_established == true)
-		#endif /* CONFIG_TDLS		 */
 	)
 		return false;
 
@@ -678,13 +674,6 @@ void rtw_set_ps_mode(PADAPTER padapter, u8 ps_mode, u8 smart_ps, u8 bcn_ant_mode
 	struct dvobj_priv *psdpriv = padapter->dvobj;
 	struct debug_priv *pdbgpriv = &psdpriv->drv_dbg;
 	struct registry_priv *pregistrypriv = &padapter->registrypriv;
-#ifdef CONFIG_TDLS
-	struct sta_priv *pstapriv = &padapter->stapriv;
-	_irqL irqL;
-	int i, j;
-	_list	*plist, *phead;
-	struct sta_info *ptdls_sta;
-#endif /* CONFIG_TDLS */
 #ifdef CONFIG_LPS_PG
 	u8 lps_pg_hdl_id = 0;
 #endif
@@ -747,20 +736,6 @@ void rtw_set_ps_mode(PADAPTER padapter, u8 ps_mode, u8 smart_ps, u8 bcn_ant_mode
 				pwrpriv->lps_leave_cnts++;
 			else
 				pwrpriv->lps_leave_cnts = 0;
-#ifdef CONFIG_TDLS
-			for (i = 0; i < NUM_STA; i++) {
-				phead = &(pstapriv->sta_hash[i]);
-				plist = get_next(phead);
-
-				while ((rtw_end_of_queue_search(phead, plist)) == false) {
-					ptdls_sta = LIST_CONTAINOR(plist, struct sta_info, hash_list);
-
-					if (ptdls_sta->tdls_sta_state & TDLS_LINKED_STATE)
-						issue_nulldata_to_TDLS_peer_STA(padapter, ptdls_sta->cmn.mac_addr, 0, 0, 0);
-					plist = get_next(plist);
-				}
-			}
-#endif /* CONFIG_TDLS */
 
 			pwrpriv->pwr_mode = ps_mode;
 			rtw_set_rpwm(padapter, PS_STATE_S4);
@@ -832,20 +807,6 @@ void rtw_set_ps_mode(PADAPTER padapter, u8 ps_mode, u8 smart_ps, u8 bcn_ant_mode
 				pwrpriv->lps_enter_cnts++;
 			else
 				pwrpriv->lps_enter_cnts = 0;
-#ifdef CONFIG_TDLS
-			for (i = 0; i < NUM_STA; i++) {
-				phead = &(pstapriv->sta_hash[i]);
-				plist = get_next(phead);
-
-				while ((rtw_end_of_queue_search(phead, plist)) == false) {
-					ptdls_sta = LIST_CONTAINOR(plist, struct sta_info, hash_list);
-
-					if (ptdls_sta->tdls_sta_state & TDLS_LINKED_STATE)
-						issue_nulldata_to_TDLS_peer_STA(padapter, ptdls_sta->cmn.mac_addr, 1, 0, 0);
-					plist = get_next(plist);
-				}
-			}
-#endif /* CONFIG_TDLS */
 
 #ifdef CONFIG_BT_COEXIST
 			rtw_btcoex_LpsNotify(padapter, ps_mode);

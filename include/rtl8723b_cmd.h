@@ -179,12 +179,6 @@ void rtl8723b_download_rsvd_page(PADAPTER padapter, u8 mstatus);
 	void rtl8723b_download_BTCoex_AP_mode_rsvd_page(PADAPTER padapter);
 #endif /* CONFIG_BT_COEXIST */
 
-#ifdef CONFIG_TDLS
-	#ifdef CONFIG_TDLS_CH_SW
-		void rtl8723b_set_BcnEarly_C2H_Rpt_cmd(PADAPTER padapter, u8 enable);
-	#endif
-#endif
-
 void rtl8723b_set_FwPwrModeInIPS_cmd(PADAPTER padapter, u8 cmd_param);
 
 s32 FillH2CCmd8723B(PADAPTER padapter, u8 ElementID, u32 CmdLen, u8 *pCmdBuffer);

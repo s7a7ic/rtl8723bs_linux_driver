@@ -745,15 +745,6 @@ s32 c2h_handler(_adapter *adapter, u8 id, u8 seq, u8 plen, u8 *payload)
 		c2h_iqk_offload(adapter, payload, plen);
 		break;
 
-#if defined(CONFIG_TDLS) && defined(CONFIG_TDLS_CH_SW)
-	case C2H_FW_CHNL_SWITCH_COMPLETE:
-		rtw_tdls_chsw_oper_done(adapter);
-		break;
-	case C2H_BCN_EARLY_RPT:
-		rtw_tdls_ch_sw_back_to_base_chnl(adapter);
-		break;
-#endif
-
 #ifdef CONFIG_RTW_MAC_HIDDEN_RPT
 	case C2H_MAC_HIDDEN_RPT:
 		c2h_mac_hidden_rpt_hdl(adapter, payload, plen);

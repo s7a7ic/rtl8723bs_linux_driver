@@ -933,10 +933,6 @@ static u8 _rtw_phydm_rfk_condition_check(_adapter *adapter)
 	if (rtw_mi_stayin_union_ch_chk(adapter))
 		rst = true;
 
-	#if defined(CONFIG_TDLS) && defined(CONFIG_TDLS_CH_SW)
-
-	#endif
-
 	return rst;
 }
 

@@ -289,10 +289,6 @@ struct pkt_attrib {
 	/* union Keytype	dot11tkiprxmickey; */
 	union Keytype	dot118021x_UncstKey;
 
-#ifdef CONFIG_TDLS
-	u8 direct_link;
-	struct sta_info *ptdls_sta;
-#endif /* CONFIG_TDLS */
 	u8 key_type;
 
 	u8 icmp_pkt;
@@ -626,23 +622,16 @@ extern s32 rtw_xmitframe_coalesce(_adapter *padapter, _pkt *pkt, struct xmit_fra
 #ifdef CONFIG_IEEE80211W
 extern s32 rtw_mgmt_xmitframe_coalesce(_adapter *padapter, _pkt *pkt, struct xmit_frame *pxmitframe);
 #endif /* CONFIG_IEEE80211W */
-#ifdef CONFIG_TDLS
-extern struct tdls_txmgmt *ptxmgmt;
-s32 rtw_xmit_tdls_coalesce(_adapter *padapter, struct xmit_frame *pxmitframe, struct tdls_txmgmt *ptxmgmt);
-s32 update_tdls_attrib(_adapter *padapter, struct pkt_attrib *pattrib);
-#endif
+
 s32 _rtw_init_hw_txqueue(struct hw_txqueue *phw_txqueue, u8 ac_tag);
 void _rtw_init_sta_xmit_priv(struct sta_xmit_priv *psta_xmitpriv);
-
 
 s32 rtw_txframes_pending(_adapter *padapter);
 s32 rtw_txframes_sta_ac_pending(_adapter *padapter, struct pkt_attrib *pattrib);
 void rtw_init_hwxmits(struct hw_xmit *phwxmit, sint entry);
 
-
 s32 _rtw_init_xmit_priv(struct xmit_priv *pxmitpriv, _adapter *padapter);
 void _rtw_free_xmit_priv(struct xmit_priv *pxmitpriv);
-
 
 void rtw_alloc_hwxmits(_adapter *padapter);
 void rtw_free_hwxmits(_adapter *padapter);
@@ -651,7 +640,7 @@ s32 rtw_monitor_xmit_entry(struct sk_buff *skb, struct net_device *ndev);
 #endif
 s32 rtw_xmit(_adapter *padapter, _pkt **pkt);
 bool xmitframe_hiq_filter(struct xmit_frame *xmitframe);
-#if defined(CONFIG_AP_MODE) || defined(CONFIG_TDLS)
+#if defined(CONFIG_AP_MODE)
 sint xmitframe_enqueue_for_sleeping_sta(_adapter *padapter, struct xmit_frame *pxmitframe);
 void stop_sta_xmit(_adapter *padapter, struct sta_info *psta);
 void wakeup_sta_to_xmit(_adapter *padapter, struct sta_info *psta);

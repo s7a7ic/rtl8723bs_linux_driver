@@ -586,9 +586,6 @@ void set_channel_bwmode(_adapter *padapter, unsigned char channel, unsigned char
 {
 	u8 center_ch, chnl_offset80 = HAL_PRIME_CHNL_OFFSET_DONT_CARE;
 	struct mlme_ext_priv *pmlmeext = &padapter->mlmeextpriv;
-#if (defined(CONFIG_TDLS) && defined(CONFIG_TDLS_CH_SW))
-	u8 iqk_info_backup = false;
-#endif
 
 	if (padapter->bNotifyChannelChange)
 		RTW_INFO("[%s] ch = %d, offset = %d, bwmode = %d\n", __FUNCTION__, channel, channel_offset, bwmode);
@@ -611,24 +608,7 @@ void set_channel_bwmode(_adapter *padapter, unsigned char channel, unsigned char
 		rtw_set_oper_bw(padapter, bwmode);
 		rtw_set_oper_choffset(padapter, channel_offset);
 
-#if (defined(CONFIG_TDLS) && defined(CONFIG_TDLS_CH_SW))
-		/* To check if we need to backup iqk info after switch chnl & bw */
-		{
-			u8 take_care_iqk, do_iqk;
-
-			rtw_hal_get_hwreg(padapter, HW_VAR_CH_SW_NEED_TO_TAKE_CARE_IQK_INFO, &take_care_iqk);
-			rtw_hal_get_hwreg(padapter, HW_VAR_DO_IQK, &do_iqk);
-			if ((take_care_iqk == true) && (do_iqk == true))
-				iqk_info_backup = true;
-		}
-#endif
-
 		rtw_hal_set_chnl_bw(padapter, center_ch, bwmode, channel_offset, chnl_offset80); /* set center channel */
-
-#if (defined(CONFIG_TDLS) && defined(CONFIG_TDLS_CH_SW))
-		if (iqk_info_backup == true)
-			rtw_hal_ch_sw_iqk_info_backup(padapter);
-#endif
 
 	_exit_critical_mutex(&(adapter_to_dvobj(padapter)->setch_mutex), NULL);
 }
@@ -2449,11 +2429,6 @@ void update_beacon_info(_adapter *padapter, u8 *pframe, uint pkt_len, struct sta
 	unsigned int len;
 	PNDIS_802_11_VARIABLE_IEs	pIE;
 
-#ifdef CONFIG_TDLS
-	struct tdls_info *ptdlsinfo = &padapter->tdlsinfo;
-	u8 tdls_prohibited[] = { 0x00, 0x00, 0x00, 0x00, 0x10 }; /* bit(38): TDLS_prohibited */
-#endif /* CONFIG_TDLS */
-
 	len = pkt_len - (_BEACON_IE_OFFSET_ + WLAN_HDR_A3_LEN);
 
 	for (i = 0; i < len;) {
@@ -2477,14 +2452,6 @@ void update_beacon_info(_adapter *padapter, u8 *pframe, uint pkt_len, struct sta
 			VCS_update(padapter, psta);
 			break;
 
-#ifdef CONFIG_TDLS
-		case _EXT_CAP_IE_:
-			if (check_ap_tdls_prohibited(pIE->data, pIE->Length) == true)
-				ptdlsinfo->ap_prohibited = true;
-			if (check_ap_tdls_ch_switching_prohibited(pIE->data, pIE->Length) == true)
-				ptdlsinfo->ch_switch_prohibited = true;
-			break;
-#endif /* CONFIG_TDLS */
 		default:
 			break;
 		}

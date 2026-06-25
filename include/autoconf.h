@@ -40,14 +40,6 @@
 	#define CONFIG_TX_MCAST2UNI	/* Support IP multicast->unicast */
 #endif
 
-/* Added by Kurt 20110511 */
-#ifdef CONFIG_TDLS
-	#define CONFIG_TDLS_DRIVER_SETUP
-/*	#define CONFIG_TDLS_AUTOSETUP */
-	#define CONFIG_TDLS_AUTOCHECKALIVE
-	#define CONFIG_TDLS_CH_SW	/* Enable this flag only when we confirm that TDLS CH SW is supported in FW */
-#endif
-
 /* #define CONFIG_CONCURRENT_MODE */	/* Set from Makefile */
 #ifdef CONFIG_CONCURRENT_MODE
 	#define CONFIG_RUNTIME_PORT_SWITCH

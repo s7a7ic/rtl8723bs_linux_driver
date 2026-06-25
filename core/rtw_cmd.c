@@ -1560,12 +1560,6 @@ u8 rtw_setstakey_cmd(_adapter *padapter, struct sta_info *sta, u8 key_type, bool
 		_rtw_memcpy(&psetstakey_para->key, &psecuritypriv->dot118021XGrpKey[psecuritypriv->dot118021XGrpKeyid].skey, 16);
 	else if (key_type == UNICAST_KEY)
 		_rtw_memcpy(&psetstakey_para->key, &sta->dot118021x_UncstKey, 16);
-#ifdef CONFIG_TDLS
-	else if (key_type == TDLS_KEY) {
-		_rtw_memcpy(&psetstakey_para->key, sta->tpk.tk, 16);
-		psetstakey_para->algorithm = (u8)sta->dot118021XPrivacy;
-	}
-#endif /* CONFIG_TDLS */
 
 	/* jeff: set this becasue at least sw key is ready */
 	padapter->securitypriv.busetkipkey = true;
@@ -2196,8 +2190,6 @@ u8 rtw_set_csa_cmd(_adapter *padapter, u8 new_ch_no)
 	res = rtw_enqueue_cmd(pcmdpriv, pcmdobj);
 
 exit:
-
-
 	return res;
 }
 
@@ -2207,40 +2199,9 @@ u8 rtw_tdls_cmd(_adapter *padapter, u8 *addr, u8 option)
 	struct	TDLSoption_param	*TDLSoption;
 	struct	mlme_priv *pmlmepriv = &padapter->mlmepriv;
 	struct	cmd_priv   *pcmdpriv = &padapter->cmdpriv;
-
 	u8	res = _SUCCESS;
 
-
-#ifdef CONFIG_TDLS
-
-
-	pcmdobj = (struct	cmd_obj *)rtw_zmalloc(sizeof(struct	cmd_obj));
-	if (pcmdobj == NULL) {
-		res = _FAIL;
-		goto exit;
-	}
-
-	TDLSoption = (struct TDLSoption_param *)rtw_zmalloc(sizeof(struct TDLSoption_param));
-	if (TDLSoption == NULL) {
-		rtw_mfree((u8 *)pcmdobj, sizeof(struct cmd_obj));
-		res = _FAIL;
-		goto exit;
-	}
-
-	_rtw_spinlock(&(padapter->tdlsinfo.cmd_lock));
-	if (addr != NULL)
-		_rtw_memcpy(TDLSoption->addr, addr, 6);
-	TDLSoption->option = option;
-	_rtw_spinunlock(&(padapter->tdlsinfo.cmd_lock));
-	init_h2fwcmd_w_parm_no_rsp(pcmdobj, TDLSoption, GEN_CMD_CODE(_TDLS));
-	res = rtw_enqueue_cmd(pcmdpriv, pcmdobj);
-
-#endif /* CONFIG_TDLS */
-
 exit:
-
-
-
 	return res;
 }
 
@@ -2250,7 +2211,6 @@ u8 rtw_enable_hw_update_tsf_cmd(_adapter *padapter)
 	struct drvextra_cmd_parm	*pdrvextra_cmd_parm;
 	struct cmd_priv *pcmdpriv = &padapter->cmdpriv;
 	u8	res = _SUCCESS;
-
 
 	ph2c = (struct cmd_obj *)rtw_zmalloc(sizeof(struct cmd_obj));
 	if (ph2c == NULL) {
@@ -2289,11 +2249,6 @@ u8 traffic_status_watchdog(_adapter *padapter, u8 from_timer)
 	u8	bHigherBusyTraffic = false, bHigherBusyRxTraffic = false, bHigherBusyTxTraffic = false;
 
 	struct mlme_priv		*pmlmepriv = &(padapter->mlmepriv);
-#ifdef CONFIG_TDLS
-	struct tdls_info *ptdlsinfo = &(padapter->tdlsinfo);
-	struct tdls_txmgmt txmgmt;
-	u8 baddr[ETH_ALEN] = { 0xff, 0xff, 0xff, 0xff, 0xff, 0xff };
-#endif /* CONFIG_TDLS */
 
 #ifdef CONFIG_BT_COEXIST
 	if (padapter->registrypriv.wifi_spec != 1) {
@@ -2306,7 +2261,6 @@ u8 traffic_status_watchdog(_adapter *padapter, u8 from_timer)
 		BusyThresholdLow = 75;
 	}
 	BusyThreshold = BusyThresholdHigh;
-
 
 	/*  */
 	/* Determine if our traffic is busy now */
@@ -2337,19 +2291,6 @@ u8 traffic_status_watchdog(_adapter *padapter, u8 from_timer)
 			else
 				bHigherBusyTxTraffic = true;
 		}
-
-#ifdef CONFIG_TDLS
-#ifdef CONFIG_TDLS_AUTOSETUP
-		/* TDLS_WATCHDOG_PERIOD * 2sec, periodically send */
-		if (hal_chk_wl_func(padapter, WL_FUNC_TDLS) == true) {
-			if ((ptdlsinfo->watchdog_count % TDLS_WATCHDOG_PERIOD) == 0) {
-				_rtw_memcpy(txmgmt.peer, baddr, ETH_ALEN);
-				issue_tdls_dis_req(padapter, &txmgmt);
-			}
-			ptdlsinfo->watchdog_count++;
-		}
-#endif /* CONFIG_TDLS_AUTOSETUP */
-#endif /* CONFIG_TDLS */
 
 #ifdef CONFIG_LPS
 		/* check traffic for  powersaving. */

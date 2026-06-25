@@ -628,11 +628,6 @@ int rtw_iqk_fw_offload;
 #endif /* RTW_IQK_FW_OFFLOAD */
 module_param(rtw_iqk_fw_offload, int, 0644);
 
-#ifdef CONFIG_TDLS
-int rtw_en_tdls = 1;
-module_param(rtw_en_tdls, int, 0644);
-#endif
-
 #ifdef CONFIG_FW_OFFLOAD_PARAM_INIT
 int rtw_fw_param_init = 1;
 module_param(rtw_fw_param_init, int, 0644);
@@ -950,10 +945,6 @@ uint loadparam(_adapter *padapter)
 #endif /* CONFIG_RTW_NAPI */
 
 	registry_par->iqk_fw_offload = (u8)rtw_iqk_fw_offload;
-
-#ifdef CONFIG_TDLS
-	registry_par->en_tdls = rtw_en_tdls;
-#endif
 
 #ifdef CONFIG_ADVANCE_OTA
 	registry_par->adv_ota = rtw_advnace_ota;
@@ -1870,13 +1861,9 @@ u8 rtw_reset_drv_sw(_adapter *padapter)
 	return ret8;
 }
 
-
 u8 rtw_init_drv_sw(_adapter *padapter)
 {
-
 	u8	ret8 = _SUCCESS;
-
-
 
 	_rtw_init_listhead(&padapter->list);
 
@@ -1906,14 +1893,6 @@ u8 rtw_init_drv_sw(_adapter *padapter)
 		ret8 = _FAIL;
 		goto exit;
 	}
-
-#ifdef CONFIG_TDLS
-	if (rtw_init_tdls_info(padapter) == _FAIL) {
-		RTW_INFO("Can't rtw_init_tdls_info\n");
-		ret8 = _FAIL;
-		goto exit;
-	}
-#endif /* CONFIG_TDLS */
 
 	if (_rtw_init_xmit_priv(&padapter->xmitpriv, padapter) == _FAIL) {
 		RTW_INFO("Can't _rtw_init_xmit_priv\n");
@@ -2015,10 +1994,6 @@ u8 rtw_free_drv_sw(_adapter *padapter)
 	_rtw_spinlock_free(&padapter->security_key_mutex);
 
 	free_mlme_ext_priv(&padapter->mlmeextpriv);
-
-#ifdef CONFIG_TDLS
-	/* rtw_free_tdls_info(&padapter->tdlsinfo); */
-#endif /* CONFIG_TDLS */
 
 	rtw_free_cmd_priv(&padapter->cmdpriv);
 

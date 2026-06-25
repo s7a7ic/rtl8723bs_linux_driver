@@ -69,7 +69,6 @@ CONFIG_RTW_ADAPTIVITY_MODE = normal
 CONFIG_SIGNAL_SCALE_MAPPING = n
 CONFIG_80211W = n
 CONFIG_REDUCE_TX_CPU_LOADING = n
-CONFIG_TDLS = n
 CONFIG_WIFI_MONITOR = n
 CONFIG_APPEND_VENDOR_IE_ENABLE = n
 CONFIG_RTW_NAPI = y
@@ -322,10 +321,6 @@ ifeq ($(CONFIG_REDUCE_TX_CPU_LOADING), y)
 ccflags-y += -DCONFIG_REDUCE_TX_CPU_LOADING
 endif
 
-ifeq ($(CONFIG_TDLS), y)
-ccflags-y += -DCONFIG_TDLS
-endif
-
 ifeq ($(CONFIG_WIFI_MONITOR), y)
 ccflags-y += -DCONFIG_WIFI_MONITOR
 endif
@@ -407,7 +402,6 @@ rtk_core :=	core/rtw_cmd.o \
 		core/rtw_sta_mgt.o \
 		core/rtw_ap.o \
 		core/rtw_xmit.o	\
-		core/rtw_tdls.o \
 		core/rtw_sreset.o \
 		core/rtw_btcoex_wifionly.o \
 		core/rtw_btcoex.o \

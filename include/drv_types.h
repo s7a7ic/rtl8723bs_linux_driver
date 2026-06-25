@@ -80,10 +80,6 @@ typedef struct _ADAPTER _adapter, ADAPTER, *PADAPTER;
 #include <rtw_version.h>
 #include <rtw_odm.h>
 
-#ifdef CONFIG_TDLS
-	#include <rtw_tdls.h>
-#endif /* CONFIG_TDLS */
-
 #ifdef CONFIG_DRVEXT_MODULE
 	#include <drvext_api.h>
 #endif /* CONFIG_DRVEXT_MODULE */
@@ -333,10 +329,6 @@ struct registry_priv {
 	u32 pci_aspm_config;
 
 	u8 iqk_fw_offload;
-
-#ifdef CONFIG_TDLS
-	u8 en_tdls;
-#endif
 
 #ifdef CONFIG_ADVANCE_OTA
 	u8	adv_ota;
@@ -1031,10 +1023,6 @@ struct _ADAPTER {
 
 	u32	setband;
 	ATOMIC_T bandskip;
-
-#ifdef CONFIG_TDLS
-	struct tdls_info	tdlsinfo;
-#endif /* CONFIG_TDLS */
 
 #ifdef CONFIG_BT_COEXIST_SOCKET_TRX
 	struct bt_coex_info coex_info;
