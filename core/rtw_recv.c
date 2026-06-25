@@ -833,14 +833,9 @@ void process_wmmps_data(_adapter *padapter, union recv_frame *precv_frame)
 
 	psta = rtw_get_stainfo(pstapriv, pattrib->src);
 
-	if (!psta)
-		return;
-
-		if (!psta->qos_option)
-			return;
-
-		if (!(psta->qos_info & 0xf))
-			return;
+	if (!psta) { return; }
+	if (!psta->qos_option) { return; }
+	if (!(psta->qos_info & 0xf)) { return; }
 
 	if (psta->state & WIFI_SLEEP_STATE) {
 		u8 wmmps_ac = 0;
