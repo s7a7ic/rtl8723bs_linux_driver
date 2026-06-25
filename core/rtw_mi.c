@@ -892,18 +892,10 @@ static u8 _rtw_mi_traffic_statistics(_adapter *padapter , void *data)
 	pdvobjpriv->traffic_stat.rx_drop += padapter->recvpriv.rx_drop;
 	return true;
 }
+
 u8 rtw_mi_traffic_statistics(_adapter *padapter)
 {
 	return _rtw_mi_process(padapter, false, NULL, _rtw_mi_traffic_statistics);
-}
-
-static u8 _rtw_mi_check_miracast_enabled(_adapter *padapter , void *data)
-{
-	return is_miracast_enabled(padapter);
-}
-u8 rtw_mi_check_miracast_enabled(_adapter *padapter)
-{
-	return _rtw_mi_process(padapter, false, NULL, _rtw_mi_check_miracast_enabled);
 }
 
 #ifdef CONFIG_XMIT_THREAD_MODE

@@ -6,16 +6,13 @@
  ******************************************************************************/
 #ifdef CONFIG_GPIO_WAKEUP
 #include <linux/gpio.h>
+#include <linux/interrupt.h>
+#include <linux/irq.h>
 #endif
 
 #include <drv_types.h>
 
 #define strnicmp	strncasecmp
-
-#ifdef CONFIG_GPIO_WAKEUP
-#include <linux/interrupt.h>
-#include <linux/irq.h>
-#endif
 
 #include "rtw_version.h"
 
@@ -45,8 +42,6 @@ const char *android_wifi_cmd_str[ANDROID_WIFI_CMD_MAX] = {
 	"P2P_GET_NOA",
 	"P2P_SET_PS",
 	"SET_AP_WPS_P2P_IE",
-
-	"MIRACAST",
 
 #ifdef CONFIG_PNO_SUPPORT
 	"PNOSSIDCLR",
@@ -444,43 +439,6 @@ int rtw_android_getband(struct net_device *net, char *command, int total_len)
 	return bytes_written;
 }
 
-#ifdef CONFIG_WFD
-int rtw_android_set_miracast_mode(struct net_device *net, char *command, int total_len)
-{
-	_adapter *adapter = (_adapter *)rtw_netdev_priv(net);
-	struct wifi_display_info *wfd_info = &adapter->wfd_info;
-	char *arg = command + strlen(android_wifi_cmd_str[ANDROID_WIFI_CMD_MIRACAST]) + 1;
-	u8 mode;
-	int num;
-	int ret = _FAIL;
-
-	num = sscanf(arg, "%hhu", &mode);
-
-	if (num < 1)
-		goto exit;
-
-	switch (mode) {
-	case 1: /* soruce */
-		mode = MIRACAST_SOURCE;
-		break;
-	case 2: /* sink */
-		mode = MIRACAST_SINK;
-		break;
-	case 0: /* disabled */
-	default:
-		mode = MIRACAST_DISABLED;
-		break;
-	}
-	wfd_info->stack_wfd_mode = mode;
-	RTW_INFO("stack miracast mode: %s\n", get_miracast_mode_str(wfd_info->stack_wfd_mode));
-
-	ret = _SUCCESS;
-
-exit:
-	return (ret == _SUCCESS) ? 0 : -1;
-}
-#endif /* CONFIG_WFD */
-
 int get_int_from_command(char *pcmd)
 {
 	int i = 0;
@@ -552,9 +510,6 @@ int rtw_android_priv_cmd(struct net_device *net, struct ifreq *ifr, int cmd)
 #endif
 	android_wifi_priv_cmd priv_cmd;
 	_adapter	*padapter = (_adapter *) rtw_netdev_priv(net);
-#ifdef CONFIG_WFD
-	struct wifi_display_info		*pwfd_info;
-#endif
 
 	rtw_lock_suspend();
 
@@ -761,55 +716,6 @@ int rtw_android_priv_cmd(struct net_device *net, struct ifreq *ifr, int cmd)
 		break;
 	}
 
-#ifdef CONFIG_WFD
-
-	case ANDROID_WIFI_CMD_MIRACAST:
-		bytes_written = rtw_android_set_miracast_mode(net, command, priv_cmd.total_len);
-		break;
-
-	case ANDROID_WIFI_CMD_WFD_ENABLE: {
-		/*	Commented by Albert 2012/07/24 */
-		/*	We can enable the WFD function by using the following command: */
-		/*	wpa_cli driver wfd-enable */
-
-		if (padapter->wdinfo.driver_interface == DRIVER_CFG80211)
-			rtw_wfd_enable(padapter, 1);
-		break;
-	}
-
-	case ANDROID_WIFI_CMD_WFD_DISABLE: {
-		/*	Commented by Albert 2012/07/24 */
-		/*	We can disable the WFD function by using the following command: */
-		/*	wpa_cli driver wfd-disable */
-
-		if (padapter->wdinfo.driver_interface == DRIVER_CFG80211)
-			rtw_wfd_enable(padapter, 0);
-		break;
-	}
-	case ANDROID_WIFI_CMD_WFD_SET_TCPPORT: {
-		/*	Commented by Albert 2012/07/24 */
-		/*	We can set the tcp port number by using the following command: */
-		/*	wpa_cli driver wfd-set-tcpport = 554 */
-
-		if (padapter->wdinfo.driver_interface == DRIVER_CFG80211)
-			rtw_wfd_set_ctrl_port(padapter, (u16)get_int_from_command(priv_cmd.buf));
-		break;
-	}
-	case ANDROID_WIFI_CMD_WFD_SET_MAX_TPUT: {
-		break;
-	}
-	case ANDROID_WIFI_CMD_WFD_SET_DEVTYPE: {
-		/*	Commented by Albert 2012/08/28 */
-		/*	Specify the WFD device type ( WFD source/primary sink ) */
-
-		pwfd_info = &padapter->wfd_info;
-		if (padapter->wdinfo.driver_interface == DRIVER_CFG80211) {
-			pwfd_info->wfd_device_type = (u8) get_int_from_command(priv_cmd.buf);
-			pwfd_info->wfd_device_type &= WFD_DEVINFO_DUAL;
-		}
-		break;
-	}
-#endif
 	case ANDROID_WIFI_CMD_CHANGE_DTIM: {
 #ifdef CONFIG_LPS
 		u8 dtim;

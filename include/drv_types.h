@@ -1047,10 +1047,6 @@ struct _ADAPTER {
 	u8	rtw_rson_scanstage;
 #endif
 
-#ifdef CONFIG_WFD
-	struct wifi_display_info wfd_info;
-#endif /* CONFIG_WFD */
-
 #ifdef CONFIG_BT_COEXIST_SOCKET_TRX
 	struct bt_coex_info coex_info;
 #endif /* CONFIG_BT_COEXIST_SOCKET_TRX */

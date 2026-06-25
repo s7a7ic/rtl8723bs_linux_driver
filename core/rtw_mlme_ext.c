@@ -4876,11 +4876,6 @@ void _issue_assocreq(_adapter *padapter, u8 is_reassoc)
 	if (pmlmeinfo->assoc_AP_vendor == HT_IOT_PEER_REALTEK)
 		pframe = rtw_set_ie(pframe, _VENDOR_SPECIFIC_IE_, 6 , REALTEK_96B_IE, &(pattrib->pktlen));
 
-#ifdef CONFIG_WFD
-	wfdielen = rtw_append_assoc_req_wfd_ie(padapter, pframe);
-	pframe += wfdielen;
-	pattrib->pktlen += wfdielen;
-#endif
 #ifdef CONFIG_RTW_REPEATER_SON
 	rtw_rson_append_ie(padapter, pframe, &pattrib->pktlen);
 #endif
@@ -8853,12 +8848,8 @@ u8 rtw_scan_sparse(_adapter *adapter, struct rtw_ieee80211_channel *ch, u8 ch_nu
 
 	interval = rtw_get_passing_time_ms(mlmeext->last_scan_time);
 
-
 	if (rtw_mi_busy_traffic_check(adapter, false))
 		busy_traffic = true;
-
-	if (rtw_mi_check_miracast_enabled(adapter))
-		miracast_enabled = true;
 
 	if (interval > RTW_SCAN_SPARSE_BG_INTERVAL_MS)
 		bg_scan = true;

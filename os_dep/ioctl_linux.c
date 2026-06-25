@@ -6875,29 +6875,11 @@ static int rtw_priv_get(struct net_device *dev,
 	return 0;
 }
 
-
-
 static int rtw_wx_tdls_wfd_enable(struct net_device *dev,
 				  struct iw_request_info *info,
 				  union iwreq_data *wrqu, char *extra)
 {
 	int ret = 0;
-
-#ifdef CONFIG_TDLS
-#ifdef CONFIG_WFD
-
-	_adapter *padapter = (_adapter *)rtw_netdev_priv(dev);
-
-	RTW_INFO("[%s] %s %d\n", __FUNCTION__, extra, wrqu->data.length - 1);
-
-	if (extra[0] == '0')
-		rtw_tdls_wfd_enable(padapter, 0);
-	else
-		rtw_tdls_wfd_enable(padapter, 1);
-
-#endif /* CONFIG_WFD */
-#endif /* CONFIG_TDLS */
-
 	return ret;
 }
 
@@ -6908,7 +6890,6 @@ static int rtw_tdls_weaksec(struct net_device *dev,
 	int ret = 0;
 
 #ifdef CONFIG_TDLS
-
 	u8 i, j;
 	_adapter *padapter = (_adapter *)rtw_netdev_priv(dev);
 
@@ -6918,12 +6899,9 @@ static int rtw_tdls_weaksec(struct net_device *dev,
 		padapter->wdinfo.wfd_tdls_weaksec = 0;
 	else
 		padapter->wdinfo.wfd_tdls_weaksec = 1;
-
 #endif /* CONFIG_TDLS */
-
 	return ret;
 }
-
 
 static int rtw_tdls_enable(struct net_device *dev,
 			   struct iw_request_info *info,
@@ -6954,9 +6932,6 @@ static int rtw_tdls_setup(struct net_device *dev,
 	u8 i, j;
 	_adapter *padapter = (_adapter *)rtw_netdev_priv(dev);
 	struct tdls_txmgmt txmgmt;
-#ifdef CONFIG_WFD
-	struct wifidirect_info *pwdinfo = &(padapter->wdinfo);
-#endif /* CONFIG_WFD */
 
 	RTW_INFO("[%s] %s %d\n", __FUNCTION__, extra, wrqu->data.length - 1);
 
@@ -6968,18 +6943,6 @@ static int rtw_tdls_setup(struct net_device *dev,
 	_rtw_memset(&txmgmt, 0x00, sizeof(struct tdls_txmgmt));
 	for (i = 0, j = 0 ; i < ETH_ALEN; i++, j += 3)
 		txmgmt.peer[i] = key_2char2num(*(extra + j), *(extra + j + 1));
-
-#ifdef CONFIG_WFD
-	if (_AES_ != padapter->securitypriv.dot11PrivacyAlgrthm) {
-		/* Weak Security situation with AP. */
-		if (0 == pwdinfo->wfd_tdls_weaksec)	{
-			/* Can't send the tdls setup request out!! */
-			RTW_INFO("[%s] Current link is not AES, "
-				"SKIP sending the tdls setup request!!\n", __FUNCTION__);
-		} else
-			issue_tdls_setup_req(padapter, &txmgmt, true);
-	} else
-#endif /* CONFIG_WFD */
 	{
 		issue_tdls_setup_req(padapter, &txmgmt, true);
 	}
@@ -7309,105 +7272,24 @@ static int rtw_tdls_setip(struct net_device *dev,
 			  struct iw_request_info *info,
 			  union iwreq_data *wrqu, char *extra)
 {
-	int ret = 0;
-
-#ifdef CONFIG_TDLS
-#ifdef CONFIG_WFD
-
-	_adapter *padapter = (_adapter *)rtw_netdev_priv(dev);
-	struct tdls_info *ptdlsinfo = &padapter->tdlsinfo;
-	struct wifi_display_info *pwfd_info = ptdlsinfo->wfd_info;
-	u8 i = 0, j = 0, k = 0, tag = 0;
-
-	RTW_INFO("[%s] %s %d\n", __FUNCTION__, extra, wrqu->data.length - 1);
-
-	while (i < 4) {
-		for (j = 0; j < 4; j++) {
-			if (*(extra + j + tag) == '.' || *(extra + j + tag) == '\0') {
-				if (j == 1)
-					pwfd_info->ip_address[i] = convert_ip_addr('0', '0', *(extra + (j - 1) + tag));
-				if (j == 2)
-					pwfd_info->ip_address[i] = convert_ip_addr('0', *(extra + (j - 2) + tag), *(extra + (j - 1) + tag));
-				if (j == 3)
-					pwfd_info->ip_address[i] = convert_ip_addr(*(extra + (j - 3) + tag), *(extra + (j - 2) + tag), *(extra + (j - 1) + tag));
-
-				tag += j + 1;
-				break;
-			}
-		}
-		i++;
-	}
-
-	RTW_INFO("[%s] Set IP = %u.%u.%u.%u\n", __FUNCTION__,
-		 ptdlsinfo->wfd_info->ip_address[0],
-		 ptdlsinfo->wfd_info->ip_address[1],
-		 ptdlsinfo->wfd_info->ip_address[2],
-		 ptdlsinfo->wfd_info->ip_address[3]);
-
-#endif /* CONFIG_WFD */
-#endif /* CONFIG_TDLS */
-
-	return ret;
+	/* deadcode */
+	return 0;
 }
 
 static int rtw_tdls_getip(struct net_device *dev,
 			  struct iw_request_info *info,
 			  union iwreq_data *wrqu, char *extra)
 {
-	int ret = 0;
-
-#ifdef CONFIG_TDLS
-#ifdef CONFIG_WFD
-
-	_adapter *padapter = (_adapter *)rtw_netdev_priv(dev);
-	struct tdls_info *ptdlsinfo = &padapter->tdlsinfo;
-	struct wifi_display_info *pwfd_info = ptdlsinfo->wfd_info;
-
-	RTW_INFO("[%s]\n", __FUNCTION__);
-
-	sprintf(extra, "\n\n%u.%u.%u.%u\n",
-		pwfd_info->peer_ip_address[0], pwfd_info->peer_ip_address[1],
-		pwfd_info->peer_ip_address[2], pwfd_info->peer_ip_address[3]);
-
-	RTW_INFO("[%s] IP=%u.%u.%u.%u\n", __FUNCTION__,
-		 pwfd_info->peer_ip_address[0], pwfd_info->peer_ip_address[1],
-		 pwfd_info->peer_ip_address[2], pwfd_info->peer_ip_address[3]);
-
-	wrqu->data.length = strlen(extra);
-
-#endif /* CONFIG_WFD */
-#endif /* CONFIG_TDLS */
-
-	return ret;
+	/* deadcode */
+	return 0;
 }
 
 static int rtw_tdls_getport(struct net_device *dev,
 			    struct iw_request_info *info,
 			    union iwreq_data *wrqu, char *extra)
 {
-
-	int ret = 0;
-
-#ifdef CONFIG_TDLS
-#ifdef CONFIG_WFD
-
-	_adapter *padapter = (_adapter *)rtw_netdev_priv(dev);
-	struct tdls_info *ptdlsinfo = &padapter->tdlsinfo;
-	struct wifi_display_info *pwfd_info = ptdlsinfo->wfd_info;
-
-	RTW_INFO("[%s]\n", __FUNCTION__);
-
-	sprintf(extra, "\n\n%d\n", pwfd_info->peer_rtsp_ctrlport);
-	RTW_INFO("[%s] remote port = %d\n",
-		 __FUNCTION__, pwfd_info->peer_rtsp_ctrlport);
-
-	wrqu->data.length = strlen(extra);
-
-#endif /* CONFIG_WFD */
-#endif /* CONFIG_TDLS */
-
-	return ret;
-
+	/* deadcode */
+	return 0;
 }
 
 /* WFDTDLS, for sigma test */
@@ -7415,29 +7297,8 @@ static int rtw_tdls_dis_result(struct net_device *dev,
 			       struct iw_request_info *info,
 			       union iwreq_data *wrqu, char *extra)
 {
-
-	int ret = 0;
-
-#ifdef CONFIG_TDLS
-#ifdef CONFIG_WFD
-
-	_adapter *padapter = (_adapter *)rtw_netdev_priv(dev);
-	struct tdls_info *ptdlsinfo = &padapter->tdlsinfo;
-
-	RTW_INFO("[%s]\n", __FUNCTION__);
-
-	if (ptdlsinfo->dev_discovered == true) {
-		sprintf(extra, "\n\nDis=1\n");
-		ptdlsinfo->dev_discovered = false;
-	}
-
-	wrqu->data.length = strlen(extra);
-
-#endif /* CONFIG_WFD */
-#endif /* CONFIG_TDLS */
-
-	return ret;
-
+	/* deadcode */
+	return 0;
 }
 
 /* WFDTDLS, for sigma test */
@@ -7445,7 +7306,6 @@ static int rtw_wfd_tdls_status(struct net_device *dev,
 			       struct iw_request_info *info,
 			       union iwreq_data *wrqu, char *extra)
 {
-
 	int ret = 0;
 
 #ifdef CONFIG_TDLS
@@ -7676,19 +7536,7 @@ static int rtw_tdls(struct net_device *dev,
 		wrqu->data.length -= 6;
 		rtw_tdls_psoff(dev, info, wrqu, &extra[6]);
 	}
-
-#ifdef CONFIG_WFD
-	if (hal_chk_wl_func(padapter, WL_FUNC_MIRACAST)) {
-		if (_rtw_memcmp(extra, "setip=", 6)) {
-			wrqu->data.length -= 6;
-			rtw_tdls_setip(dev, info, wrqu, &extra[6]);
-		} else if (_rtw_memcmp(extra, "tprobe=", 6))
-			issue_tunneled_probe_req((_adapter *)rtw_netdev_priv(dev));
-	}
-#endif /* CONFIG_WFD */
-
 #endif /* CONFIG_TDLS */
-
 	return ret;
 }
 
