@@ -17,7 +17,6 @@
 #define __HAL_PHY_RF_H__
 
 #include "halrf/halrf_kfree.h"
-
 #include "halrf/halrf_powertracking_ce.h"
 
 enum spur_cal_method {
@@ -59,43 +58,21 @@ struct _TXPWRTRACK_CFG {
 	func_set_xtal			odm_txxtaltrack_set_xtal;
 };
 
-void
-configure_txpower_track(
-	void					*p_dm_void,
-	struct _TXPWRTRACK_CFG	*p_config
-);
+void configure_txpower_track(void *p_dm_void, struct _TXPWRTRACK_CFG *p_config);
 
+void odm_clear_txpowertracking_state(void *p_dm_void);
 
-void
-odm_clear_txpowertracking_state(
-	void					*p_dm_void
-);
-
-void
-odm_txpowertracking_callback_thermal_meter(
-#if (DM_ODM_SUPPORT_TYPE & ODM_AP)
-	void					*p_dm_void
-#elif (DM_ODM_SUPPORT_TYPE & ODM_CE) && defined(DM_ODM_CE_MAC80211)
+void odm_txpowertracking_callback_thermal_meter(
+#if (DM_ODM_SUPPORT_TYPE & ODM_CE) && defined(DM_ODM_CE_MAC80211)
 	void	*p_dm
 #else
 	struct _ADAPTER	*adapter
 #endif
 );
 
-
-
 #define ODM_TARGET_CHNL_NUM_2G_5G	59
 
-
-void
-odm_reset_iqk_result(
-	void					*p_dm_void
-);
-u8
-odm_get_right_chnl_place_for_iqk(
-	u8 chnl
-);
-
+void odm_reset_iqk_result(void *p_dm_void);
 void phydm_rf_init(void					*p_dm_void);
 void phydm_rf_watchdog(void					*p_dm_void);
 

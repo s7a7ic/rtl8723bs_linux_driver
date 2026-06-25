@@ -697,56 +697,14 @@ odm_txpowertracking_callback_thermal_meter(
 	p_rf_calibrate_info->tx_powercount = 0;
 }
 
-
-
 /* 3============================================================
  * 3 IQ Calibration
  * 3============================================================ */
 
-void
-odm_reset_iqk_result(
-	void					*p_dm_void
-)
-{
-	return;
-}
-#if !(DM_ODM_SUPPORT_TYPE & ODM_AP)
-u8 odm_get_right_chnl_place_for_iqk(u8 chnl)
-{
-	u8	channel_all[ODM_TARGET_CHNL_NUM_2G_5G] = {
-		1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 36, 38, 40, 42, 44, 46, 48, 50, 52, 54, 56, 58, 60, 62, 64, 100, 102, 104, 106, 108, 110, 112, 114, 116, 118, 120, 122, 124, 126, 128, 130, 132, 134, 136, 138, 140, 149, 151, 153, 155, 157, 159, 161, 163, 165
-	};
-	u8	place = chnl;
-
-
-	if (chnl > 14) {
-		for (place = 14; place < sizeof(channel_all); place++) {
-			if (channel_all[place] == chnl)
-				return place - 13;
-		}
-	}
-	return 0;
-
-}
-#endif
-
-void
-odm_iq_calibrate(
-	struct PHY_DM_STRUCT	*p_dm
-)
+void odm_iq_calibrate(struct PHY_DM_STRUCT *p_dm)
 {
 	struct _ADAPTER	*adapter = p_dm->adapter;
 	struct _IQK_INFORMATION	*p_iqk_info = &p_dm->IQK_info;
-
-#if (DM_ODM_SUPPORT_TYPE == ODM_WIN)
-	if (*p_dm->p_is_fcs_mode_enable)
-		return;
-#endif
-
-#if (DM_ODM_SUPPORT_TYPE & (ODM_CE))
-	if (IS_HARDWARE_TYPE_8812AU(adapter))
-		return;
-#endif
 
 	if ((p_dm->is_linked) && (!p_iqk_info->rfk_forbidden)) {
 		if ((*p_dm->p_channel != p_dm->pre_channel) && (!*p_dm->p_is_scan_in_process)) {
@@ -771,14 +729,6 @@ void phydm_rf_init(void		*p_dm_void)
 #if (DM_ODM_SUPPORT_TYPE & (ODM_WIN | ODM_CE))
 	odm_clear_txpowertracking_state(p_dm);
 #endif
-
-#if (DM_ODM_SUPPORT_TYPE & (ODM_AP))
-#if (RTL8814A_SUPPORT == 1)
-	if (p_dm->support_ic_type & ODM_RTL8814A)
-		phy_iq_calibrate_8814a_init(p_dm);
-#endif
-#endif
-
 }
 
 void phydm_rf_watchdog(void		*p_dm_void)

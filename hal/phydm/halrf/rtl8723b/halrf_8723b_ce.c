@@ -11,7 +11,7 @@
 #define	ODM_TXPWRTRACK_MAX_IDX8723B	6
 
 /* MACRO definition for p_rf_calibrate_info->tx_iqc_8723b[0] */
-#define 	PATH_S0 						1 /* RF_PATH_B */
+#define	PATH_S0 						1 /* RF_PATH_B */
 #define	idx_0xc94						0
 #define	idx_0xc80						1
 #define	idx_0xc4c						2
@@ -21,25 +21,18 @@
 #define	VAL							1
 
 /* MACRO definition for p_rf_calibrate_info->tx_iqc_8723b[1] */
-#define 	PATH_S1 						0 /* RF_PATH_A */
+#define	PATH_S1 						0 /* RF_PATH_A */
 #define	idx_0xc9c						0
 #define	idx_0xc88						1
 #define	idx_0xc4c						2
 #define	idx_0xc1c						0
 #define	idx_0xc78						1
 
-
-/*---------------------------Define Local Constant---------------------------*/
-
-
 /* 3============================================================
  * 3 Tx Power Tracking
  * 3============================================================ */
 
-void halrf_rf_lna_setting_8723b(
-	struct PHY_DM_STRUCT	*p_dm,
-	enum phydm_lna_set type
-)
+void halrf_rf_lna_setting_8723b(struct PHY_DM_STRUCT *p_dm, enum phydm_lna_set type)
 {
 		/*phydm_disable_lna*/
 		if (type == phydm_lna_disable) {
@@ -145,12 +138,7 @@ void set_iqk_matrix_8723b(
 		(u32)iqk_result_x, (u32)iqk_result_y, (u32)ele_A, (u32)ele_C, (u32)ele_D, (u32)iqk_result_x, (u32)iqk_result_y));
 }
 
-
-void
-set_cck_filter_coefficient(
-	struct PHY_DM_STRUCT	*p_dm,
-	u8		cck_swing_index
-)
+void set_cck_filter_coefficient(struct PHY_DM_STRUCT *p_dm, u8 cck_swing_index)
 {
 	if (!p_dm->rf_calibrate_info.is_cck_in_ch14) {
 		odm_write_1byte(p_dm, 0xa22, cck_swing_table_ch1_ch13_new[cck_swing_index][0]);
@@ -173,56 +161,6 @@ set_cck_filter_coefficient(
 	}
 }
 
-void do_iqk_8723b(
-	void		*p_dm_void,
-	u8		delta_thermal_index,
-	u8		thermal_value,
-	u8		threshold
-)
-{
-#if 0 /* mark by Lucas@SD4 20140128, suggested by Allen@SD3 */
-	struct PHY_DM_STRUCT	*p_dm = (struct PHY_DM_STRUCT *)p_dm_void;
-#if !(DM_ODM_SUPPORT_TYPE & ODM_AP)
-	struct _ADAPTER		*adapter = p_dm->adapter;
-	HAL_DATA_TYPE	*p_hal_data = GET_HAL_DATA(adapter);
-#endif
-
-	odm_reset_iqk_result(p_dm);
-
-#if (DM_ODM_SUPPORT_TYPE & ODM_WIN)
-#if (DEV_BUS_TYPE == RT_PCI_INTERFACE)
-#if USE_WORKITEM
-	platform_acquire_mutex(&p_hal_data->mx_chnl_bw_control);
-#else
-	platform_acquire_spin_lock(adapter, RT_CHANNEL_AND_BANDWIDTH_SPINLOCK);
-#endif
-#elif ((DEV_BUS_TYPE == RT_USB_INTERFACE) || (DEV_BUS_TYPE == RT_SDIO_INTERFACE))
-	platform_acquire_mutex(&p_hal_data->mx_chnl_bw_control);
-#endif
-#endif
-
-
-	p_dm->rf_calibrate_info.thermal_value_iqk = thermal_value;
-#if (DM_ODM_SUPPORT_TYPE & ODM_AP)
-	phy_iq_calibrate_8723b(p_dm, false, false);
-#else
-	phy_iq_calibrate_8723b(adapter, false, false);
-#endif
-
-#if (DM_ODM_SUPPORT_TYPE & ODM_WIN)
-#if (DEV_BUS_TYPE == RT_PCI_INTERFACE)
-#if USE_WORKITEM
-	platform_release_mutex(&p_hal_data->mx_chnl_bw_control);
-#else
-	platform_release_spin_lock(adapter, RT_CHANNEL_AND_BANDWIDTH_SPINLOCK);
-#endif
-#elif ((DEV_BUS_TYPE == RT_USB_INTERFACE) || (DEV_BUS_TYPE == RT_SDIO_INTERFACE))
-	platform_release_mutex(&p_hal_data->mx_chnl_bw_control);
-#endif
-#endif
-#endif /*  #if 0 */
-}
-
 /*-----------------------------------------------------------------------------
  * Function:	odm_TxPwrTrackSetPwr88E()
  *
@@ -240,8 +178,7 @@ void do_iqk_8723b(
  *	04/23/2012	MHC	Create version 0.
  *
  *---------------------------------------------------------------------------*/
-void
-odm_tx_pwr_track_set_pwr_8723b(
+void odm_tx_pwr_track_set_pwr_8723b(
 	void		*p_dm_void,
 	enum pwrtrack_method	method,
 	u8				rf_path,
@@ -264,9 +201,7 @@ odm_tx_pwr_track_set_pwr_8723b(
 		u16	rate	 = *(p_dm->p_forced_data_rate);
 
 		if (!rate) { /*auto rate*/
-#if (DM_ODM_SUPPORT_TYPE & ODM_WIN)
-			tx_rate = adapter->HalFunc.GetHwRateFromMRateHandler(p_dm->tx_rate);
-#elif (DM_ODM_SUPPORT_TYPE & ODM_CE)
+#if (DM_ODM_SUPPORT_TYPE & ODM_CE)
 			if (p_dm->number_linked_client != 0)
 				tx_rate = hw_rate_to_m_rate(p_dm->tx_rate);
 #endif
@@ -449,8 +384,7 @@ odm_tx_pwr_track_set_pwr_8723b(
 	}
 }
 
-void
-get_delta_swing_table_8723b(
+void get_delta_swing_table_8723b(
 	void		*p_dm_void,
 	u8 **temperature_up_a,
 	u8 **temperature_down_a,
@@ -470,9 +404,7 @@ get_delta_swing_table_8723b(
 		u16	rate	 = *(p_dm->p_forced_data_rate);
 
 		if (!rate) { /*auto rate*/
-#if (DM_ODM_SUPPORT_TYPE & ODM_WIN)
-			tx_rate = adapter->HalFunc.GetHwRateFromMRateHandler(p_dm->tx_rate);
-#elif (DM_ODM_SUPPORT_TYPE & ODM_CE)
+#if (DM_ODM_SUPPORT_TYPE & ODM_CE)
 			if (p_dm->number_linked_client != 0)
 				tx_rate = hw_rate_to_m_rate(p_dm->tx_rate);
 #endif
@@ -504,10 +436,7 @@ get_delta_swing_table_8723b(
 	return;
 }
 
-
-void configure_txpower_track_8723b(
-	struct _TXPWRTRACK_CFG *p_config
-)
+void configure_txpower_track_8723b(struct _TXPWRTRACK_CFG *p_config)
 {
 	p_config->swing_table_size_cck = CCK_TABLE_SIZE;
 	p_config->swing_table_size_ofdm = OFDM_TABLE_SIZE;
@@ -517,7 +446,6 @@ void configure_txpower_track_8723b(
 	p_config->thermal_reg_addr = RF_T_METER_8723B;
 
 	p_config->odm_tx_pwr_track_set_pwr = odm_tx_pwr_track_set_pwr_8723b;
-	p_config->do_iqk = do_iqk_8723b;
 	p_config->phy_lc_calibrate = halrf_lck_trigger;
 	p_config->get_delta_swing_table = get_delta_swing_table_8723b;
 }
@@ -604,7 +532,6 @@ phy_path_a_iqk_8723b(
 
 	/* leave IQK mode */
 	odm_set_bb_reg(p_dm, REG_FPGA0_IQK, MASKH3BYTES, 0x000000);
-
 
 	/* Check failed */
 	reg_eac = odm_get_bb_reg(p_dm, REG_RX_POWER_AFTER_IQK_A_2, MASKDWORD);
@@ -940,7 +867,6 @@ phy_path_b_iqk_8723b(
 #endif
 }
 
-
 u8			/* bit0 = 1 => Tx OK, bit1 = 1 => Rx OK */
 phy_path_b_rx_iqk_8723b(
 	struct PHY_DM_STRUCT		*p_dm,
@@ -971,11 +897,9 @@ phy_path_b_rx_iqk_8723b(
 	odm_set_rf_reg(p_dm, RF_PATH_A, 0xed, 0x20, 0x1);
 	odm_set_rf_reg(p_dm, RF_PATH_A, 0x43, RFREGOFFSETMASK, 0x60fcd);
 
-
 	/* IQK setting */
 	odm_set_bb_reg(p_dm, REG_TX_IQK, MASKDWORD, 0x01007c00);
 	odm_set_bb_reg(p_dm, REG_RX_IQK, MASKDWORD, 0x01004800);
-
 
 	/* path-B IQK setting */
 	odm_set_bb_reg(p_dm, REG_TX_IQK_TONE_A, MASKDWORD, 0x18008c1c);
@@ -1151,9 +1075,7 @@ phy_path_b_rx_iqk_8723b(
 	return result;
 }
 
-
-void
-_phy_path_a_fill_iqk_matrix8723b(
+void _phy_path_a_fill_iqk_matrix8723b(
 	struct PHY_DM_STRUCT		*p_dm,
 	boolean	is_iqk_ok,
 	s32		result[][8],
@@ -1215,10 +1137,6 @@ _phy_path_a_fill_iqk_matrix8723b(
 		}
 
 		reg = result[final_candidate][2];
-#if (DM_ODM_SUPPORT_TYPE == ODM_AP)
-		if (RTL_ABS(reg, 0x100) >= 16)
-			reg = 0x100;
-#endif
 		/* 2 Rx IQC */
 		odm_set_bb_reg(p_dm, REG_OFDM_0_XA_RX_IQ_IMBALANCE, 0x3FF, reg);
 		reg = result[final_candidate][3] & 0x3F;
@@ -1234,8 +1152,7 @@ _phy_path_a_fill_iqk_matrix8723b(
 	}
 }
 
-void
-_phy_path_b_fill_iqk_matrix8723b(
+void _phy_path_b_fill_iqk_matrix8723b(
 	struct PHY_DM_STRUCT		*p_dm,
 	boolean	is_iqk_ok,
 	s32		result[][8],
@@ -1317,12 +1234,7 @@ _phy_path_b_fill_iqk_matrix8723b(
  * 2011/07/26 MH Add an API for testing IQK fail case.
  *
  * MP Already declare in odm.c */
-
-void
-odm_set_iqc_by_rfpath(
-	struct PHY_DM_STRUCT		*p_dm,
-	u32 rf_path
-)
+void odm_set_iqc_by_rfpath(struct PHY_DM_STRUCT *p_dm, u32 rf_path)
 {
 	struct odm_rf_calibration_structure	*p_rf_calibrate_info = &(p_dm->rf_calibrate_info);
 
@@ -1348,8 +1260,7 @@ odm_set_iqc_by_rfpath(
 	}
 }
 
-void
-_phy_save_adda_registers8723b(
+void _phy_save_adda_registers8723b(
 	struct PHY_DM_STRUCT		*p_dm,
 	u32	*adda_reg,
 	u32	*adda_backup,
@@ -1363,9 +1274,7 @@ _phy_save_adda_registers8723b(
 		adda_backup[i] = odm_get_bb_reg(p_dm, adda_reg[i], MASKDWORD);
 }
 
-
-void
-_phy_save_mac_registers8723b(
+void _phy_save_mac_registers8723b(
 	struct PHY_DM_STRUCT		*p_dm,
 	u32	*mac_reg,
 	u32	*mac_backup
@@ -1379,9 +1288,7 @@ _phy_save_mac_registers8723b(
 	mac_backup[i] = odm_read_4byte(p_dm, mac_reg[i]);
 }
 
-
-void
-_phy_reload_adda_registers8723b(
+void _phy_reload_adda_registers8723b(
 	struct PHY_DM_STRUCT		*p_dm,
 	u32	*adda_reg,
 	u32	*adda_backup,
@@ -1395,8 +1302,7 @@ _phy_reload_adda_registers8723b(
 		odm_set_bb_reg(p_dm, adda_reg[i], MASKDWORD, adda_backup[i]);
 }
 
-void
-_phy_reload_mac_registers8723b(
+void _phy_reload_mac_registers8723b(
 	struct PHY_DM_STRUCT		*p_dm,
 	u32	*mac_reg,
 	u32	*mac_backup
@@ -1411,8 +1317,7 @@ _phy_reload_mac_registers8723b(
 }
 
 
-void
-_phy_path_adda_on8723b(
+void _phy_path_adda_on8723b(
 	struct PHY_DM_STRUCT		*p_dm,
 	u32	*adda_reg,
 	boolean	is_path_a_on,
@@ -1436,8 +1341,7 @@ _phy_path_adda_on8723b(
 
 }
 
-void
-_phy_mac_setting_calibration8723b(
+void _phy_mac_setting_calibration8723b(
 	struct PHY_DM_STRUCT		*p_dm,
 	u32	*mac_reg,
 	u32	*mac_backup
@@ -1452,8 +1356,7 @@ _phy_mac_setting_calibration8723b(
 	odm_write_1byte(p_dm, mac_reg[i], (u8)(mac_backup[i] & (~BIT(5))));
 }
 
-void
-_phy_path_a_stand_by8723b(
+void _phy_path_a_stand_by8723b(
 	struct PHY_DM_STRUCT		*p_dm
 )
 {
@@ -1466,8 +1369,7 @@ _phy_path_a_stand_by8723b(
 	odm_set_bb_reg(p_dm, REG_FPGA0_IQK, MASKH3BYTES, 0x808000);
 }
 
-void
-_phy_pi_mode_switch8723b(
+void _phy_pi_mode_switch8723b(
 	struct PHY_DM_STRUCT		*p_dm,
 	boolean	pi_mode
 )
@@ -1480,8 +1382,7 @@ _phy_pi_mode_switch8723b(
 	odm_set_bb_reg(p_dm, REG_FPGA0_XB_HSSI_PARAMETER1, MASKDWORD, mode);
 }
 
-boolean
-phy_simularity_compare_8723b(
+boolean phy_simularity_compare_8723b(
 	struct PHY_DM_STRUCT		*p_dm,
 	s32		result[][8],
 	u8		 c1,
@@ -1574,9 +1475,7 @@ phy_simularity_compare_8723b(
 	}
 }
 
-
-void
-_phy_iq_calibrate_8723b(
+void _phy_iq_calibrate_8723b(
 	struct PHY_DM_STRUCT		*p_dm,
 	s32		result[][8],
 	u8		t,
@@ -1848,12 +1747,7 @@ _phy_iq_calibrate_8723b(
 	ODM_RT_TRACE(p_dm, ODM_COMP_CALIBRATION, ODM_DBG_LOUD, ("_phy_iq_calibrate_8723b() <==\n"));
 }
 
-
-void
-_phy_lc_calibrate_8723b(
-	struct PHY_DM_STRUCT		*p_dm,
-	boolean	is2T
-)
+void _phy_lc_calibrate_8723b(struct PHY_DM_STRUCT *p_dm, boolean is2T)
 {
 	u8	tmp_reg;
 	u32	rf_amode = 0, rf_bmode = 0, lc_cal;
@@ -1913,11 +1807,7 @@ _phy_lc_calibrate_8723b(
 
 /* IQK version:0x19    20140123
  * IQK is controlled by is_2ant, RF path */
-void
-phy_iq_calibrate_8723b(
-	void		*p_dm_void,
-	boolean		is_recovery
-)
+void phy_iq_calibrate_8723b(void *p_dm_void, boolean is_recovery)
 {
 	struct PHY_DM_STRUCT	*p_dm = (struct PHY_DM_STRUCT *)p_dm_void;
 	struct _hal_rf_				*p_rf = &(p_dm->rf_table);
@@ -2005,7 +1895,6 @@ phy_iq_calibrate_8723b(
 	*	odm_set_bb_reg(p_dm, 0x764, BIT(12), 0x0);
 	*	odm_set_bb_reg(p_dm, 0x764, BIT(11), 0x1); */
 
-
 	for (i = 0; i < 8; i++) {
 		result[0][i] = 0;
 		result[1][i] = 0;
@@ -2018,7 +1907,6 @@ phy_iq_calibrate_8723b(
 	is12simular = false;
 	is23simular = false;
 	is13simular = false;
-
 
 	for (i = 0; i < 3; i++) {
 		_phy_iq_calibrate_8723b(p_dm, result, i, !(*p_dm->p_is_1_antenna), *p_dm->p_rf_default_path);
@@ -2092,17 +1980,6 @@ phy_iq_calibrate_8723b(
 	if (regeb4 != 0)
 		_phy_path_b_fill_iqk_matrix8723b(p_dm, is_pathb_ok, result, final_candidate, (regec4 == 0));
 
-	indexforchannel = odm_get_right_chnl_place_for_iqk(*p_dm->p_channel);
-
-	/* To Fix BSOD when final_candidate is 0xff
-	 * by sherry 20120321 */
-	if (final_candidate < 4) {
-		for (i = 0; i < iqk_matrix_reg_num; i++)
-			p_dm->rf_calibrate_info.iqk_matrix_reg_setting[indexforchannel].value[0][i] = result[final_candidate][i];
-		p_dm->rf_calibrate_info.iqk_matrix_reg_setting[indexforchannel].is_iqk_done = true;
-	}
-	/* RT_DISP(FINIT, INIT_IQK, ("\nIQK OK indexforchannel %d.\n", indexforchannel)); */
-	ODM_RT_TRACE(p_dm, ODM_COMP_CALIBRATION, ODM_DBG_LOUD, ("\nIQK OK indexforchannel %d.\n", indexforchannel));
 	_phy_save_adda_registers8723b(p_dm, IQK_BB_REG_92C, p_dm->rf_calibrate_info.IQK_BB_backup_recover, IQK_BB_REG_NUM);
 
 	/* restore GNT_BT */
@@ -2139,36 +2016,22 @@ out:
 	return;
 }
 
-
-void
-phy_lc_calibrate_8723b(
-	void		*p_dm_void
-)
+void phy_lc_calibrate_8723b(void *p_dm_void)
 {
 	u32			start_time;
 	s32			progressing_time;
 	struct PHY_DM_STRUCT	*p_dm = (struct PHY_DM_STRUCT *)p_dm_void;
-
 	_phy_lc_calibrate_8723b(p_dm, false);
 }
 
 void _phy_set_rf_path_switch_8723b(
-#if (DM_ODM_SUPPORT_TYPE & ODM_AP)
-	struct PHY_DM_STRUCT		*p_dm,
-#else
 	struct _ADAPTER	*p_adapter,
-#endif
 	boolean	is_main,
 	boolean	is2T
 )
 {
 	HAL_DATA_TYPE	*p_hal_data = GET_HAL_DATA(p_adapter);
-#if (DM_ODM_SUPPORT_TYPE == ODM_CE)
 	struct PHY_DM_STRUCT		*p_dm = &p_hal_data->odmpriv;
-#endif
-#if (DM_ODM_SUPPORT_TYPE == ODM_WIN)
-	struct PHY_DM_STRUCT		*p_dm = &p_hal_data->DM_OutSrc;
-#endif
 
 	if (is_main) /* Left antenna */
 		odm_set_bb_reg(p_dm, 0x92C, MASKDWORD, 0x1);
@@ -2176,76 +2039,10 @@ void _phy_set_rf_path_switch_8723b(
 		odm_set_bb_reg(p_dm, 0x92C, MASKDWORD, 0x2);
 }
 
-void phy_set_rf_path_switch_8723b(
-#if (DM_ODM_SUPPORT_TYPE & ODM_AP)
-	struct PHY_DM_STRUCT		*p_dm,
-#else
-	struct _ADAPTER	*p_adapter,
-#endif
-	boolean	is_main
-)
+void phy_set_rf_path_switch_8723b(struct _ADAPTER *p_adapter, boolean is_main)
 {
-
 #if DISABLE_BB_RF
 	return;
 #endif
-
-#if !(DM_ODM_SUPPORT_TYPE & ODM_AP)
 	_phy_set_rf_path_switch_8723b(p_adapter, is_main, true);
-#endif
-
 }
-
-#if (DM_ODM_SUPPORT_TYPE == ODM_WIN)
-
-/* return value true => Main; false => Aux */
-boolean _phy_query_rf_path_switch_8723b(
-#if (DM_ODM_SUPPORT_TYPE & ODM_AP)
-	struct PHY_DM_STRUCT		*p_dm,
-#else
-	struct _ADAPTER	*p_adapter,
-#endif
-	boolean	is2T
-)
-{
-#if !(DM_ODM_SUPPORT_TYPE & ODM_AP)
-	HAL_DATA_TYPE	*p_hal_data = GET_HAL_DATA(p_adapter);
-#if (DM_ODM_SUPPORT_TYPE == ODM_CE)
-	struct PHY_DM_STRUCT		*p_dm = &p_hal_data->odmpriv;
-#endif
-#if (DM_ODM_SUPPORT_TYPE == ODM_WIN)
-	struct PHY_DM_STRUCT		*p_dm = &p_hal_data->DM_OutSrc;
-#endif
-#endif
-
-
-	if (odm_get_bb_reg(p_dm, 0x92C, MASKDWORD) == 0x01)
-		return true;
-	else
-		return false;
-
-}
-
-/* return value true => Main; false => Aux */
-boolean phy_query_rf_path_switch_8723b(
-#if (DM_ODM_SUPPORT_TYPE & ODM_AP)
-	struct PHY_DM_STRUCT		*p_dm
-#else
-	struct _ADAPTER	*p_adapter
-#endif
-)
-{
-	HAL_DATA_TYPE	*p_hal_data = GET_HAL_DATA(p_adapter);
-
-#if DISABLE_BB_RF
-	return true;
-#endif
-
-#if !(DM_ODM_SUPPORT_TYPE & ODM_AP)
-	return _phy_query_rf_path_switch_8723b(p_adapter, false);
-#else
-	return _phy_query_rf_path_switch_8723b(p_dm, false);
-#endif
-
-}
-#endif
