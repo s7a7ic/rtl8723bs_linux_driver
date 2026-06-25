@@ -81,10 +81,6 @@
 	#include <linux/udp.h>
 #endif
 
-#ifdef CONFIG_HAS_EARLYSUSPEND
-	#include <linux/earlysuspend.h>
-#endif /* CONFIG_HAS_EARLYSUSPEND */
-
 #ifdef CONFIG_EFUSE_CONFIG_FILE
 	#include <linux/fs.h>
 #endif

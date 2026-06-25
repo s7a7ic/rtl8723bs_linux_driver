@@ -690,10 +690,6 @@ static void rtw_dev_remove(struct sdio_func *func)
 		}
 	}
 
-#if defined(CONFIG_HAS_EARLYSUSPEND)
-	rtw_unregister_early_suspend(pwrctl);
-#endif
-
 	if (GET_HAL_DATA(padapter)->bFWReady == true) {
 		rtw_ps_deny(padapter, PS_DENY_DRV_REMOVE);
 		rtw_pm_set_ips(padapter, IPS_NONE);

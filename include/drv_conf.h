@@ -9,13 +9,6 @@
 #include "autoconf.h"
 #include "hal_ic_cfg.h"
 
-/*
-#if defined(CONFIG_HAS_EARLYSUSPEND) && defined(CONFIG_RESUME_IN_WORKQUEUE)
-	#warning "You have CONFIG_HAS_EARLYSUSPEND enabled in your system, we disable CONFIG_RESUME_IN_WORKQUEUE automatically"
-	#undef CONFIG_RESUME_IN_WORKQUEUE
-#endif
-*/
-
 #ifdef CONFIG_RESUME_IN_WORKQUEUE /* this can be removed, because there is no case for this... */
 	#if !defined(CONFIG_WAKELOCK)
 		#error "enable CONFIG_RESUME_IN_WORKQUEUE without CONFIG_WAKELOCK will suffer from the danger of wifi's unfunctionality..."
