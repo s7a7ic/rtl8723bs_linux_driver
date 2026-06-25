@@ -2749,8 +2749,7 @@ void EXhalbtcoutsrc_rx_rate_change_notify(PBTC_COEXIST pBtCoexist, u8 is_data_fr
 	pBtCoexist->statistics.cnt_rate_id_notify++;
 }
 
-VOID
-EXhalbtcoutsrc_RfStatusNotify(
+void EXhalbtcoutsrc_RfStatusNotify(
 	IN	PBTC_COEXIST		pBtCoexist,
 	IN	u1Byte				type
 )
@@ -2890,8 +2889,7 @@ void EXhalbtcoutsrc_dbg_control(PBTC_COEXIST pBtCoexist, u8 opCode, u8 opLen, u8
 }
 
 #if 0
-VOID
-EXhalbtcoutsrc_AntennaDetection(
+void EXhalbtcoutsrc_AntennaDetection(
 	IN	PBTC_COEXIST			pBtCoexist,
 	IN	u4Byte					centFreq,
 	IN	u4Byte					offset,

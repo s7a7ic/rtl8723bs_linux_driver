@@ -215,9 +215,9 @@ void Hal_EfuseParseCustomerID_8723B(PADAPTER padapter, u8 *hwinfo, BOOLEAN AutoL
 void Hal_EfuseParseAntennaDiversity_8723B(PADAPTER padapter, u8 *hwinfo, BOOLEAN AutoLoadFail);
 void Hal_EfuseParseXtal_8723B(PADAPTER pAdapter, u8 *hwinfo, u8 AutoLoadFail);
 void Hal_EfuseParseThermalMeter_8723B(PADAPTER padapter, u8 *hwinfo, u8 AutoLoadFail);
-VOID Hal_EfuseParsePackageType_8723B(PADAPTER pAdapter, u8 *hwinfo, BOOLEAN AutoLoadFail);
-VOID Hal_EfuseParseVoltage_8723B(PADAPTER pAdapter, u8 *hwinfo, BOOLEAN	AutoLoadFail);
-VOID Hal_EfuseParseBoardType_8723B(PADAPTER Adapter,	u8	*PROMContent, BOOLEAN AutoloadFail);
+void Hal_EfuseParsePackageType_8723B(PADAPTER pAdapter, u8 *hwinfo, BOOLEAN AutoLoadFail);
+void Hal_EfuseParseVoltage_8723B(PADAPTER pAdapter, u8 *hwinfo, BOOLEAN	AutoLoadFail);
+void Hal_EfuseParseBoardType_8723B(PADAPTER Adapter,	u8	*PROMContent, BOOLEAN AutoloadFail);
 
 void rtl8723b_set_hal_ops(struct hal_ops *pHalFunc);
 void init_hal_spec_8723b(_adapter *adapter);

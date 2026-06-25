@@ -7,7 +7,6 @@
 #ifndef __HAL_PHY_H__
 #define __HAL_PHY_H__
 
-
 #if DISABLE_BB_RF
 	#define	HAL_FW_ENABLE				0
 	#define	HAL_MAC_ENABLE			0
@@ -40,7 +39,6 @@
 #define ANT_DETECT_BY_RSSI				BIT1
 #define IS_ANT_DETECT_SUPPORT_SINGLE_TONE(__Adapter)		((GET_HAL_DATA(__Adapter)->AntDetection) & ANT_DETECT_BY_SINGLE_TONE)
 #define IS_ANT_DETECT_SUPPORT_RSSI(__Adapter)		((GET_HAL_DATA(__Adapter)->AntDetection) & ANT_DETECT_BY_RSSI)
-
 
 /*--------------------------Define Parameters-------------------------------*/
 typedef	enum _RF_CHIP {
@@ -158,68 +156,55 @@ typedef struct RF_Shadow_Compare_Map {
 
 /*--------------------------Exported Function prototype---------------------*/
 
-u32
-PHY_CalculateBitShift(
-	u32 BitMask
+u32 PHY_CalculateBitShift(u32 BitMask);
+
+u32 PHY_RFShadowRead(
+	IN	PADAPTER		Adapter,
+	IN	enum rf_path		eRFPath,
+	IN	u32				Offset
 );
 
-u32
-PHY_RFShadowRead(
-	IN	PADAPTER		Adapter,
-	IN	enum rf_path		eRFPath,
-	IN	u32				Offset);
-
-VOID
-PHY_RFShadowWrite(
+void PHY_RFShadowWrite(
 	IN	PADAPTER		Adapter,
 	IN	enum rf_path		eRFPath,
 	IN	u32				Offset,
-	IN	u32				Data);
+	IN	u32				Data
+);
 
-BOOLEAN
-PHY_RFShadowCompare(
+BOOLEAN PHY_RFShadowCompare(
 	IN	PADAPTER		Adapter,
 	IN	enum rf_path		eRFPath,
-	IN	u32				Offset);
+	IN	u32				Offset
+);
 
-VOID
-PHY_RFShadowRecorver(
+void PHY_RFShadowRecorver(
 	IN	PADAPTER		Adapter,
 	IN	enum rf_path		eRFPath,
-	IN	u32				Offset);
+	IN	u32				Offset
+);
 
-VOID
-PHY_RFShadowCompareAll(
-	IN	PADAPTER		Adapter);
+void PHY_RFShadowCompareAll(IN PADAPTER Adapter);
 
-VOID
-PHY_RFShadowRecorverAll(
-	IN	PADAPTER		Adapter);
+void PHY_RFShadowRecorverAll(IN PADAPTER Adapter);
 
-VOID
-PHY_RFShadowCompareFlagSet(
+void PHY_RFShadowCompareFlagSet(
 	IN	PADAPTER		Adapter,
 	IN	enum rf_path		eRFPath,
 	IN	u32				Offset,
-	IN	u8				Type);
+	IN	u8				Type
+);
 
-VOID
-PHY_RFShadowRecorverFlagSet(
+void PHY_RFShadowRecorverFlagSet(
 	IN	PADAPTER		Adapter,
 	IN	enum rf_path		eRFPath,
 	IN	u32				Offset,
-	IN	u8				Type);
+	IN	u8				Type
+);
 
-VOID
-PHY_RFShadowCompareFlagSetAll(
-	IN	PADAPTER		Adapter);
+void PHY_RFShadowCompareFlagSetAll(IN PADAPTER Adapter);
 
-VOID
-PHY_RFShadowRecorverFlagSetAll(
-	IN	PADAPTER		Adapter);
+void PHY_RFShadowRecorverFlagSetAll(IN PADAPTER Adapter);
 
-VOID
-PHY_RFShadowRefresh(
-	IN	PADAPTER		Adapter);
+void PHY_RFShadowRefresh(IN PADAPTER Adapter);
 
 #endif /* __HAL_COMMON_H__ */

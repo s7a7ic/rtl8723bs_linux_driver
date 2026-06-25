@@ -74,7 +74,7 @@ u32 PHY_RFShadowRead(
 
 }	/* PHY_RFShadowRead */
 
-VOID PHY_RFShadowWrite(
+void PHY_RFShadowWrite(
 	IN	PADAPTER		Adapter,
 	IN	enum rf_path		eRFPath,
 	IN	u32				Offset,
@@ -104,7 +104,7 @@ BOOLEAN PHY_RFShadowCompare(
 	return false;
 }	/* PHY_RFShadowCompare */
 
-VOID PHY_RFShadowRecorver(
+void PHY_RFShadowRecorver(
 	IN	PADAPTER		Adapter,
 	IN	enum rf_path		eRFPath,
 	IN	u32				Offset)
@@ -120,7 +120,7 @@ VOID PHY_RFShadowRecorver(
 
 }	/* PHY_RFShadowRecorver */
 
-VOID PHY_RFShadowCompareAll(
+void PHY_RFShadowCompareAll(
 	IN	PADAPTER			Adapter)
 {
 	enum rf_path	eRFPath = RF_PATH_A;
@@ -133,7 +133,7 @@ VOID PHY_RFShadowCompareAll(
 
 }	/* PHY_RFShadowCompareAll */
 
-VOID PHY_RFShadowRecorverAll(
+void PHY_RFShadowRecorverAll(
 	IN	PADAPTER			Adapter)
 {
 	enum rf_path		eRFPath = RF_PATH_A;
@@ -146,7 +146,7 @@ VOID PHY_RFShadowRecorverAll(
 
 }	/* PHY_RFShadowRecorverAll */
 
-VOID PHY_RFShadowCompareFlagSet(
+void PHY_RFShadowCompareFlagSet(
 	IN	PADAPTER		Adapter,
 	IN	enum rf_path		eRFPath,
 	IN	u32				Offset,
@@ -157,7 +157,7 @@ VOID PHY_RFShadowCompareFlagSet(
 
 }	/* PHY_RFShadowCompareFlagSet */
 
-VOID PHY_RFShadowRecorverFlagSet(
+void PHY_RFShadowRecorverFlagSet(
 	IN	PADAPTER		Adapter,
 	IN	enum rf_path		eRFPath,
 	IN	u32				Offset,
@@ -168,7 +168,7 @@ VOID PHY_RFShadowRecorverFlagSet(
 
 }	/* PHY_RFShadowRecorverFlagSet */
 
-VOID PHY_RFShadowCompareFlagSetAll(IN PADAPTER Adapter)
+void PHY_RFShadowCompareFlagSetAll(IN PADAPTER Adapter)
 {
 	enum rf_path	eRFPath = RF_PATH_A;
 	u32		Offset = 0, maxReg = GET_RF6052_REAL_MAX_REG(Adapter);
@@ -185,7 +185,7 @@ VOID PHY_RFShadowCompareFlagSetAll(IN PADAPTER Adapter)
 
 }	/* PHY_RFShadowCompareFlagSetAll */
 
-VOID PHY_RFShadowRecorverFlagSetAll(IN PADAPTER Adapter)
+void PHY_RFShadowRecorverFlagSetAll(IN PADAPTER Adapter)
 {
 	enum rf_path		eRFPath = RF_PATH_A;
 	u32		Offset = 0, maxReg = GET_RF6052_REAL_MAX_REG(Adapter);
@@ -202,7 +202,7 @@ VOID PHY_RFShadowRecorverFlagSetAll(IN PADAPTER Adapter)
 
 }	/* PHY_RFShadowCompareFlagSetAll */
 
-VOID PHY_RFShadowRefresh(IN PADAPTER Adapter)
+void PHY_RFShadowRefresh(IN PADAPTER Adapter)
 {
 	enum rf_path		eRFPath = RF_PATH_A;
 	u32		Offset = 0, maxReg = GET_RF6052_REAL_MAX_REG(Adapter);

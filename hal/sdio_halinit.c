@@ -228,8 +228,7 @@ static void _InitTxBufferBoundary(PADAPTER padapter)
 #endif /* CONFIG_CONCURRENT_MODE */
 }
 
-static VOID
-_InitNormalChipRegPriority(
+static void _InitNormalChipRegPriority(
 	IN	PADAPTER	Adapter,
 	IN	u16		beQ,
 	IN	u16		bkQ,
@@ -248,8 +247,7 @@ _InitNormalChipRegPriority(
 	rtw_write16(Adapter, REG_TRXDMA_CTRL, value16);
 }
 
-static VOID
-_InitNormalChipOneOutEpPriority(
+static void _InitNormalChipOneOutEpPriority(
 	IN	PADAPTER Adapter
 )
 {
@@ -279,18 +277,15 @@ _InitNormalChipOneOutEpPriority(
 				   value,
 				   value
 				  );
-
 }
 
-static VOID
-_InitNormalChipTwoOutEpPriority(
+static void _InitNormalChipTwoOutEpPriority(
 	IN	PADAPTER Adapter
 )
 {
 	HAL_DATA_TYPE	*pHalData	= GET_HAL_DATA(Adapter);
 	struct registry_priv *pregistrypriv = &Adapter->registrypriv;
 	u16			beQ, bkQ, viQ, voQ, mgtQ, hiQ;
-
 
 	u16	valueHi = 0;
 	u16	valueLow = 0;
@@ -332,10 +327,7 @@ _InitNormalChipTwoOutEpPriority(
 	_InitNormalChipRegPriority(Adapter, beQ, bkQ, viQ, voQ, mgtQ, hiQ);
 }
 
-static VOID
-_InitNormalChipThreeOutEpPriority(
-	IN	PADAPTER padapter
-)
+static void _InitNormalChipThreeOutEpPriority(IN PADAPTER padapter)
 {
 	struct registry_priv *pregistrypriv = &padapter->registrypriv;
 	u16			beQ, bkQ, viQ, voQ, mgtQ, hiQ;
@@ -358,10 +350,7 @@ _InitNormalChipThreeOutEpPriority(
 	_InitNormalChipRegPriority(padapter, beQ, bkQ, viQ, voQ, mgtQ, hiQ);
 }
 
-static VOID
-_InitNormalChipQueuePriority(
-	IN	PADAPTER Adapter
-)
+static void _InitNormalChipQueuePriority(IN PADAPTER Adapter)
 {
 	HAL_DATA_TYPE	*pHalData	= GET_HAL_DATA(Adapter);
 
@@ -1340,10 +1329,7 @@ _EfuseCellSel(
 	}
 }
 
-static VOID
-_ReadRFType(
-	IN	PADAPTER	Adapter
-)
+static void _ReadRFType(IN PADAPTER Adapter)
 {
 	HAL_DATA_TYPE	*pHalData = GET_HAL_DATA(Adapter);
 
@@ -1354,18 +1340,12 @@ _ReadRFType(
 #endif
 }
 
-static VOID
-_ReadEfuseInfo8723BS(
-	IN PADAPTER			padapter
-)
+static void _ReadEfuseInfo8723BS(IN PADAPTER padapter)
 {
 	PHAL_DATA_TYPE pHalData = GET_HAL_DATA(padapter);
 	u8			*hwinfo = NULL;
 
-
-	/*  */
 	/* This part read and parse the eeprom/efuse content */
-	/*  */
 
 	if (sizeof(pHalData->efuse_eeprom_data) < HWSET_MAX_SIZE_8723B)
 		RTW_INFO("[WARNING] size of efuse_eeprom_data is less than HWSET_MAX_SIZE_8723B!\n");
@@ -1421,13 +1401,9 @@ static void _ReadPROMContent(
 	_ReadEfuseInfo8723BS(padapter);
 }
 
-static VOID
-_InitOtherVariable(
-	IN PADAPTER		Adapter
-)
+static void _InitOtherVariable(IN PADAPTER Adapter)
 {
 	HAL_DATA_TYPE	*pHalData = GET_HAL_DATA(Adapter);
-
 
 	/* if(Adapter->bInHctTest){ */
 	/*	pMgntInfo->PowerSaveControl.bInactivePs = FALSE; */
@@ -1435,9 +1411,6 @@ _InitOtherVariable(
 	/*	pMgntInfo->PowerSaveControl.bLeisurePs = FALSE; */
 	/*	pMgntInfo->keepAliveLevel = 0; */
 	/* } */
-
-
-
 }
 
 /*
