@@ -154,7 +154,7 @@ CONFIG_PLATFORM_RTL8197D = n
 
 CONFIG_DRVEXT_MODULE = n
 
-export TopDIR ?= $(src)
+export TopDIR ?= $(CURDIR)
 
 ########### COMMON  #################################
 ifeq ($(CONFIG_GSPI_HCI), y)
