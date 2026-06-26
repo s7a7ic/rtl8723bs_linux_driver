@@ -1,6 +1,8 @@
-# rtl8723bs v5.2.17.1_26955.20180307_COEX20180201-6f52
+# rtl8723bs linux driver
 
-Patched driver for newer linux kernel versions (tested on 6.12 to 7.0).
+Realtek SDIO Wi-Fi driver patched for newer linux kernel versions (tested on 6.12 to 7.0).
+
+Driver version: `v5.2.17.1_26955.20180307_COEX20180201-6f52`
 
 I'm using this driver on the ASUS Tinker Board S (RK3288 - ARMv7) under LibreELEC.
 
@@ -9,6 +11,10 @@ Module name: 8723bs
 List available parameters: `ls /sys/module/8723bs/parameters` or `modinfo 8723bs`
 
 ## Credits
+
+Hopefully will soon be replaced by:
+
+https://github.com/MocLG/rtw88-rtl8723bs
 
 Inspired by:
 
