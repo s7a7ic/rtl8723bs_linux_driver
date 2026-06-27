@@ -45,11 +45,6 @@
 
 static u8 SNAP_ETH_TYPE_IPX[2] = {0x81, 0x37};
 
-static u8 SNAP_ETH_TYPE_APPLETALK_AARP[2] = {0x80, 0xf3};
-static u8 SNAP_ETH_TYPE_APPLETALK_DDP[2] = {0x80, 0x9b};
-static u8 SNAP_ETH_TYPE_TDLS[2] = {0x89, 0x0d};
-static u8 SNAP_HDR_APPLETALK_DDP[3] = {0x08, 0x00, 0x07}; /* Datagram Delivery Protocol */
-
 static u8 oui_8021h[] = {0x00, 0x00, 0xf8};
 static u8 oui_rfc1042[] = {0x00, 0x00, 0x00};
 
@@ -429,8 +424,6 @@ union recv_frame {
 	} u;
 	/* uint mem[MAX_RXSZ>>2]; */
 };
-
-bool rtw_rframe_del_wfd_ie(union recv_frame *rframe, u8 ies_offset);
 
 typedef enum _RX_PACKET_TYPE {
 	NORMAL_RX,/* Normal rx packet */

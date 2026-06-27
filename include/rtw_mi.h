@@ -41,8 +41,6 @@ struct mi_state {
 #define MSTATE_STA_LD_NUM(_mstate)		((_mstate)->ld_sta_num)
 #define MSTATE_STA_LG_NUM(_mstate)		((_mstate)->lg_sta_num)
 
-#define MSTATE_TDLS_LD_NUM(_mstate)		0
-
 #ifdef CONFIG_AP_MODE
 #define MSTATE_AP_NUM(_mstate)			((_mstate)->ap_num)
 #define MSTATE_AP_LD_NUM(_mstate)		((_mstate)->ld_ap_num)

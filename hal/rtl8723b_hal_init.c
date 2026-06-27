@@ -2469,11 +2469,13 @@ void init_hal_spec_8723b(_adapter *adapter)
 	hal_spec->port_num = 2;
 	hal_spec->proto_cap = PROTO_CAP_11B | PROTO_CAP_11G | PROTO_CAP_11N;
 
-	hal_spec->wl_func = 0
+	hal_spec->wl_func = 0;
+/*
 			    | WL_FUNC_P2P
 			    | WL_FUNC_MIRACAST
 			    | WL_FUNC_TDLS
 			    ;
+*/
 }
 
 void rtl8723b_init_default_value(PADAPTER padapter)

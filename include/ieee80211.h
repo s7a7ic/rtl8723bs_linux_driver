@@ -1261,7 +1261,7 @@ enum rtw_ieee80211_category {
 	RTW_WLAN_CATEGORY_SA_QUERY = 8,
 	RTW_WLAN_CATEGORY_WNM = 10,
 	RTW_WLAN_CATEGORY_UNPROTECTED_WNM = 11, /* add for CONFIG_IEEE80211W, none 11w also can use */
-	RTW_WLAN_CATEGORY_TDLS = 12,
+/*	RTW_WLAN_CATEGORY_TDLS = 12, */
 	RTW_WLAN_CATEGORY_SELF_PROTECTED = 15, /* add for CONFIG_IEEE80211W, none 11w also can use */
 	RTW_WLAN_CATEGORY_WMM = 17,
 	RTW_WLAN_CATEGORY_VHT = 21,
@@ -1572,7 +1572,6 @@ u8 *rtw_get_wfd_attr_content(u8 *wfd_ie, uint wfd_ielen, u8 target_attr_id, u8 *
 uint rtw_del_wfd_ie(u8 *ies, uint ies_len_ori, const char *msg);
 uint rtw_del_wfd_attr(u8 *ie, uint ielen_ori, u8 attr_id);
 u8 *rtw_bss_ex_get_wfd_ie(WLAN_BSSID_EX *bss_ex, u8 *wfd_ie, uint *wfd_ielen);
-void rtw_bss_ex_del_wfd_ie(WLAN_BSSID_EX *bss_ex);
 void rtw_bss_ex_del_wfd_attr(WLAN_BSSID_EX *bss_ex, u8 attr_id);
 
 uint	rtw_get_rateset_len(u8	*rateset);

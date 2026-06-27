@@ -212,7 +212,6 @@ enum LPS_CTRL_TYPE {
 enum STAKEY_TYPE {
 	GROUP_KEY		= 0,
 	UNICAST_KEY		= 1,
-	TDLS_KEY		= 2,
 };
 
 enum RFINTFS {
@@ -893,12 +892,6 @@ struct SetChannelSwitch_param {
 	u8 new_ch_no;
 };
 
-/*H2C Handler index: 62 */
-struct TDLSoption_param {
-	u8 addr[ETH_ALEN];
-	u8 option;
-};
-
 /*H2C Handler index: 64 */
 struct RunInThread_param {
 	void (*func)(void *);
@@ -1005,7 +998,6 @@ u8 rtw_set_country_cmd(_adapter *adapter, int flags, const char *country_code, u
 
 extern u8 rtw_led_blink_cmd(_adapter *padapter, PVOID pLed);
 extern u8 rtw_set_csa_cmd(_adapter *padapter, u8 new_ch_no);
-extern u8 rtw_tdls_cmd(_adapter *padapter, u8 *addr, u8 option);
 
 u8 rtw_mp_cmd(_adapter *adapter, u8 mp_cmd_id, u8 flags);
 
@@ -1113,7 +1105,7 @@ enum rtw_h2c_cmd {
 	GEN_CMD_CODE(_LedBlink), /*60*/
 
 	GEN_CMD_CODE(_SetChannelSwitch), /*61*/
-	GEN_CMD_CODE(_TDLS), /*62*/
+//	GEN_CMD_CODE(_TDLS), /*62*/
 	GEN_CMD_CODE(_ChkBMCSleepq), /*63*/
 
 	GEN_CMD_CODE(_RunInThreadCMD), /*64*/
@@ -1200,7 +1192,7 @@ struct _cmd_callback	rtw_cmd_callback[] = {
 	{GEN_CMD_CODE(_LedBlink), NULL},/*60*/
 
 	{GEN_CMD_CODE(_SetChannelSwitch), NULL},/*61*/
-	{GEN_CMD_CODE(_TDLS), NULL},/*62*/
+//	{GEN_CMD_CODE(_TDLS), NULL},/*62*/
 	{GEN_CMD_CODE(_ChkBMCSleepq), NULL}, /*63*/
 
 	{GEN_CMD_CODE(_RunInThreadCMD), NULL},/*64*/

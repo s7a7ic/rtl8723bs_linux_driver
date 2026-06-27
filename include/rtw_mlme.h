@@ -114,8 +114,6 @@ enum {
 	MLME_STA_CONNECTING,
 	MLME_STA_CONNECTED,
 	MLME_STA_DISCONNECTED,
-	MLME_TDLS_LINKED,
-	MLME_TDLS_NOLINK,
 	MLME_AP_STARTED,
 	MLME_AP_STOPPED,
 	MLME_ADHOC_STARTED,
@@ -324,16 +322,6 @@ struct wifidirect_info {
 														/*	0: disable */
 														/*	1: enable */
 
-	u8						wfd_tdls_enable;			/*	Flag to enable or disable the TDLS by WFD Sigma */
-														/*	0: disable */
-														/*	1: enable */
-	u8						wfd_tdls_weaksec;			/*	Flag to enable or disable the weak security function for TDLS by WFD Sigma */
-														/*	0: disable */
-														/*	In this case, the driver can't issue the tdsl setup request frame. */
-														/*	1: enable */
-														/*	In this case, the driver can issue the tdls setup request frame */
-														/*	even the current security is weak security. */
-
 	enum	P2P_WPSINFO		ui_got_wps_info;			/*	This field will store the WPS value (PIN value or PBC) that UI had got from the user. */
 	u16						supported_wps_cm;			/*	This field describes the WPS config method which this driver supported. */
 														/*	The value should be the combination of config method defined in page104 of WPS v2.0 spec.	 */
@@ -348,48 +336,6 @@ struct wifidirect_info {
 	u16						ext_listen_interval;	/*	The interval to be available with legacy AP (ms) */
 	u16						ext_listen_period;	/*	The time period to be available for P2P listen state (ms) */
 #endif
-};
-
-struct tdls_ss_record {	/* signal strength record */
-	u8		macaddr[ETH_ALEN];
-	u8		RxPWDBAll;
-	u8		is_tdls_sta;	/* true: direct link sta, false: else */
-};
-
-struct tdls_temp_mgmt {
-	u8	initiator;	/* 0: None, 1: we initiate, 2: peer initiate */
-	u8	peer_addr[ETH_ALEN];
-};
-
-struct tdls_info {
-	u8					ap_prohibited;
-	u8					ch_switch_prohibited;
-	u8					link_established;
-	u8					sta_cnt;
-	u8					sta_maximum;	/* 1:tdls sta is equal (NUM_STA-1), reach max direct link number; 0: else; */
-	struct tdls_ss_record	ss_record;
-
-	u8					ch_sensing;
-	u8					cur_channel;
-	u8					collect_pkt_num[MAX_CHANNEL_NUM];
-	_lock				cmd_lock;
-	_lock				hdl_lock;
-	u8					watchdog_count;
-	u8					dev_discovered;		/* WFD_TDLS: for sigma test */
-
-	/* Let wpa_supplicant to setup*/
-	u8					driver_setup;
-
-	struct submit_ctx	*tdls_sctx;
-};
-
-struct tdls_txmgmt {
-	u8 peer[ETH_ALEN];
-	u8 action_code;
-	u8 dialog_token;
-	u16 status_code;
-	u8 *buf;
-	size_t len;
 };
 
 /* used for mlme_priv.roam_flags */

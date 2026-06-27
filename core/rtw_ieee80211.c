@@ -2280,17 +2280,6 @@ inline u8 *rtw_bss_ex_get_wfd_ie(WLAN_BSSID_EX *bss_ex, u8 *wfd_ie, uint *wfd_ie
 	return rtw_get_wfd_ie(BSS_EX_TLV_IES(bss_ex), BSS_EX_TLV_IES_LEN(bss_ex), wfd_ie, wfd_ielen);
 }
 
-void rtw_bss_ex_del_wfd_ie(WLAN_BSSID_EX *bss_ex)
-{
-#define DBG_BSS_EX_DEL_WFD_IE 0
-	u8 *ies = BSS_EX_TLV_IES(bss_ex);
-	uint ies_len_ori = BSS_EX_TLV_IES_LEN(bss_ex);
-	uint ies_len;
-
-	ies_len = rtw_del_wfd_ie(ies, ies_len_ori, DBG_BSS_EX_DEL_WFD_IE ? __func__ : NULL);
-	bss_ex->IELength -= ies_len_ori - ies_len;
-}
-
 void rtw_bss_ex_del_wfd_attr(WLAN_BSSID_EX *bss_ex, u8 attr_id)
 {
 #define DBG_BSS_EX_DEL_WFD_ATTR 0

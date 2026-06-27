@@ -2889,12 +2889,14 @@ u8 mac_hidden_wl_func_to_hal_wl_func(u8 func)
 {
 	u8 wl_func = 0;
 
+/*
 	if (func & BIT0)
 		wl_func |= WL_FUNC_MIRACAST;
 	if (func & BIT1)
 		wl_func |= WL_FUNC_P2P;
 	if (func & BIT2)
 		wl_func |= WL_FUNC_TDLS;
+*/
 	if (func & BIT3)
 		wl_func |= WL_FUNC_FTM;
 

@@ -2627,7 +2627,7 @@ void rtw_hal_rcr_set_chk_bssid(_adapter *adapter, u8 self_action)
 
 	rtw_mi_status_merge(&mstate, &mstate_s);
 
-	if (MSTATE_AP_NUM(&mstate) || MSTATE_MESH_NUM(&mstate) || MSTATE_TDLS_LD_NUM(&mstate)
+	if (MSTATE_AP_NUM(&mstate) || MSTATE_MESH_NUM(&mstate)
 		#ifdef CONFIG_FIND_BEST_CHANNEL
 		|| MSTATE_SCAN_ENTER_NUM(&mstate)
 		#endif

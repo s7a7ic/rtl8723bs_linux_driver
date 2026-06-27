@@ -316,9 +316,11 @@ void rtw_hal_config_rftype(PADAPTER  padapter);
 #define PROTO_CAP_11AC		BIT3
 #define PROTO_CAP_BIT_NUM	4
 
+/*
 #define WL_FUNC_P2P			BIT0
 #define WL_FUNC_MIRACAST	BIT1
 #define WL_FUNC_TDLS		BIT2
+*/
 #define WL_FUNC_FTM			BIT3
 #define WL_FUNC_BIT_NUM		4
 

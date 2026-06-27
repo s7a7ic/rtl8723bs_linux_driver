@@ -2193,18 +2193,6 @@ exit:
 	return res;
 }
 
-u8 rtw_tdls_cmd(_adapter *padapter, u8 *addr, u8 option)
-{
-	struct	cmd_obj	*pcmdobj;
-	struct	TDLSoption_param	*TDLSoption;
-	struct	mlme_priv *pmlmepriv = &padapter->mlmepriv;
-	struct	cmd_priv   *pcmdpriv = &padapter->cmdpriv;
-	u8	res = _SUCCESS;
-
-exit:
-	return res;
-}
-
 u8 rtw_enable_hw_update_tsf_cmd(_adapter *padapter)
 {
 	struct cmd_obj *ph2c;

@@ -589,17 +589,6 @@ int rtw_android_priv_cmd(struct net_device *net, struct ifreq *ifr, int cmd)
 		goto exit;
 	}
 
-	if (!hal_chk_wl_func(padapter, WL_FUNC_MIRACAST)) {
-		switch (cmd_num) {
-		case ANDROID_WIFI_CMD_WFD_ENABLE:
-		case ANDROID_WIFI_CMD_WFD_DISABLE:
-		case ANDROID_WIFI_CMD_WFD_SET_TCPPORT:
-		case ANDROID_WIFI_CMD_WFD_SET_MAX_TPUT:
-		case ANDROID_WIFI_CMD_WFD_SET_DEVTYPE:
-			goto response;
-		}
-	}
-
 	switch (cmd_num) {
 
 	case ANDROID_WIFI_CMD_STOP:

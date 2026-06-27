@@ -3135,9 +3135,6 @@ unsigned int on_action_public_vendor(union recv_frame *precv_frame)
 		if (rtw_action_public_decache(precv_frame, 7) == _FAIL)
 			goto exit;
 
-		if (!hal_chk_wl_func(precv_frame->u.hdr.adapter, WL_FUNC_MIRACAST))
-			rtw_rframe_del_wfd_ie(precv_frame, 8);
-
 		ret = on_action_public_p2p(precv_frame);
 	}
 
@@ -10189,11 +10186,6 @@ u8 led_blink_hdl(_adapter *padapter, unsigned char *pbuf)
 u8 set_csa_hdl(_adapter *padapter, unsigned char *pbuf)
 {
 	return	H2C_REJECTED;
-}
-
-u8 tdls_hdl(_adapter *padapter, unsigned char *pbuf)
-{
-	return H2C_REJECTED;
 }
 
 u8 run_in_thread_hdl(_adapter *padapter, u8 *pbuf)

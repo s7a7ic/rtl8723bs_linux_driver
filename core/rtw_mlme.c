@@ -920,9 +920,6 @@ void rtw_add_network(_adapter *adapter, WLAN_BSSID_EX *pnetwork)
 
 	/* _enter_critical_bh(&queue->lock, &irqL); */
 
-	if (!hal_chk_wl_func(adapter, WL_FUNC_MIRACAST))
-		rtw_bss_ex_del_wfd_ie(pnetwork);
-
 	update_current_network(adapter, pnetwork);
 
 	rtw_update_scanned_network(adapter, pnetwork);
