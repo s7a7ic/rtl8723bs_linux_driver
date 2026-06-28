@@ -221,25 +221,10 @@ ccflags-y += -I$(src)/platform
 _PLATFORM_FILES := platform/platform_ops.o
 
 ccflags-y += -I$(src)/hal/btc
-_BTC_FILES += hal/btc/halbtc8723bwifionly.o \
-				hal/btc/halbtc8822bwifionly.o \
-				hal/btc/halbtc8821cwifionly.o
+_BTC_FILES += hal/btc/halbtc8723bwifionly.o
 ifeq ($(CONFIG_BT_COEXIST), y)
-_BTC_FILES += hal/btc/halbtc8192e1ant.o \
-				hal/btc/halbtc8192e2ant.o \
-				hal/btc/halbtc8723b1ant.o \
-				hal/btc/halbtc8723b2ant.o \
-				hal/btc/halbtc8812a1ant.o \
-				hal/btc/halbtc8812a2ant.o \
-				hal/btc/halbtc8821a1ant.o \
-				hal/btc/halbtc8821a2ant.o \
-				hal/btc/halbtc8703b1ant.o \
-				hal/btc/halbtc8723d1ant.o \
-				hal/btc/halbtc8723d2ant.o \
-				hal/btc/halbtc8822b1ant.o \
-				hal/btc/halbtc8822b2ant.o \
-				hal/btc/halbtc8821c1ant.o \
-				hal/btc/halbtc8821c2ant.o
+_BTC_FILES += 	hal/btc/halbtc8723b1ant.o \
+		hal/btc/halbtc8723b2ant.o
 endif
 
 include $(TopDIR)/hal/phydm/phydm.mk
