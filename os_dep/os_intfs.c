@@ -56,18 +56,11 @@ int rtw_soft_ap = 0;
 		int rtw_ips_mode = IPS_NORMAL;
 	#endif /*CONFIG_IPS_LEVEL_2*/
 
-	#ifdef CONFIG_USB_HCI
-		int rtw_lps_level = LPS_NORMAL; /*USB default LPS level*/
-	#else /*SDIO,PCIE*/
-		#if defined(CONFIG_LPS_PG)
-			/*int rtw_lps_level = LPS_PG;*//*FW not support yet*/
-			int rtw_lps_level = LPS_LCLK;
-		#elif defined(CONFIG_LPS_LCLK)
-			int rtw_lps_level = LPS_LCLK;
-		#else
-			int rtw_lps_level = LPS_NORMAL;
-		#endif
-	#endif/*CONFIG_USB_HCI*/
+	#if defined(CONFIG_LPS_LCLK)
+		int rtw_lps_level = LPS_LCLK;
+	#else
+		int rtw_lps_level = LPS_NORMAL;
+	#endif
 #else /* !CONFIG_POWER_SAVING */
 	int rtw_power_mgnt = PS_MODE_ACTIVE;
 	int rtw_ips_mode = IPS_NONE;
@@ -668,16 +661,6 @@ module_param(rtw_decrypt_phy_file, int, 0644);
 MODULE_PARM_DESC(rtw_decrypt_phy_file, "Enable Decrypt PHY File");
 #endif
 
-#ifdef CONFIG_SUPPORT_TRX_SHARED
-#ifdef DFT_TRX_SHARE_MODE
-int rtw_trx_share_mode = DFT_TRX_SHARE_MODE;
-#else
-int rtw_trx_share_mode = 0;
-#endif
-module_param(rtw_trx_share_mode, int, 0644);
-MODULE_PARM_DESC(rtw_trx_share_mode, "TRx FIFO Shared");
-#endif
-
 int _netdev_open(struct net_device *pnetdev);
 int netdev_open(struct net_device *pnetdev);
 static int netdev_close(struct net_device *pnetdev);
@@ -1086,10 +1069,6 @@ uint loadparam(_adapter *padapter)
 
 #ifdef CONFIG_WOWLAN
 	registry_par->wakeup_event = rtw_wakeup_event;
-#endif
-
-#ifdef CONFIG_SUPPORT_TRX_SHARED
-	registry_par->trx_share_mode = rtw_trx_share_mode;
 #endif
 
 #ifdef CONFIG_PCI_HCI
@@ -2395,10 +2374,6 @@ void rtw_cancel_all_timer(_adapter *padapter)
 
 	/* cancel dm timer */
 	rtw_hal_dm_deinit(padapter);
-
-#ifdef CONFIG_PLATFORM_FS_MX61
-	msleep(50);
-#endif
 }
 
 u8 rtw_free_drv_sw(_adapter *padapter)
@@ -3179,13 +3154,11 @@ int _netdev_open(struct net_device *pnetdev)
 
 		RTW_INFO("MAC Address = "MAC_FMT"\n", MAC_ARG(pnetdev->dev_addr));
 
-#ifndef RTW_HALMAC
 		status = rtw_start_drv_threads(padapter);
 		if (status == _FAIL) {
 			RTW_INFO("Initialize driver software resource Failed!\n");
 			goto netdev_open_error;
 		}
-#endif /* !RTW_HALMAC */
 
 #ifdef CONFIG_RTW_NAPI
 		if(padapter->napi_state == NAPI_DISABLE) {
@@ -3197,9 +3170,8 @@ int _netdev_open(struct net_device *pnetdev)
 #ifdef CONFIG_DRVEXT_MODULE
 		init_drvext(padapter);
 #endif
-#ifndef RTW_HALMAC
+
 		rtw_intf_start(padapter);
-#endif /* !RTW_HALMAC */
 
 #ifdef CONFIG_IOCTL_CFG80211
 		rtw_cfg80211_init_wiphy(padapter);
@@ -3338,9 +3310,8 @@ int  ips_netdrv_open(_adapter *padapter)
 #if 0
 	rtw_restore_mac_addr(padapter);
 #endif
-#ifndef RTW_HALMAC
+
 	rtw_intf_start(padapter);
-#endif /* !RTW_HALMAC */
 
 #ifndef CONFIG_IPS_CHECK_IN_WD
 	rtw_set_pwr_state_check_timer(adapter_to_pwrctl(padapter));

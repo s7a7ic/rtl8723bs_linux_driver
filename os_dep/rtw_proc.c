@@ -163,21 +163,6 @@ static int proc_get_chplan_test(struct seq_file *m, void *v)
 	return 0;
 }
 
-#ifdef RTW_HALMAC
-extern void rtw_halmac_get_version(char *str, u32 len);
-
-static int proc_get_halmac_info(struct seq_file *m, void *v)
-{
-	char ver[30] = {0};
-
-
-	rtw_halmac_get_version(ver, 30);
-	RTW_PRINT_SEL(m, "version: %s\n", ver);
-
-	return 0;
-}
-#endif
-
 /*
 * rtw_drv_proc:
 * init/deinit when register/unregister driver
@@ -192,9 +177,6 @@ const struct rtw_proc_hdl drv_proc_hdls[] = {
 	RTW_PROC_HDL_SSEQ("country_chplan_map", proc_get_country_chplan_map, NULL),
 	RTW_PROC_HDL_SSEQ("chplan_id_list", proc_get_chplan_id_list, NULL),
 	RTW_PROC_HDL_SSEQ("chplan_test", proc_get_chplan_test, NULL),
-#ifdef RTW_HALMAC
-	RTW_PROC_HDL_SSEQ("halmac_info", proc_get_halmac_info, NULL),
-#endif /* RTW_HALMAC */
 };
 
 const int drv_proc_hdls_num = sizeof(drv_proc_hdls) / sizeof(struct rtw_proc_hdl);
@@ -2428,18 +2410,6 @@ static int proc_get_phy_cap(struct seq_file *m, void *v)
 	return 0;
 }
 
-#ifdef CONFIG_SUPPORT_TRX_SHARED
-#include "../../hal/hal_halmac.h"
-static int proc_get_trx_share_mode(struct seq_file *m, void *v)
-{
-	struct net_device *dev = m->private;
-	_adapter *adapter = (_adapter *)rtw_netdev_priv(dev);
-
-	dump_trx_share_mode(m, adapter);
-	return 0;
-}
-#endif
-
 static int proc_dump_rsvd_page(struct seq_file *m, void *v)
 {
 	struct net_device *dev = m->private;
@@ -2918,9 +2888,6 @@ const struct rtw_proc_hdl adapter_proc_hdls[] = {
 	RTW_PROC_HDL_SSEQ("txbf_cap", proc_get_txbf_cap, proc_set_txbf_cap),
 #endif
 
-#ifdef CONFIG_SUPPORT_TRX_SHARED
-	RTW_PROC_HDL_SSEQ("trx_share_mode", proc_get_trx_share_mode, NULL),
-#endif
 	RTW_PROC_HDL_SSEQ("napi_info", proc_get_napi_info, NULL),
 #ifdef CONFIG_RTW_NAPI_DYNAMIC
 	RTW_PROC_HDL_SSEQ("napi_th", proc_get_napi_info, proc_set_napi_th),

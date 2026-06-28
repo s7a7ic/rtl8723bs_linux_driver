@@ -18,9 +18,6 @@
 #include <rtw_mp.h>
 #include <rtw_mp_ioctl.h>
 #include "../../hal/phydm/phydm_precomp.h"
-#ifdef RTW_HALMAC
-#include "../../hal/hal_halmac.h"
-#endif
 
 #if (LINUX_VERSION_CODE < KERNEL_VERSION(2, 6, 27))
 #define  iwe_stream_add_event(a, b, c, d, e)  iwe_stream_add_event(b, c, d, e)
@@ -851,25 +848,12 @@ static int wpa_set_auth_algs(struct net_device *dev, u32 value)
 	} else if (value & AUTH_ALG_SHARED_KEY) {
 		RTW_INFO("wpa_set_auth_algs, AUTH_ALG_SHARED_KEY  [value:0x%x]\n", value);
 		padapter->securitypriv.ndisencryptstatus = Ndis802_11Encryption1Enabled;
-
-#ifdef CONFIG_PLATFORM_MT53XX
-		padapter->securitypriv.ndisauthtype = Ndis802_11AuthModeAutoSwitch;
-		padapter->securitypriv.dot11AuthAlgrthm = dot11AuthAlgrthm_Auto;
-#else
 		padapter->securitypriv.ndisauthtype = Ndis802_11AuthModeShared;
 		padapter->securitypriv.dot11AuthAlgrthm = dot11AuthAlgrthm_Shared;
-#endif
 	} else if (value & AUTH_ALG_OPEN_SYSTEM) {
 		RTW_INFO("wpa_set_auth_algs, AUTH_ALG_OPEN_SYSTEM\n");
 		/* padapter->securitypriv.ndisencryptstatus = Ndis802_11EncryptionDisabled; */
 		if (padapter->securitypriv.ndisauthtype < Ndis802_11AuthModeWPAPSK) {
-#ifdef CONFIG_PLATFORM_MT53XX
-			padapter->securitypriv.ndisauthtype = Ndis802_11AuthModeAutoSwitch;
-			padapter->securitypriv.dot11AuthAlgrthm = dot11AuthAlgrthm_Auto;
-#else
-			padapter->securitypriv.ndisauthtype = Ndis802_11AuthModeOpen;
-			padapter->securitypriv.dot11AuthAlgrthm = dot11AuthAlgrthm_Open;
-#endif
 		}
 
 	} else if (value & AUTH_ALG_LEAP)
@@ -2797,13 +2781,7 @@ static int rtw_wx_set_enc(struct net_device *dev,
 	if (erq->flags & IW_ENCODE_OPEN) {
 		RTW_INFO("rtw_wx_set_enc():IW_ENCODE_OPEN\n");
 		padapter->securitypriv.ndisencryptstatus = Ndis802_11Encryption1Enabled;/* Ndis802_11EncryptionDisabled; */
-
-#ifdef CONFIG_PLATFORM_MT53XX
-		padapter->securitypriv.dot11AuthAlgrthm = dot11AuthAlgrthm_Auto;
-#else
 		padapter->securitypriv.dot11AuthAlgrthm = dot11AuthAlgrthm_Open;
-#endif
-
 		padapter->securitypriv.dot11PrivacyAlgrthm = _NO_PRIVACY_;
 		padapter->securitypriv.dot118021XGrpPrivacy = _NO_PRIVACY_;
 		authmode = Ndis802_11AuthModeOpen;
@@ -2811,13 +2789,7 @@ static int rtw_wx_set_enc(struct net_device *dev,
 	} else if (erq->flags & IW_ENCODE_RESTRICTED) {
 		RTW_INFO("rtw_wx_set_enc():IW_ENCODE_RESTRICTED\n");
 		padapter->securitypriv.ndisencryptstatus = Ndis802_11Encryption1Enabled;
-
-#ifdef CONFIG_PLATFORM_MT53XX
-		padapter->securitypriv.dot11AuthAlgrthm = dot11AuthAlgrthm_Auto;
-#else
 		padapter->securitypriv.dot11AuthAlgrthm = dot11AuthAlgrthm_Shared;
-#endif
-
 		padapter->securitypriv.dot11PrivacyAlgrthm = _WEP40_;
 		padapter->securitypriv.dot118021XGrpPrivacy = _WEP40_;
 		authmode = Ndis802_11AuthModeShared;
@@ -3491,46 +3463,6 @@ static int rtw_wx_set_channel_plan(struct net_device *dev,
 		return -EPERM;
 
 	return 0;
-}
-
-static int rtw_wx_set_mtk_wps_probe_ie(struct net_device *dev,
-				       struct iw_request_info *a,
-				       union iwreq_data *wrqu, char *b)
-{
-#ifdef CONFIG_PLATFORM_MT53XX
-	_adapter *padapter = (_adapter *)rtw_netdev_priv(dev);
-	struct mlme_priv *pmlmepriv = &padapter->mlmepriv;
-
-#endif
-	return 0;
-}
-
-static int rtw_wx_get_sensitivity(struct net_device *dev,
-				  struct iw_request_info *info,
-				  union iwreq_data *wrqu, char *buf)
-{
-#ifdef CONFIG_PLATFORM_MT53XX
-	_adapter *padapter = (_adapter *)rtw_netdev_priv(dev);
-
-	/*	Modified by Albert 20110914 */
-	/*	This is in dbm format for MTK platform. */
-	wrqu->qual.level = padapter->recvpriv.rssi;
-	RTW_INFO(" level = %u\n",  wrqu->qual.level);
-#endif
-	return 0;
-}
-
-static int rtw_wx_set_mtk_wps_ie(struct net_device *dev,
-				 struct iw_request_info *info,
-				 union iwreq_data *wrqu, char *extra)
-{
-#ifdef CONFIG_PLATFORM_MT53XX
-	_adapter *padapter = (_adapter *)rtw_netdev_priv(dev);
-
-	return rtw_set_wpa_ie(padapter, wrqu->data.pointer, wrqu->data.length);
-#else
-	return 0;
-#endif
 }
 
 /*
@@ -8948,13 +8880,6 @@ static int rtw_mp_efuse_get(struct net_device *dev,
 		addr = 0;
 		EFUSE_GetEfuseDefinition(padapter, EFUSE_BT, TYPE_EFUSE_REAL_CONTENT_LEN, (PVOID)&mapLen, _FALSE);
 		RTW_INFO("Real content len = %d\n", mapLen);
-#ifdef RTW_HALMAC
-		if (rtw_efuse_bt_access(padapter, _FALSE, 0, mapLen, rawdata) == _FAIL) {
-			RTW_INFO("%s: rtw_efuse_access Fail!!\n", __func__);
-			err = -EFAULT;
-			goto exit;
-		}
-#else
 		rtw_write8(padapter, 0x35, 0x1);
 
 		if (rtw_efuse_access(padapter, _FALSE, addr, mapLen, rawdata) == _FAIL) {
@@ -8962,7 +8887,7 @@ static int rtw_mp_efuse_get(struct net_device *dev,
 			err = -EFAULT;
 			goto exit;
 		}
-#endif
+
 		_rtw_memset(extra, '\0', strlen(extra));
 
 		shift = blksz * bt_raw_order;
@@ -9087,12 +9012,8 @@ static int rtw_mp_efuse_get(struct net_device *dev,
 		}
 		/*		RTW_INFO("}\n"); */
 	} else if (strcmp(tmp[0], "ableraw") == 0) {
-#ifdef RTW_HALMAC
-		raw_maxsize = efuse_GetavailableSize(padapter);
-#else
 		efuse_GetCurrentSize(padapter, &raw_cursize);
 		raw_maxsize = efuse_GetMaxSize(padapter);
-#endif
 		sprintf(extra, "[available raw size]= %d bytes\n", raw_maxsize - raw_cursize);
 	} else if (strcmp(tmp[0], "btableraw") == 0) {
 		efuse_bt_GetCurrentSize(padapter, &raw_cursize);
@@ -9189,14 +9110,14 @@ static int rtw_mp_efuse_get(struct net_device *dev,
 			goto exit;
 		}
 		RTW_INFO("%s: cnts=%d\n", __FUNCTION__, cnts);
-#ifndef RTW_HALMAC
+
 		EFUSE_GetEfuseDefinition(padapter, EFUSE_BT, TYPE_EFUSE_MAP_LEN, (PVOID)&max_available_len, _FALSE);
 		if ((addr + cnts) > max_available_len) {
 			RTW_INFO("%s: addr(0x%X)+cnts(%d) parameter error!\n", __FUNCTION__, addr, cnts);
 			err = -EFAULT;
 			goto exit;
 		}
-#endif
+
 		if (rtw_BT_efuse_map_read(padapter, addr, cnts, data) == _FAIL) {
 			RTW_INFO("%s: rtw_BT_efuse_map_read error!!\n", __FUNCTION__);
 			err = -EFAULT;
@@ -9469,7 +9390,6 @@ static int rtw_mp_efuse_set(struct net_device *dev,
 			goto exit;
 		}
 
-#ifndef RTW_HALMAC
 		/* unknown bug workaround, need to fix later */
 		addr = 0x1ff;
 		rtw_write8(padapter, EFUSE_CTRL + 1, (addr & 0xff));
@@ -9479,7 +9399,6 @@ static int rtw_mp_efuse_set(struct net_device *dev,
 		rtw_write8(padapter, EFUSE_CTRL + 3, 0x72);
 		rtw_msleep_os(10);
 		rtw_read8(padapter, EFUSE_CTRL);
-#endif /* RTW_HALMAC */
 
 		addr = simple_strtoul(tmp[1], &ptmp, 16);
 		addr &= 0xFFF;
@@ -9588,13 +9507,7 @@ static int rtw_mp_efuse_set(struct net_device *dev,
 
 		for (jj = 0, kk = 0; jj < cnts; jj++, kk += 2)
 			setrawdata[jj] = key_2char2num(tmp[2][kk], tmp[2][kk + 1]);
-#ifdef RTW_HALMAC
-		if (rtw_efuse_bt_access(padapter, _TRUE, addr, cnts, setrawdata) == _FAIL) {
-			RTW_INFO("%s: rtw_efuse_access error!!\n", __FUNCTION__);
-			err = -EFAULT;
-			goto exit;
-		}
-#else
+
 		rtw_write8(padapter, 0x35, 1); /* switch bank 1 (BT)*/
 		if (rtw_efuse_access(padapter, _TRUE, addr, cnts, setrawdata) == _FAIL) {
 			RTW_INFO("%s: rtw_efuse_access error!!\n", __FUNCTION__);
@@ -9603,7 +9516,6 @@ static int rtw_mp_efuse_set(struct net_device *dev,
 			goto exit;
 		}
 		rtw_write8(padapter, 0x35, 0); /* switch bank 0 (WiFi)*/
-#endif
 	} else if (strcmp(tmp[0], "mac") == 0) {
 		if (tmp[1] == NULL) {
 			err = -EINVAL;
@@ -9754,7 +9666,6 @@ static int rtw_mp_efuse_set(struct net_device *dev,
 			goto exit;
 		}
 
-#ifndef RTW_HALMAC
 		BTEfuse_PowerSwitch(padapter, 1, _TRUE);
 		addr = 0x1ff;
 		rtw_write8(padapter, EFUSE_CTRL + 1, (addr & 0xff));
@@ -9765,7 +9676,6 @@ static int rtw_mp_efuse_set(struct net_device *dev,
 		rtw_msleep_os(10);
 		rtw_read8(padapter, EFUSE_CTRL);
 		BTEfuse_PowerSwitch(padapter, 1, _FALSE);
-#endif /* RTW_HALMAC */
 
 		addr = simple_strtoul(tmp[1], &ptmp, 16);
 		addr &= 0xFFF;
@@ -9787,14 +9697,14 @@ static int rtw_mp_efuse_set(struct net_device *dev,
 
 		for (jj = 0, kk = 0; jj < cnts; jj++, kk += 2)
 			setdata[jj] = key_2char2num(tmp[2][kk], tmp[2][kk + 1]);
-#ifndef RTW_HALMAC
+
 		EFUSE_GetEfuseDefinition(padapter, EFUSE_BT, TYPE_EFUSE_MAP_LEN, (PVOID)&max_available_len, _FALSE);
 		if ((addr + cnts) > max_available_len) {
 			RTW_INFO("%s: addr(0x%X)+cnts(%d) parameter error!\n", __FUNCTION__, addr, cnts);
 			err = -EFAULT;
 			goto exit;
 		}
-#endif
+
 		if (rtw_BT_efuse_map_write(padapter, addr, cnts, setdata) == _FAIL) {
 			RTW_INFO("%s: rtw_BT_efuse_map_write error!!\n", __FUNCTION__);
 			err = -EFAULT;
@@ -9856,7 +9766,7 @@ static int rtw_mp_efuse_set(struct net_device *dev,
 			sprintf(extra, "BT Status not Active Write FAIL\n");
 			goto exit;
 		}
-#ifndef RTW_HALMAC
+
 		BTEfuse_PowerSwitch(padapter, 1, _TRUE);
 		addr = 0x1ff;
 		rtw_write8(padapter, EFUSE_CTRL + 1, (addr & 0xff));
@@ -9867,7 +9777,7 @@ static int rtw_mp_efuse_set(struct net_device *dev,
 		rtw_msleep_os(10);
 		rtw_read8(padapter, EFUSE_CTRL);
 		BTEfuse_PowerSwitch(padapter, 1, _FALSE);
-#endif /* RTW_HALMAC */
+
 		_rtw_memcpy(pEfuseHal->BTEfuseModifiedMap, pEfuseHal->fakeBTEfuseModifiedMap, EFUSE_BT_MAX_MAP_LEN);
 
 		if (rtw_BT_efuse_map_write(padapter, 0x00, EFUSE_BT_MAX_MAP_LEN, pEfuseHal->fakeBTEfuseModifiedMap) == _FAIL) {
@@ -11903,11 +11813,6 @@ static iw_handler rtw_private_handler[] = {
 
 	rtw_set_pid,						/* 0x05 */
 	rtw_wps_start,					/* 0x06 */
-
-	/* for PLATFORM_MT53XX */
-	rtw_wx_get_sensitivity,			/* 0x07 */
-	rtw_wx_set_mtk_wps_probe_ie,	/* 0x08 */
-	rtw_wx_set_mtk_wps_ie,			/* 0x09 */
 
 	/* for RTK_DMP_PLATFORM
 	 * Set Channel depend on the country code */

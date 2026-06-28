@@ -721,10 +721,6 @@ void GetHalODMVar(
 	}
 }
 
-#ifdef RTW_HALMAC
-#include "../hal_halmac.h"
-#endif
-
 enum hal_status
 rtw_phydm_fw_iqk(
 	struct PHY_DM_STRUCT	*p_dm_odm,
@@ -732,12 +728,7 @@ rtw_phydm_fw_iqk(
 	u8 segment
 )
 {
-	#ifdef RTW_HALMAC
-	struct _ADAPTER *adapter = p_dm_odm->adapter;
-
-	if (rtw_halmac_iqk(adapter_to_dvobj(adapter), clear, segment) == 0)
-		return HAL_STATUS_SUCCESS;
-	#endif
+/* deadcode */
 	return HAL_STATUS_FAILURE;
 }
 
@@ -751,96 +742,7 @@ rtw_phydm_cfg_phy_para(
 	enum rf_path e_rf_path,
 	u32 delay_time)
 {
-	#ifdef RTW_HALMAC
-	struct _ADAPTER *adapter = p_dm_odm->adapter;
-	struct rtw_phy_parameter para;
-
-	switch (config_type) {
-	case PHYDM_HALMAC_CMD_MAC_W8:
-		para.cmd = 0; /* MAC register */
-		para.data.mac.offset = offset;
-		para.data.mac.value = data;
-		para.data.mac.msk = mask;
-		para.data.mac.msk_en = 1;
-		para.data.mac.size = 1;
-	break;
-	case PHYDM_HALMAC_CMD_MAC_W16:
-		para.cmd = 0; /* MAC register */
-		para.data.mac.offset = offset;
-		para.data.mac.value = data;
-		para.data.mac.msk = mask;
-		para.data.mac.msk_en = 1;
-		para.data.mac.size = 2;
-	break;
-	case PHYDM_HALMAC_CMD_MAC_W32:
-		para.cmd = 0; /* MAC register */
-		para.data.mac.offset = offset;
-		para.data.mac.value = data;
-		para.data.mac.msk = mask;
-		para.data.mac.msk_en = 1;
-		para.data.mac.size = 4;
-	break;
-	case PHYDM_HALMAC_CMD_BB_W8:
-		para.cmd = 1; /* BB register */
-		para.data.bb.offset = offset;
-		para.data.bb.value = data;
-		para.data.bb.msk = mask;
-		para.data.bb.msk_en = 1;
-		para.data.bb.size = 1;
-	break;
-	case PHYDM_HALMAC_CMD_BB_W16:
-		para.cmd = 1; /* BB register */
-		para.data.bb.offset = offset;
-		para.data.bb.value = data;
-		para.data.bb.msk = mask;
-		para.data.bb.msk_en = 1;
-		para.data.bb.size = 2;
-	break;
-	case PHYDM_HALMAC_CMD_BB_W32:
-		para.cmd = 1; /* BB register */
-		para.data.bb.offset = offset;
-		para.data.bb.value = data;
-		para.data.bb.msk = mask;
-		para.data.bb.msk_en = 1;
-		para.data.bb.size = 4;
-	break;
-	case PHYDM_HALMAC_CMD_RF_W:
-		para.cmd = 2; /* RF register */
-		para.data.rf.offset = offset;
-		para.data.rf.value = data;
-		para.data.rf.msk = mask;
-		para.data.rf.msk_en = 1;
-		if (e_rf_path == RF_PATH_A)
-			para.data.rf.path = 0;
-		else if (e_rf_path == RF_PATH_B)
-			para.data.rf.path = 1;
-		else if (e_rf_path == RF_PATH_C)
-			para.data.rf.path = 2;
-		else if (e_rf_path == RF_PATH_D)
-			para.data.rf.path = 3;
-		else
-			para.data.rf.path = 0;
-	break;
-	case PHYDM_HALMAC_CMD_DELAY_US:
-		para.cmd = 3; /* Delay */
-		para.data.delay.unit = 0; /* microsecond */
-		para.data.delay.value = delay_time;
-	break;
-	case PHYDM_HALMAC_CMD_DELAY_MS:
-		para.cmd = 3; /* Delay */
-		para.data.delay.unit = 1; /* millisecond */
-		para.data.delay.value = delay_time;
-	break;
-	case PHYDM_HALMAC_CMD_END:
-		para.cmd = 0xFF; /* End command */
-	break;
-	default:
-		return HAL_STATUS_FAILURE;
-	}
-
-	if (rtw_halmac_cfg_phy_para(adapter_to_dvobj(adapter), &para))
-		return HAL_STATUS_FAILURE;
-	#endif /*RTW_HALMAC*/
+/* deadcode */
 	return HAL_STATUS_SUCCESS;
 }
 
@@ -986,25 +888,6 @@ void rtw_phydm_ra_registed(_adapter *adapter, struct sta_info *psta)
 	dump_sta_info(RTW_DBGDUMP, psta);
 }
 
-#ifdef CONFIG_LPS_PG
-static void _lps_pg_state_update(_adapter *adapter)
-{
-	u8	is_in_lpspg = _FALSE;
-	struct pwrctrl_priv *pwrpriv = adapter_to_pwrctl(adapter);
-	PHAL_DATA_TYPE	pHalData = GET_HAL_DATA(adapter);
-	struct mlme_priv *pmlmepriv = &adapter->mlmepriv;
-	struct sta_priv *pstapriv = &adapter->stapriv;
-	struct sta_info *psta = NULL;
-
-	if ((pwrpriv->lps_level == LPS_PG) && (pwrpriv->pwr_mode != PS_MODE_ACTIVE) && (pwrpriv->rpwm <= PS_STATE_S2))
-		is_in_lpspg = _TRUE;
-	psta = rtw_get_stainfo(pstapriv, get_bssid(pmlmepriv));
-
-	if (psta)
-		psta->cmn.ra_info.disable_ra = (is_in_lpspg) ? _TRUE : _FALSE;
-}
-#endif
-
 /*#define DBG_PHYDM_STATE_CHK*/
 
 
@@ -1076,9 +959,6 @@ void rtw_phydm_watchdog(_adapter *adapter)
 #endif /* CONFIG_BT_COEXIST */
 	odm_cmn_info_update(&pHalData->odmpriv, ODM_CMNINFO_BT_ENABLED,
 							(bBtDisabled == _TRUE) ? _FALSE : _TRUE);
-#ifdef CONFIG_LPS_PG
-	_lps_pg_state_update(adapter);
-#endif
 
 	if (bLinked == _TRUE) {
 		rfk_forbidden = (_rtw_phydm_rfk_condition_check(adapter) == _TRUE) ? _FALSE : _TRUE;

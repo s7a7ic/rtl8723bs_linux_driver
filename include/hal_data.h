@@ -111,52 +111,7 @@ typedef enum _RT_AMPDU_BRUST_MODE {
 /* #define HP_THERMAL_NUM		8 */
 /* ###### duplicate code,will move to ODM ######### */
 
-#ifdef RTW_RX_AGGREGATION
-typedef enum _RX_AGG_MODE {
-	RX_AGG_DISABLE,
-	RX_AGG_DMA,
-	RX_AGG_USB,
-	RX_AGG_MIX
-} RX_AGG_MODE;
-
-/* #define MAX_RX_DMA_BUFFER_SIZE	10240 */		/* 10K for 8192C RX DMA buffer */
-
-#endif /* RTW_RX_AGGREGATION */
-
-/* E-Fuse */
-#ifdef CONFIG_RTL8188E
-	#define EFUSE_MAP_SIZE	512
-#endif
-#if defined(CONFIG_RTL8812A) || defined(CONFIG_RTL8821A) || defined(CONFIG_RTL8814A)
-	#define EFUSE_MAP_SIZE	512
-#endif
-#ifdef CONFIG_RTL8192E
-	#define EFUSE_MAP_SIZE	512
-#endif
-#ifdef CONFIG_RTL8723B
-	#define EFUSE_MAP_SIZE	512
-#endif
-#ifdef CONFIG_RTL8814A
-	#define EFUSE_MAP_SIZE	512
-#endif
-#ifdef CONFIG_RTL8703B
-	#define EFUSE_MAP_SIZE	512
-#endif
-#ifdef CONFIG_RTL8723D
-	#define EFUSE_MAP_SIZE	512
-#endif
-#ifdef CONFIG_RTL8188F
-	#define EFUSE_MAP_SIZE	512
-#endif
-
-#if defined(CONFIG_RTL8814A) || defined(CONFIG_RTL8822B) || defined(CONFIG_RTL8821C)
-	#define EFUSE_MAX_SIZE	1024
-#elif defined(CONFIG_RTL8188E) || defined(CONFIG_RTL8188F) || defined(CONFIG_RTL8703B)
-	#define EFUSE_MAX_SIZE	256
-#else
-	#define EFUSE_MAX_SIZE	512
-#endif
-/* end of E-Fuse */
+#define EFUSE_MAX_SIZE	512
 
 #define Mac_OFDM_OK			0x00000000
 #define Mac_OFDM_Fail		0x10000000
@@ -565,14 +520,6 @@ typedef struct hal_com_data {
 	u8	OutEpQueueSel;
 	u8	OutEpNumber;
 
-#ifdef RTW_RX_AGGREGATION
-	RX_AGG_MODE rxagg_mode;
-
-	/* For RX Aggregation DMA Mode */
-	u8 rxagg_dma_size;
-	u8 rxagg_dma_timeout;
-#endif /* RTW_RX_AGGREGATION */
-
 #if defined(CONFIG_SDIO_HCI) || defined(CONFIG_GSPI_HCI)
 	/*  */
 	/* For SDIO Interface HAL related */
@@ -586,7 +533,6 @@ typedef struct hal_com_data {
 	*	LOG_INTERRUPT		InterruptLog; */
 	u32			sdio_himr;
 	u32			sdio_hisr;
-#ifndef RTW_HALMAC
 	/*  */
 	/* SDIO Tx FIFO related. */
 	/*  */
@@ -595,9 +541,6 @@ typedef struct hal_com_data {
 	_lock		SdioTxFIFOFreePageLock;
 	u8			SdioTxOQTMaxFreeSpace;
 	u8			SdioTxOQTFreeSpace;
-#else /* RTW_HALMAC */
-	u16			SdioTxOQTFreeSpace;
-#endif /* RTW_HALMAC */
 
 	/*  */
 	/* SDIO Rx FIFO related. */
@@ -605,9 +548,8 @@ typedef struct hal_com_data {
 	u8			SdioRxFIFOCnt;
 	u16			SdioRxFIFOSize;
 
-#ifndef RTW_HALMAC
 	u32			sdio_tx_max_len[SDIO_MAX_TX_QUEUE];/* H, N, L, used for sdio tx aggregation max length per queue */
-#else
+
 #ifdef CONFIG_RTL8821C
 	u16			tx_high_page;
 	u16			tx_low_page;
@@ -626,7 +568,6 @@ typedef struct hal_com_data {
 	u16			max_xmit_page_bk;
 
 #endif /*#ifdef CONFIG_RTL8821C*/
-#endif /* !RTW_HALMAC */
 #endif /* CONFIG_SDIO_HCI */
 
 #ifdef CONFIG_USB_HCI
@@ -743,10 +684,6 @@ typedef struct hal_com_data {
 
 	struct hal_iqk_reg_backup iqk_reg_backup[MAX_IQK_INFO_BACKUP_CHNL_NUM];
 
-#ifdef RTW_HALMAC
-	u8 drv_rsvd_page_number;
-#endif
-
 #ifdef CONFIG_BEAMFORMING
 	u8 backup_snd_ptcl_ctrl;
 #ifdef RTW_BEAMFORMING_VERSION_2
@@ -780,10 +717,6 @@ typedef struct hal_com_data HAL_DATA_TYPE, *PHAL_DATA_TYPE;
 #define rtw_get_hw_init_completed(adapter)		(GET_HAL_DATA(adapter)->hw_init_completed)
 #define rtw_is_hw_init_completed(adapter)		(GET_HAL_DATA(adapter)->hw_init_completed == _TRUE)
 #endif
-
-#ifdef RTW_HALMAC
-int rtw_halmac_deinit_adapter(struct dvobj_priv *);
-#endif /* RTW_HALMAC */
 
 /* alias for phydm coding style */
 #define REG_OFDM_0_XA_TX_IQ_IMBALANCE	rOFDM0_XATxIQImbalance

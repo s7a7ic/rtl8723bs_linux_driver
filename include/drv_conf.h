@@ -343,14 +343,6 @@
 /*Don't release SDIO irq in suspend/resume procedure*/
 #define CONFIG_RTW_SDIO_KEEP_IRQ	0
 
-/*
- * Add by Lucas@2016/02/15
- * For RX Aggregation
- */
-#if defined(CONFIG_SDIO_HCI) || defined(CONFIG_USB_RX_AGGREGATION)
-	#define RTW_RX_AGGREGATION
-#endif /* CONFIG_SDIO_HCI || CONFIG_USB_RX_AGGREGATION */
-
 #ifdef CONFIG_RTW_HOSTAPD_ACS
 	#if defined(CONFIG_RTL8812A) || defined(CONFIG_RTL8821A) || defined(CONFIG_RTL8814A)
 		#ifndef CONFIG_FIND_BEST_CHANNEL

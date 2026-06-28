@@ -574,9 +574,6 @@ struct xmit_buf {
 
 	/* u32 sz[8]; */
 	u32	ff_hwaddr;
-#ifdef RTW_HALMAC
-	u8 bulkout_id; /* for halmac */
-#endif /* RTW_HALMAC */
 
 #if defined(PLATFORM_OS_XP) || defined(PLATFORM_LINUX) || defined(PLATFORM_FREEBSD)
 	PURB	pxmit_urb[8];

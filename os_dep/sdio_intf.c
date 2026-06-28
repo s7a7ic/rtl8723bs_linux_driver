@@ -758,16 +758,7 @@ static void rtw_sdio_primary_adapter_deinit(_adapter *padapter)
 	/* TODO: use rtw_os_ndevs_deinit instead at the first stage of driver's dev deinit function */
 	rtw_os_ndev_free(padapter);
 
-#ifdef RTW_HALMAC
-	rtw_halmac_deinit_adapter(adapter_to_dvobj(padapter));
-#endif /* RTW_HALMAC */
-
 	rtw_vmfree((u8 *)padapter, sizeof(_adapter));
-
-#ifdef CONFIG_PLATFORM_RTD2880B
-	RTW_INFO("wlan link down\n");
-	rtd2885_wlan_netlink_sendMsg("linkdown", "8712");
-#endif
 
 #ifdef RTW_SUPPORT_PLATFORM_SHUTDOWN
 	g_test_adapter = NULL;
@@ -857,11 +848,6 @@ static int rtw_drv_init(
 
 #ifdef CONFIG_HOSTAPD_MLME
 	hostapd_mode_init(padapter);
-#endif
-
-#ifdef CONFIG_PLATFORM_RTD2880B
-	RTW_INFO("wlan link up\n");
-	rtd2885_wlan_netlink_sendMsg("linkup", "8712");
 #endif
 
 	if (sdio_alloc_irq(dvobj) != _SUCCESS)

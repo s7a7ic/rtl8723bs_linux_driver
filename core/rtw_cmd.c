@@ -2718,7 +2718,6 @@ void rtw_dynamic_chk_wk_hdl(_adapter *padapter)
 #ifdef DBG_RX_COUNTER_DUMP
 		rtw_dump_rx_counters(padapter);
 #endif
-		dm_DynamicUsbTxAgg(padapter, 0);
 	}
 	rtw_hal_dm_watchdog(padapter);
 
@@ -3994,12 +3993,7 @@ static s32 rtw_mp_cmd_hdl(_adapter *padapter, u8 mp_cmd_id)
 				ret = H2C_REJECTED;
 				goto exit;
 			}
-#ifndef RTW_HALMAC
 			rtw_intf_start(padapter);
-#endif /* !RTW_HALMAC */
-#ifdef RTW_HALMAC /*for New IC*/
-			MPT_InitializeAdapter(padapter, 1);
-#endif /* CONFIG_MP_INCLUDED */
 		}
 
 		if (padapter->registrypriv.mp_mode == 0) {
@@ -4045,9 +4039,7 @@ static s32 rtw_mp_cmd_hdl(_adapter *padapter, u8 mp_cmd_id)
 				ret = H2C_REJECTED;
 				goto exit;
 			}
-#ifndef RTW_HALMAC
 			rtw_intf_start(padapter);
-#endif /* !RTW_HALMAC */
 		}
 
 		if (padapter->mppriv.mode != MP_OFF) {

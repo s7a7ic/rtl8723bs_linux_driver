@@ -797,11 +797,6 @@ void rtw_set_ps_mode(PADAPTER padapter, u8 ps_mode, u8 smart_ps, u8 bcn_ant_mode
 	_list	*plist, *phead;
 	struct sta_info *ptdls_sta;
 #endif /* CONFIG_TDLS */
-#ifdef CONFIG_LPS_PG
-	u8 lps_pg_hdl_id = 0;
-#endif
-
-
 
 	if (ps_mode > PM_Card_Disable) {
 		return;
@@ -825,14 +820,6 @@ void rtw_set_ps_mode(PADAPTER padapter, u8 ps_mode, u8 smart_ps, u8 bcn_ant_mode
 	if (PS_MODE_ACTIVE != ps_mode) {
 		rtw_set_ps_rsvd_page(padapter);
 		rtw_set_default_port_id(padapter);
-	}
-#endif
-
-#ifdef CONFIG_LPS_PG
-	if ((PS_MODE_ACTIVE != ps_mode) && (pwrpriv->blpspg_info_up)) {
-		/*rtw_hal_set_lps_pg_info(padapter);*/
-		lps_pg_hdl_id = LPS_PG_INFO_CFG;
-		rtw_hal_set_hwreg(padapter, HW_VAR_LPS_PG_HANDLE, (u8 *)(&lps_pg_hdl_id));
 	}
 #endif
 
@@ -908,20 +895,8 @@ void rtw_set_ps_mode(PADAPTER padapter, u8 ps_mode, u8 smart_ps, u8 bcn_ant_mode
 				} while (1);
 			}
 #endif
-#ifdef CONFIG_LPS_PG
-			if (pwrpriv->lps_level == LPS_PG) {
-				lps_pg_hdl_id = LPS_PG_REDLEMEM;
-				rtw_hal_set_hwreg(padapter, HW_VAR_LPS_PG_HANDLE, (u8 *)(&lps_pg_hdl_id));
-			}
-#endif
-			rtw_hal_set_hwreg(padapter, HW_VAR_H2C_FW_PWRMODE, (u8 *)(&ps_mode));
 
-#ifdef CONFIG_LPS_PG
-			if (pwrpriv->lps_level == LPS_PG) {
-				lps_pg_hdl_id = LPS_PG_RESEND_H2C;
-				rtw_hal_set_hwreg(padapter, HW_VAR_LPS_PG_HANDLE, (u8 *)(&lps_pg_hdl_id));
-			}
-#endif
+			rtw_hal_set_hwreg(padapter, HW_VAR_H2C_FW_PWRMODE, (u8 *)(&ps_mode));
 
 #ifdef CONFIG_LPS_POFF
 			rtw_hal_set_hwreg(padapter, HW_VAR_LPS_POFF_SET_MODE,
@@ -2050,10 +2025,6 @@ void rtw_init_pwrctrl_priv(PADAPTER padapter)
 #endif
 
 	pwrctrlpriv->LpsIdleCount = 0;
-
-#ifdef CONFIG_LPS_PG
-	pwrctrlpriv->lpspg_rsvd_page_locate = 0;
-#endif
 
 	/* pwrctrlpriv->FWCtrlPSMode =padapter->registrypriv.power_mgnt; */ /* PS_MODE_MIN; */
 	if (padapter->registrypriv.mp_mode == 1)

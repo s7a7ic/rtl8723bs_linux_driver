@@ -40,7 +40,7 @@ inline void rtw_sdio_set_irq_thd(struct dvobj_priv *dvobj, _thread_hdl_ thd_hdl)
 
 	sdio_data->sys_sdio_irq_thd = thd_hdl;
 }
-#ifndef RTW_HALMAC
+
 u8 sd_f0_read8(struct intf_hdl *pintfhdl, u32 addr, s32 *err)
 {
 	PADAPTER padapter;
@@ -654,7 +654,6 @@ void sd_write32(struct intf_hdl *pintfhdl, u32 addr, u32 v, s32 *err)
 	}
 
 }
-#endif /* !RTW_HALMAC */
 
 /*
  * Use CMD53 to read data from SDIO device.

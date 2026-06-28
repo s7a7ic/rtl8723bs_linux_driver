@@ -424,9 +424,6 @@ struct registry_priv {
 	u8 wakeup_event;
 #endif
 
-#ifdef CONFIG_SUPPORT_TRX_SHARED
-	u8 trx_share_mode;
-#endif
 	u8 check_hw_status;
 
 	u32 pci_aspm_config;
@@ -885,29 +882,6 @@ struct mbid_cam_cache {
 };
 #endif /*CONFIG_MBSSID_CAM*/
 
-#ifdef RTW_HALMAC
-struct halmac_indicator {
-	struct submit_ctx *sctx;
-	u8 *buffer;
-	u32 buf_size;
-	u32 ret_size;
-	u32 status;
-};
-
-struct halmacpriv {
-	/* flags */
-
-	/* For asynchronous functions */
-	struct halmac_indicator *indicator;
-
-	/* Hardware parameters */
-#ifdef CONFIG_SDIO_HCI
-	/* Store hardware tx queue page number setting */
-	u16 txpage[HW_QUEUE_ENTRY];
-#endif /* CONFIG_SDIO_HCI */
-};
-#endif /* RTW_HALMAC */
-
 struct dvobj_priv {
 	/*-------- below is common data --------*/
 	u8	chip_type;
@@ -1005,11 +979,6 @@ struct dvobj_priv {
 #ifdef CONFIG_RTW_NAPI_DYNAMIC
 	u8 en_napi_dynamic;
 #endif /* CONFIG_RTW_NAPI_DYNAMIC */
-
-#ifdef RTW_HALMAC
-	void *halmac;
-	struct halmacpriv hmpriv;
-#endif /* RTW_HALMAC */
 
 #ifdef CONFIG_FW_MULTI_PORT_SUPPORT
 	u8 default_port_id;

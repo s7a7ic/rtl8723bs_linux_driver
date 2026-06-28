@@ -381,7 +381,6 @@ Hal_MappingOutPipe(
 );
 
 void rtw_dump_fw_info(void *sel, _adapter *adapter);
-void rtw_restore_hw_port_cfg(_adapter *adapter);
 void rtw_restore_mac_addr(_adapter *adapter);/*set mac addr when hal_init for all iface*/
 void rtw_hal_dump_macaddr(void *sel, _adapter *adapter);
 
@@ -507,7 +506,6 @@ void rtw_dump_cur_efuse(PADAPTER padapter);
 	void rtw_bb_rf_gain_offset(_adapter *padapter);
 #endif /*CONFIG_RF_POWER_TRIM*/
 
-void dm_DynamicUsbTxAgg(_adapter *padapter, u8 from_timer);
 u8 rtw_hal_busagg_qsel_check(_adapter *padapter, u8 pre_qsel, u8 next_qsel);
 
 u8 rtw_get_current_tx_rate(_adapter *padapter, struct sta_info *psta);
@@ -576,30 +574,6 @@ void StopTxBeacon(_adapter *padapter);
 	void rtw_hal_read_sta_dk_key(_adapter *adapter, u8 key_id);
 #endif
 
-#ifdef CONFIG_LPS_PG
-#define LPSPG_RSVD_PAGE_SET_MACID(_rsvd_pag, _value)		SET_BITS_TO_LE_4BYTE(_rsvd_pag+0x00, 0, 8, _value)/*used macid*/
-#define LPSPG_RSVD_PAGE_SET_MBSSCAMID(_rsvd_pag, _value)	SET_BITS_TO_LE_4BYTE(_rsvd_pag+0x00, 8, 8, _value)/*used BSSID CAM entry*/
-#define LPSPG_RSVD_PAGE_SET_PMC_NUM(_rsvd_pag, _value)		SET_BITS_TO_LE_4BYTE(_rsvd_pag+0x00, 16, 8, _value)/*Max used Pattern Match CAM entry*/
-#define LPSPG_RSVD_PAGE_SET_MU_RAID_GID(_rsvd_pag, _value)	SET_BITS_TO_LE_4BYTE(_rsvd_pag+0x00, 24, 8, _value)/*Max MU rate table Group ID*/
-#define LPSPG_RSVD_PAGE_SET_SEC_CAM_NUM(_rsvd_pag, _value)	SET_BITS_TO_LE_4BYTE(_rsvd_pag+0x04, 0, 8, _value)/*used Security CAM entry number*/
-#define LPSPG_RSVD_PAGE_SET_DRV_RSVDPAGE_NUM(_rsvd_pag, _value)	SET_BITS_TO_LE_4BYTE(_rsvd_pag+0x04, 8, 8, _value)/*Txbuf used page number for fw offload*/
-#define LPSPG_RSVD_PAGE_SET_SEC_CAM_ID1(_rsvd_pag, _value)	SET_BITS_TO_LE_4BYTE(_rsvd_pag+0x08, 0, 8, _value)/*used Security CAM entry -1*/
-#define LPSPG_RSVD_PAGE_SET_SEC_CAM_ID2(_rsvd_pag, _value)	SET_BITS_TO_LE_4BYTE(_rsvd_pag+0x08, 8, 8, _value)/*used Security CAM entry -2*/
-#define LPSPG_RSVD_PAGE_SET_SEC_CAM_ID3(_rsvd_pag, _value)	SET_BITS_TO_LE_4BYTE(_rsvd_pag+0x08, 16, 8, _value)/*used Security CAM entry -3*/
-#define LPSPG_RSVD_PAGE_SET_SEC_CAM_ID4(_rsvd_pag, _value)	SET_BITS_TO_LE_4BYTE(_rsvd_pag+0x08, 24, 8, _value)/*used Security CAM entry -4*/
-#define LPSPG_RSVD_PAGE_SET_SEC_CAM_ID5(_rsvd_pag, _value)	SET_BITS_TO_LE_4BYTE(_rsvd_pag+0x0C, 0, 8, _value)/*used Security CAM entry -5*/
-#define LPSPG_RSVD_PAGE_SET_SEC_CAM_ID6(_rsvd_pag, _value)	SET_BITS_TO_LE_4BYTE(_rsvd_pag+0x0C, 8, 8, _value)/*used Security CAM entry -6*/
-#define LPSPG_RSVD_PAGE_SET_SEC_CAM_ID7(_rsvd_pag, _value)	SET_BITS_TO_LE_4BYTE(_rsvd_pag+0x0C, 16, 8, _value)/*used Security CAM entry -7*/
-#define LPSPG_RSVD_PAGE_SET_SEC_CAM_ID8(_rsvd_pag, _value)	SET_BITS_TO_LE_4BYTE(_rsvd_pag+0x0C, 24, 8, _value)/*used Security CAM entry -8*/
-enum lps_pg_hdl_id {
-	LPS_PG_INFO_CFG = 0,
-	LPS_PG_REDLEMEM,
-	LPS_PG_RESEND_H2C,
-};
-
-	u8 rtw_hal_set_lps_pg_info(_adapter *adapter);
-#endif
-
 int rtw_hal_get_rsvd_page(_adapter *adapter, u32 page_offset, u32 page_num, u8 *buffer, u32 buffer_size);
 
 #ifdef CONFIG_WOWLAN
@@ -646,11 +620,6 @@ s32 rtw_set_default_port_id(_adapter *adapter);
 s32 rtw_set_ps_rsvd_page(_adapter *adapter);
 #endif
 
-#ifdef CONFIG_P2P_PS
-#ifdef RTW_HALMAC
-void rtw_set_p2p_ps_offload_cmd(_adapter *adapter, u8 p2p_ps_state);
-#endif
-#endif
 s16 translate_dbm_to_percentage(s16 signal);
 
 #ifdef CONFIG_SWTIMER_BASED_TXBCN

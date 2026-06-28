@@ -17,7 +17,6 @@
 #include <drv_types.h>
 #include <hal_data.h>
 
-#ifndef RTW_HALMAC
 static void dump_mac_page0(PADAPTER padapter)
 {
 	char str_out[128];
@@ -230,5 +229,3 @@ exit:
 	return;
 }
 #endif
-
-#endif /* !RTW_HALMAC */
