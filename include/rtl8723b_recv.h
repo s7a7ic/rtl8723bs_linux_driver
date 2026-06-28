@@ -19,32 +19,8 @@
 #define RECV_BLK_CNT 16
 #define RECV_BLK_TH RECV_BLK_CNT
 
-#if defined(CONFIG_USB_HCI)
-
-	#ifndef MAX_RECVBUF_SZ
-		#ifdef PLATFORM_OS_CE
-			#define MAX_RECVBUF_SZ (8192+1024) /* 8K+1k */
-		#else
-			#ifndef CONFIG_MINIMAL_MEMORY_USAGE
-				/* #define MAX_RECVBUF_SZ (32768) */ /* 32k */
-				/* #define MAX_RECVBUF_SZ (16384) */ /* 16K */
-				/* #define MAX_RECVBUF_SZ (10240) */ /* 10K */
-				#ifdef CONFIG_PLATFORM_MSTAR
-					#define MAX_RECVBUF_SZ (8192) /* 8K */
-				#else
-					#define MAX_RECVBUF_SZ (15360) /* 15k < 16k */
-				#endif
-				/* #define MAX_RECVBUF_SZ (8192+1024) */ /* 8K+1k */
-			#else
-				#define MAX_RECVBUF_SZ (4000) /* about 4K */
-			#endif
-		#endif
-	#endif /* !MAX_RECVBUF_SZ */
-
-#elif defined(CONFIG_SDIO_HCI) || defined(CONFIG_GSPI_HCI)
-
+#if defined(CONFIG_SDIO_HCI) || defined(CONFIG_GSPI_HCI)
 	#define MAX_RECVBUF_SZ  (RX_DMA_SIZE_8723B - RX_DMA_RESERVED_SIZE_8723B)
-
 #endif
 
 /* Rx smooth factor */
@@ -60,12 +36,6 @@
 #if defined(CONFIG_SDIO_HCI) || defined(CONFIG_GSPI_HCI)
 	s32 rtl8723bs_init_recv_priv(PADAPTER padapter);
 	void rtl8723bs_free_recv_priv(PADAPTER padapter);
-#endif
-
-#ifdef CONFIG_USB_HCI
-	int rtl8723bu_init_recv_priv(_adapter *padapter);
-	void rtl8723bu_free_recv_priv(_adapter *padapter);
-	void rtl8723bu_init_recvbuf(_adapter *padapter, struct recv_buf *precvbuf);
 #endif
 
 void rtl8723b_query_rx_desc_status(union recv_frame *precvframe, u8 *pdesc);

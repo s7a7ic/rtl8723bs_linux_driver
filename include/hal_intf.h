@@ -282,18 +282,11 @@ struct hal_ops {
 #ifdef CONFIG_RECV_THREAD_MODE
 	s32 (*recv_hdl)(_adapter *adapter);
 #endif
-#if defined(CONFIG_USB_HCI)
-	u32(*inirp_init)(_adapter *padapter);
-	u32(*inirp_deinit)(_adapter *padapter);
-#endif
+
 	/*** interrupt hdl section ***/
 	void	(*enable_interrupt)(_adapter *padapter);
 	void	(*disable_interrupt)(_adapter *padapter);
 	u8(*check_ips_status)(_adapter *padapter);
-
-#if defined(CONFIG_USB_HCI) && defined(CONFIG_SUPPORT_USB_INT)
-	void	(*interrupt_handler)(_adapter *padapter, u16 pkt_len, u8 *pbuf);
-#endif
 
 	/*** DM section ***/
 #ifdef CONFIG_RTW_SW_LED
@@ -595,11 +588,6 @@ void rtw_hal_disable_interrupt(_adapter *padapter);
 
 u8 rtw_hal_check_ips_status(_adapter *padapter);
 
-#if defined(CONFIG_USB_HCI)
-	u32	rtw_hal_inirp_init(_adapter *padapter);
-	u32	rtw_hal_inirp_deinit(_adapter *padapter);
-#endif
-
 u8	rtw_hal_intf_ps_func(_adapter *padapter, HAL_INTF_PS_FUNC efunc_id, u8 *val);
 
 s32	rtw_hal_xmitframe_enqueue(_adapter *padapter, struct xmit_frame *pxmitframe);
@@ -632,10 +620,6 @@ void	rtw_hal_write_rfreg(_adapter *padapter, enum rf_path eRFPath, u32 RegAddr, 
 
 #define phy_set_mac_reg	phy_set_bb_reg
 #define phy_query_mac_reg phy_query_bb_reg
-
-#if  defined(CONFIG_USB_HCI) && defined(CONFIG_SUPPORT_USB_INT)
-	void	rtw_hal_interrupt_handler(_adapter *padapter, u16 pkt_len, u8 *pbuf);
-#endif
 
 void	rtw_hal_set_chnl_bw(_adapter *padapter, u8 channel, enum channel_width Bandwidth, u8 Offset40, u8 Offset80);
 void	rtw_hal_dm_watchdog(_adapter *padapter);

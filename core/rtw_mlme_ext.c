@@ -10452,7 +10452,7 @@ unsigned int send_beacon(_adapter *padapter)
 	int	issue = 0;
 	int poll = 0;
 
-#if defined(CONFIG_USB_HCI) || defined(CONFIG_SDIO_HCI) || defined(CONFIG_GSPI_HCI)
+#if defined(CONFIG_SDIO_HCI) || defined(CONFIG_GSPI_HCI)
 	systime start = rtw_get_current_time();
 
 	/* bypass TX BCN queue because op ch is switching/waiting */
@@ -10463,14 +10463,6 @@ unsigned int send_beacon(_adapter *padapter)
 	)
 		return _SUCCESS;
 
-#if defined(CONFIG_USB_HCI)
-#if defined(CONFIG_RTL8812A)
-	if (IS_FULL_SPEED_USB(padapter)) {
-		issue_beacon(padapter, 300);
-		bxmitok = _TRUE;
-	} else
-#endif
-#endif
 	{
 		rtw_hal_set_hwreg(padapter, HW_VAR_BCN_VALID, NULL);
 		rtw_hal_set_hwreg(padapter, HW_VAR_DL_BCN_SEL, NULL);

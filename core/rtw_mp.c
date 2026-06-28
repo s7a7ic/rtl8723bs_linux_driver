@@ -1063,49 +1063,7 @@ end_of_mp_stop_test:
 #endif
 	}
 }
-/*---------------------------hal\rtl8192c\MPT_Phy.c---------------------------*/
-#if 0
-/* #ifdef CONFIG_USB_HCI */
-static VOID mpt_AdjustRFRegByRateByChan92CU(PADAPTER pAdapter, u8 RateIdx, u8 Channel, u8 BandWidthID)
-{
-	u8		eRFPath;
-	u32		rfReg0x26;
-	HAL_DATA_TYPE	*pHalData = GET_HAL_DATA(pAdapter);
 
-
-	if (RateIdx < MPT_RATE_6M) 	/* CCK rate,for 88cu */
-		rfReg0x26 = 0xf400;
-	else if ((RateIdx >= MPT_RATE_6M) && (RateIdx <= MPT_RATE_54M)) {/* OFDM rate,for 88cu */
-		if ((4 == Channel) || (8 == Channel) || (12 == Channel))
-			rfReg0x26 = 0xf000;
-		else if ((5 == Channel) || (7 == Channel) || (13 == Channel) || (14 == Channel))
-			rfReg0x26 = 0xf400;
-		else
-			rfReg0x26 = 0x4f200;
-	} else if ((RateIdx >= MPT_RATE_MCS0) && (RateIdx <= MPT_RATE_MCS15)) {
-		/* MCS 20M ,for 88cu */ /* MCS40M rate,for 88cu */
-
-		if (CHANNEL_WIDTH_20 == BandWidthID) {
-			if ((4 == Channel) || (8 == Channel))
-				rfReg0x26 = 0xf000;
-			else if ((5 == Channel) || (7 == Channel) || (13 == Channel) || (14 == Channel))
-				rfReg0x26 = 0xf400;
-			else
-				rfReg0x26 = 0x4f200;
-		} else {
-			if ((4 == Channel) || (8 == Channel))
-				rfReg0x26 = 0xf000;
-			else if ((5 == Channel) || (7 == Channel))
-				rfReg0x26 = 0xf400;
-			else
-				rfReg0x26 = 0x4f200;
-		}
-	}
-
-	for (eRFPath = 0; eRFPath < pHalData->NumTotalRFPath; eRFPath++)
-		write_rfreg(pAdapter, eRFPath, RF_SYN_G2, rfReg0x26);
-}
-#endif
 /*-----------------------------------------------------------------------------
  * Function:	mpt_SwitchRfSetting
  *

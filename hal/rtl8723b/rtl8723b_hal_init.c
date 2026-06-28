@@ -72,10 +72,6 @@ _BlockWrite(
 	u8			*bufferPtr	= (u8 *)buffer;
 	u32			i = 0, offset = 0;
 
-#ifdef CONFIG_USB_HCI
-	blockSize_p1 = 254;
-#endif
-
 	/*	printk("====>%s %d\n", __func__, __LINE__); */
 
 	/* 3 Phase #1 */
@@ -85,11 +81,8 @@ _BlockWrite(
 
 
 	for (i = 0; i < blockCount_p1; i++) {
-#ifdef CONFIG_USB_HCI
-		ret = rtw_writeN(padapter, (FW_8723B_START_ADDRESS + i * blockSize_p1), blockSize_p1, (bufferPtr + i * blockSize_p1));
-#else
 		ret = rtw_write32(padapter, (FW_8723B_START_ADDRESS + i * blockSize_p1), le32_to_cpu(*((u32 *)(bufferPtr + i * blockSize_p1))));
-#endif
+
 		if (ret == _FAIL) {
 			printk("====>%s %d i:%d\n", __func__, __LINE__, i);
 			goto exit;
@@ -103,16 +96,6 @@ _BlockWrite(
 		blockCount_p2 = remainSize_p1 / blockSize_p2;
 		remainSize_p2 = remainSize_p1 % blockSize_p2;
 
-
-
-#ifdef CONFIG_USB_HCI
-		for (i = 0; i < blockCount_p2; i++) {
-			ret = rtw_writeN(padapter, (FW_8723B_START_ADDRESS + offset + i * blockSize_p2), blockSize_p2, (bufferPtr + offset + i * blockSize_p2));
-
-			if (ret == _FAIL)
-				goto exit;
-		}
-#endif
 	}
 
 	/* 3 Phase #3 */
@@ -2852,7 +2835,7 @@ u8 rtl8723b_MRateIdxToARFRId(PADAPTER padapter, u8 rate_idx)
 	return ret;
 }
 
-#if defined(CONFIG_USB_HCI) || defined(CONFIG_SDIO_HCI) || defined(CONFIG_GSPI_HCI)
+#if defined(CONFIG_SDIO_HCI) || defined(CONFIG_GSPI_HCI)
 void rtl8723b_cal_txdesc_chksum(struct tx_desc *ptxdesc)
 {
 	u16	*usPtr = (u16 *)ptxdesc;
@@ -2947,7 +2930,7 @@ void rtl8723b_fill_fake_txdesc(
 		}
 	}
 
-#if defined(CONFIG_USB_HCI) || defined(CONFIG_SDIO_HCI) || defined(CONFIG_GSPI_HCI)
+#if defined(CONFIG_SDIO_HCI) || defined(CONFIG_GSPI_HCI)
 	/* USB interface drop packet if the checksum of descriptor isn't correct. */
 	/* Using this checksum can let hardware recovery from packet bulk out error (e.g. Cancel URC, Bulk out error.). */
 	rtl8723b_cal_txdesc_chksum((struct tx_desc *)pDesc);
@@ -3118,7 +3101,7 @@ s32 rtl8723b_InitLLTTable(PADAPTER padapter)
 	return ret;
 }
 
-#if defined(CONFIG_USB_HCI) || defined(CONFIG_SDIO_HCI) || defined(CONFIG_GSPI_HCI)
+#if defined(CONFIG_SDIO_HCI) || defined(CONFIG_GSPI_HCI)
 void _DisableGPIO(PADAPTER	padapter)
 {
 #if 0
@@ -3434,7 +3417,7 @@ s32 CardDisableWithoutHWSM(PADAPTER padapter)
 
 	return rtStatus;
 }
-#endif /* CONFIG_USB_HCI || CONFIG_SDIO_HCI || CONFIG_GSPI_HCI */
+#endif /* CONFIG_SDIO_HCI || CONFIG_GSPI_HCI */
 
 void
 Hal_InitPGData(
@@ -3585,37 +3568,18 @@ Hal_EfuseParseBTCoexistInfo_8723B(
 		tempval = hwinfo[EEPROM_RF_BT_SETTING_8723B];
 		if (tempval != 0xFF) {
 			pHalData->EEPROMBluetoothAntNum = tempval & BIT(0);
-#ifdef CONFIG_USB_HCI
-			/*
-			 * Note. default BT antenna is s0 for USB,
-			 * but the efuse 0xC3[6] is 0, it mean Single antenna use s1 (default).
-			 */
-			if (pHalData->EEPROMBluetoothAntNum == Ant_x2)
-				pHalData->ant_path = RF_PATH_A; /* s1 */
-			else
-				pHalData->ant_path = RF_PATH_B; /* s0 */
-#else /* SDIO or PCIE */
 			/* EFUSE_0xC3[6] == 0, S1(Main)-RF_PATH_A; */
 			/* EFUSE_0xC3[6] == 1, S0(Aux)-RF_PATH_B */
 			pHalData->ant_path = (tempval & BIT(6)) ? RF_PATH_B : RF_PATH_A;
-#endif
 		} else {
 			pHalData->EEPROMBluetoothAntNum = Ant_x1;
-#ifdef CONFIG_USB_HCI
-			pHalData->ant_path = RF_PATH_B;/* s0 */
-#else
 			pHalData->ant_path = RF_PATH_A;
-#endif
 		}
 	} else {
 		pHalData->EEPROMBluetoothCoexist = _FALSE;
 		pHalData->EEPROMBluetoothType = BT_RTL8723B;
 		pHalData->EEPROMBluetoothAntNum = Ant_x1;
-#ifdef CONFIG_USB_HCI
-		pHalData->ant_path = RF_PATH_B;/* s0 */
-#else
 		pHalData->ant_path = RF_PATH_A;
-#endif
 	}
 
 #ifdef CONFIG_FOR_RTL8723BS_VQ0
@@ -4152,7 +4116,7 @@ static void rtl8723b_fill_default_txdesc(
 				FUNC_ADPT_ARG(padapter), pattrib->ether_type, MRateToHwRate(pmlmeext->tx_rate));
 		}
 
-#if defined(CONFIG_USB_TX_AGGREGATION) || defined(CONFIG_SDIO_HCI) || defined(CONFIG_GSPI_HCI)
+#if defined(CONFIG_SDIO_HCI) || defined(CONFIG_GSPI_HCI)
 		SET_TX_DESC_USB_TXAGG_NUM_8723B(pbuf, pxmitframe->agg_num);
 #endif
 
@@ -4220,10 +4184,6 @@ static void rtl8723b_fill_default_txdesc(
 
 		pkt_offset = 0;
 		offset = TXDESC_SIZE;
-#ifdef CONFIG_USB_HCI
-		pkt_offset = pxmitframe->pkt_offset;
-		offset += (pxmitframe->pkt_offset >> 3);
-#endif /* CONFIG_USB_HCI */
 
 #ifdef CONFIG_TX_EARLY_MODE
 		if (pxmitframe->frame_tag == DATA_FRAMETAG) {
@@ -4267,7 +4227,7 @@ void rtl8723b_update_txdesc(struct xmit_frame *pxmitframe, u8 *pbuf)
 	odm_set_tx_ant_by_tx_info(&GET_HAL_DATA(padapter)->odmpriv, pbuf, pxmitframe->attrib.mac_id);
 #endif /* CONFIG_ANTENNA_DIVERSITY */
 
-#if defined(CONFIG_USB_HCI) || defined(CONFIG_SDIO_HCI) || defined(CONFIG_GSPI_HCI)
+#if defined(CONFIG_SDIO_HCI) || defined(CONFIG_GSPI_HCI)
 	rtl8723b_cal_txdesc_chksum((struct tx_desc *)pbuf);
 #endif
 }

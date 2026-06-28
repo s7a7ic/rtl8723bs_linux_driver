@@ -31,26 +31,6 @@
 	#if defined(CONFIG_GSPI_HCI)
 		#define NR_XMITBUFF	(128)
 	#endif
-
-#elif defined (CONFIG_USB_HCI)
-
-	#ifdef CONFIG_USB_TX_AGGREGATION
-		#if defined(CONFIG_PLATFORM_ARM_SUNxI) || defined(CONFIG_PLATFORM_ARM_SUN6I) || defined(CONFIG_PLATFORM_ARM_SUN7I) || defined(CONFIG_PLATFORM_ARM_SUN8I) || defined(CONFIG_PLATFORM_ARM_SUN50IW1P1)
-			#define MAX_XMITBUF_SZ (12288)  /* 12k 1536*8 */
-		#elif defined (CONFIG_PLATFORM_MSTAR)
-			#define MAX_XMITBUF_SZ	7680	/* 7.5k */
-		#else
-			#define MAX_XMITBUF_SZ	(20480)	/* 20k */
-		#endif
-	#else
-		#define MAX_XMITBUF_SZ	(2048)
-	#endif
-
-	#ifdef CONFIG_SINGLE_XMIT_BUF
-		#define NR_XMITBUFF	(1)
-	#else
-		#define NR_XMITBUFF	(4)
-	#endif /* CONFIG_SINGLE_XMIT_BUF */
 #endif
 
 #ifdef PLATFORM_OS_CE
@@ -180,15 +160,6 @@
 
 #if defined(CONFIG_SDIO_HCI) || defined(CONFIG_GSPI_HCI)
 	#define TXDESC_OFFSET TXDESC_SIZE
-#endif
-
-#ifdef CONFIG_USB_HCI
-	#ifdef USB_PACKET_OFFSET_SZ
-		#define PACKET_OFFSET_SZ (USB_PACKET_OFFSET_SZ)
-	#else
-		#define PACKET_OFFSET_SZ (8)
-	#endif
-	#define TXDESC_OFFSET (TXDESC_SIZE + PACKET_OFFSET_SZ)
 #endif
 
 enum TXDESC_SC {
@@ -472,30 +443,6 @@ struct xmit_buf {
 
 	struct submit_ctx *sctx;
 
-#ifdef CONFIG_USB_HCI
-
-	/* u32 sz[8]; */
-	u32	ff_hwaddr;
-
-#if defined(PLATFORM_OS_XP) || defined(PLATFORM_LINUX) || defined(PLATFORM_FREEBSD)
-	PURB	pxmit_urb[8];
-	dma_addr_t dma_transfer_addr;	/* (in) dma addr for transfer_buffer */
-#endif
-
-#ifdef PLATFORM_OS_XP
-	PIRP		pxmit_irp[8];
-#endif
-
-#ifdef PLATFORM_OS_CE
-	USB_TRANSFER	usb_transfer_write_port;
-#endif
-
-	u8 bpending[8];
-
-	sint last[8];
-
-#endif
-
 #if defined(CONFIG_SDIO_HCI) || defined(CONFIG_GSPI_HCI)
 	u8 *phead;
 	u8 *pdata;
@@ -536,13 +483,6 @@ struct xmit_frame {
 #if defined(CONFIG_SDIO_HCI) || defined(CONFIG_GSPI_HCI)
 	u8	pg_num;
 	u8	agg_num;
-#endif
-
-#ifdef CONFIG_USB_HCI
-#ifdef CONFIG_USB_TX_AGGREGATION
-	u8	agg_num;
-#endif
-	s8	pkt_offset;
 #endif
 
 #ifdef CONFIG_XMIT_ACK
@@ -662,28 +602,6 @@ struct	xmit_priv	{
 	u8	hwxmit_entry;
 
 	u8	wmm_para_seq[4];/* sequence for wmm ac parameter strength from large to small. it's value is 0->vo, 1->vi, 2->be, 3->bk. */
-
-#ifdef CONFIG_USB_HCI
-	_sema	tx_retevt;/* all tx return event; */
-	u8		txirp_cnt;
-
-#ifdef PLATFORM_OS_CE
-	USB_TRANSFER	usb_transfer_write_port;
-	/*	USB_TRANSFER	usb_transfer_write_mem; */
-#endif
-#ifdef PLATFORM_LINUX
-	struct tasklet_struct xmit_tasklet;
-#endif
-#ifdef PLATFORM_FREEBSD
-	struct task xmit_tasklet;
-#endif
-	/* per AC pending irp */
-	int beq_cnt;
-	int bkq_cnt;
-	int viq_cnt;
-	int voq_cnt;
-
-#endif
 
 #if defined(CONFIG_SDIO_HCI) || defined(CONFIG_GSPI_HCI)
 #ifdef CONFIG_SDIO_TX_TASKLET

@@ -103,68 +103,20 @@ void rtw_set_tx_chksum_offload(_pkt *pkt, struct pkt_attrib *pattrib)
 int rtw_os_xmit_resource_alloc(_adapter *padapter, struct xmit_buf *pxmitbuf, u32 alloc_sz, u8 flag)
 {
 	if (alloc_sz > 0) {
-#ifdef CONFIG_USE_USB_BUFFER_ALLOC_TX
-		struct dvobj_priv	*pdvobjpriv = adapter_to_dvobj(padapter);
-		struct usb_device	*pusbd = pdvobjpriv->pusbdev;
-
-		pxmitbuf->pallocated_buf = rtw_usb_buffer_alloc(pusbd, (size_t)alloc_sz, &pxmitbuf->dma_transfer_addr);
-		pxmitbuf->pbuf = pxmitbuf->pallocated_buf;
-		if (pxmitbuf->pallocated_buf == NULL)
-			return _FAIL;
-#else /* CONFIG_USE_USB_BUFFER_ALLOC_TX */
-
 		pxmitbuf->pallocated_buf = rtw_zmalloc(alloc_sz);
 		if (pxmitbuf->pallocated_buf == NULL)
 			return _FAIL;
 
 		pxmitbuf->pbuf = (u8 *)N_BYTE_ALIGMENT((SIZE_PTR)(pxmitbuf->pallocated_buf), XMITBUF_ALIGN_SZ);
-
-#endif /* CONFIG_USE_USB_BUFFER_ALLOC_TX */
 	}
-
-	if (flag) {
-#ifdef CONFIG_USB_HCI
-		int i;
-		for (i = 0; i < 8; i++) {
-			pxmitbuf->pxmit_urb[i] = usb_alloc_urb(0, GFP_KERNEL);
-			if (pxmitbuf->pxmit_urb[i] == NULL) {
-				RTW_INFO("pxmitbuf->pxmit_urb[i]==NULL");
-				return _FAIL;
-			}
-		}
-#endif
-	}
-
 	return _SUCCESS;
 }
 
 void rtw_os_xmit_resource_free(_adapter *padapter, struct xmit_buf *pxmitbuf, u32 free_sz, u8 flag)
 {
-	if (flag) {
-#ifdef CONFIG_USB_HCI
-		int i;
-
-		for (i = 0; i < 8; i++) {
-			if (pxmitbuf->pxmit_urb[i]) {
-				/* usb_kill_urb(pxmitbuf->pxmit_urb[i]); */
-				usb_free_urb(pxmitbuf->pxmit_urb[i]);
-			}
-		}
-#endif
-	}
-
 	if (free_sz > 0) {
-#ifdef CONFIG_USE_USB_BUFFER_ALLOC_TX
-		struct dvobj_priv	*pdvobjpriv = adapter_to_dvobj(padapter);
-		struct usb_device	*pusbd = pdvobjpriv->pusbdev;
-
-		rtw_usb_buffer_free(pusbd, (size_t)free_sz, pxmitbuf->pallocated_buf, pxmitbuf->dma_transfer_addr);
-		pxmitbuf->pallocated_buf =  NULL;
-		pxmitbuf->dma_transfer_addr = 0;
-#else	/* CONFIG_USE_USB_BUFFER_ALLOC_TX */
 		if (pxmitbuf->pallocated_buf)
 			rtw_mfree(pxmitbuf->pallocated_buf, free_sz);
-#endif /* CONFIG_USE_USB_BUFFER_ALLOC_TX */
 	}
 }
 

@@ -177,30 +177,6 @@ static void request_wps_pbc_event(_adapter *padapter)
 
 }
 
-#ifdef CONFIG_SUPPORT_HW_WPS_PBC
-void rtw_request_wps_pbc_event(_adapter *padapter)
-{
-#ifdef RTK_DMP_PLATFORM
-#if (LINUX_VERSION_CODE > KERNEL_VERSION(2, 6, 12))
-	kobject_uevent(&padapter->pnetdev->dev.kobj, KOBJ_NET_PBC);
-#else
-	kobject_hotplug(&padapter->pnetdev->class_dev.kobj, KOBJ_NET_PBC);
-#endif
-#else
-
-	if (padapter->pid[0] == 0) {
-		/*	0 is the default value and it means the application monitors the HW PBC doesn't privde its pid to driver. */
-		return;
-	}
-
-	rtw_signal_process(padapter->pid[0], SIGUSR1);
-
-#endif
-
-	rtw_led_control(padapter, LED_CTL_START_WPS_BOTTON);
-}
-#endif/* #ifdef CONFIG_SUPPORT_HW_WPS_PBC */
-
 void indicate_wx_scan_complete_event(_adapter *padapter)
 {
 	union iwreq_data wrqu;
@@ -6400,9 +6376,6 @@ static int rtw_dbg_port(struct net_device *dev,
 				pxmitpriv->free_xmitbuf_cnt, pxmitpriv->free_xmitframe_cnt,
 				pxmitpriv->free_xmit_extbuf_cnt, pxmitpriv->free_xframe_ext_cnt,
 				 precvpriv->free_recvframe_cnt);
-#ifdef CONFIG_USB_HCI
-			RTW_INFO("rx_urb_pending_cn=%d\n", ATOMIC_READ(&(precvpriv->rx_pending_cnt)));
-#endif
 		}
 			break;
 		case 0x09: {
@@ -8258,10 +8231,6 @@ static int rtw_wowlan_ctrl(struct net_device *dev,
 		rtw_suspend_common(padapter);
 
 	else if (_rtw_memcmp(extra, "disable", 7)) {
-#ifdef CONFIG_USB_HCI
-		RTW_ENABLE_FUNC(padapter, DF_RX_BIT);
-		RTW_ENABLE_FUNC(padapter, DF_TX_BIT);
-#endif
 		rtw_resume_common(padapter);
 
 #ifdef CONFIG_PNO_SUPPORT
@@ -8392,10 +8361,6 @@ static int rtw_ap_wowlan_ctrl(struct net_device *dev,
 
 		rtw_suspend_common(padapter);
 	} else if (_rtw_memcmp(extra, "disable", 7)) {
-#ifdef CONFIG_USB_HCI
-		RTW_ENABLE_FUNC(padapter, DF_RX_BIT);
-		RTW_ENABLE_FUNC(padapter, DF_TX_BIT);
-#endif
 		rtw_resume_common(padapter);
 	} else {
 		RTW_INFO("[%s] Invalid Parameter.\n", __func__);
@@ -8948,17 +8913,6 @@ static int rtw_mp_efuse_get(struct net_device *dev,
 		}
 		/*		RTW_INFO("}\n"); */
 	} else if (strcmp(tmp[0], "vidpid") == 0) {
-#ifdef CONFIG_RTL8188E
-#ifdef CONFIG_USB_HCI
-		addr = EEPROM_VID_88EU;
-#endif
-#endif /* CONFIG_RTL8188E */
-
-#ifdef CONFIG_RTL8192E
-#ifdef CONFIG_USB_HCI
-		addr = EEPROM_VID_8192EU;
-#endif
-#endif /* CONFIG_RTL8192E */
 #ifdef CONFIG_RTL8723B
 		addr = EEPROM_VID_8723BU;
 #endif /* CONFIG_RTL8192E */
@@ -8966,18 +8920,6 @@ static int rtw_mp_efuse_get(struct net_device *dev,
 #ifdef CONFIG_RTL8188F
 		addr = EEPROM_VID_8188FU;
 #endif /* CONFIG_RTL8188F */
-
-#ifdef CONFIG_RTL8703B
-#ifdef CONFIG_USB_HCI
-		addr = EEPROM_VID_8703BU;
-#endif
-#endif /* CONFIG_RTL8703B */
-
-#ifdef CONFIG_RTL8723D
-#ifdef CONFIG_USB_HCI
-		addr = EEPROM_VID_8723DU;
-#endif /* CONFIG_USB_HCI */
-#endif /* CONFIG_RTL8723D */
 
 		cnts = 4;
 
@@ -9567,18 +9509,6 @@ static int rtw_mp_efuse_set(struct net_device *dev,
 		}
 
 		/* pidvid,da0b7881		 */
-#ifdef CONFIG_RTL8188E
-#ifdef CONFIG_USB_HCI
-		addr = EEPROM_VID_88EU;
-#endif
-#endif /* CONFIG_RTL8188E */
-
-#ifdef CONFIG_RTL8192E
-#ifdef CONFIG_USB_HCI
-		addr = EEPROM_VID_8192EU;
-#endif
-#endif /* CONFIG_RTL8188E */
-
 #ifdef CONFIG_RTL8723B
 		addr = EEPROM_VID_8723BU;
 #endif
@@ -9586,18 +9516,6 @@ static int rtw_mp_efuse_set(struct net_device *dev,
 #ifdef CONFIG_RTL8188F
 		addr = EEPROM_VID_8188FU;
 #endif
-
-#ifdef CONFIG_RTL8703B
-#ifdef CONFIG_USB_HCI
-		addr = EEPROM_VID_8703BU;
-#endif /* CONFIG_USB_HCI */
-#endif /* CONFIG_RTL8703B */
-
-#ifdef CONFIG_RTL8723D
-#ifdef CONFIG_USB_HCI
-		addr = EEPROM_VID_8723DU;
-#endif /* CONFIG_USB_HCI */
-#endif /* CONFIG_RTL8723D */
 
 		cnts = strlen(tmp[1]);
 		if (cnts % 2) {
