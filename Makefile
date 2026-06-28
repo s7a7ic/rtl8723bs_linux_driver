@@ -191,12 +191,10 @@ _OS_INTFS_FILES += os_dep/ioctl_mp.o
 endif
 
 ifeq ($(CONFIG_SDIO_HCI), y)
-_OS_INTFS_FILES += os_dep/custom_gpio_linux.o
 _OS_INTFS_FILES += os_dep/$(HCI_NAME)_ops_linux.o
 endif
 
 ifeq ($(CONFIG_GSPI_HCI), y)
-_OS_INTFS_FILES += os_dep/custom_gpio_linux.o
 _OS_INTFS_FILES += os_dep/$(HCI_NAME)_ops_linux.o
 endif
 
@@ -1759,7 +1757,6 @@ rtk_core :=	core/rtw_cmd.o \
 		core/rtw_security.o \
 		core/rtw_debug.o \
 		core/rtw_io.o \
-		core/rtw_ioctl_query.o \
 		core/rtw_ioctl_set.o \
 		core/rtw_ieee80211.o \
 		core/rtw_mlme.o \

@@ -21,20 +21,6 @@
 	#include <linux/mmc/sdio_ids.h>
 	#include <linux/mmc/host.h>
 	#include <linux/mmc/card.h>
-
-	#ifdef CONFIG_PLATFORM_SPRD
-		#include <linux/gpio.h>
-		#include <custom_gpio.h>
-	#endif /* CONFIG_PLATFORM_SPRD */
-#endif
-
-#ifdef PLATFORM_OS_XP
-	#include <wdm.h>
-	#include <ntddsd.h>
-#endif
-
-#ifdef PLATFORM_OS_CE
-	#include <sdcardddk.h>
 #endif
 
 #define RTW_SDIO_CLK_33M	33000000
@@ -55,23 +41,6 @@ typedef struct sdio_data {
 	unsigned int clock;
 	unsigned int timing;
 	u8	sd3_bus_mode;
-#endif
-
-#ifdef PLATFORM_OS_XP
-	PDEVICE_OBJECT				pphysdevobj;
-	PDEVICE_OBJECT				pfuncdevobj;
-	PDEVICE_OBJECT				pnextdevobj;
-	SDBUS_INTERFACE_STANDARD	sdbusinft;
-	u8							nextdevstacksz;
-#endif
-
-#ifdef PLATFORM_OS_CE
-	SD_DEVICE_HANDLE			hDevice;
-	SD_CARD_RCA					sd_rca;
-	SD_CARD_INTERFACE			card_intf;
-	BOOLEAN						enableIsarWithStatus;
-	WCHAR						active_path[MAX_ACTIVE_REG_PATH];
-	SD_HOST_BLOCK_CAPABILITY	sd_host_blk_cap;
 #endif
 } SDIO_DATA, *PSDIO_DATA;
 

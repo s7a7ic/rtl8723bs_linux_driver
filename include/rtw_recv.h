@@ -15,40 +15,25 @@
 #ifndef _RTW_RECV_H_
 #define _RTW_RECV_H_
 
-#ifdef PLATFORM_OS_XP
-	#ifdef CONFIG_SDIO_HCI
-		#define NR_RECVBUFF 1024/* 512 */ /* 128 */
+#ifdef CONFIG_SINGLE_RECV_BUF
+	#define NR_RECVBUFF (1)
+#else
+	#if defined(CONFIG_GSPI_HCI)
+		#define NR_RECVBUFF (32)
+	#elif defined(CONFIG_SDIO_HCI)
+		#define NR_RECVBUFF (8)
 	#else
-		#define NR_RECVBUFF (16)
+		#define NR_RECVBUFF (8)
 	#endif
-#elif defined(PLATFORM_OS_CE)
-	#ifdef CONFIG_SDIO_HCI
-		#define NR_RECVBUFF (128)
-	#else
-		#define NR_RECVBUFF (4)
-	#endif
-#else /* PLATFORM_LINUX /PLATFORM_BSD */
+#endif /* CONFIG_SINGLE_RECV_BUF */
+#ifdef CONFIG_PREALLOC_RX_SKB_BUFFER
+	#define NR_PREALLOC_RECV_SKB (rtw_rtkm_get_nr_recv_skb()>>1)
+#else /*!CONFIG_PREALLOC_RX_SKB_BUFFER */
+	#define NR_PREALLOC_RECV_SKB 8
+#endif /* CONFIG_PREALLOC_RX_SKB_BUFFER */
 
-	#ifdef CONFIG_SINGLE_RECV_BUF
-		#define NR_RECVBUFF (1)
-	#else
-		#if defined(CONFIG_GSPI_HCI)
-			#define NR_RECVBUFF (32)
-		#elif defined(CONFIG_SDIO_HCI)
-			#define NR_RECVBUFF (8)
-		#else
-			#define NR_RECVBUFF (8)
-		#endif
-	#endif /* CONFIG_SINGLE_RECV_BUF */
-	#ifdef CONFIG_PREALLOC_RX_SKB_BUFFER
-		#define NR_PREALLOC_RECV_SKB (rtw_rtkm_get_nr_recv_skb()>>1)
-	#else /*!CONFIG_PREALLOC_RX_SKB_BUFFER */
-		#define NR_PREALLOC_RECV_SKB 8
-	#endif /* CONFIG_PREALLOC_RX_SKB_BUFFER */
-
-	#ifdef CONFIG_RTW_NAPI
-		#define RTL_NAPI_WEIGHT (32)
-	#endif
+#ifdef CONFIG_RTW_NAPI
+	#define RTL_NAPI_WEIGHT (32)
 #endif
 
 #if defined(CONFIG_RTL8821C) && defined(CONFIG_SDIO_HCI) && defined(CONFIG_RECV_THREAD_MODE)
@@ -287,18 +272,6 @@ struct recv_priv {
 
 	_adapter	*adapter;
 
-#ifdef PLATFORM_WINDOWS
-	_nic_hdl  RxPktPoolHdl;
-	_nic_hdl  RxBufPoolHdl;
-
-#ifdef PLATFORM_OS_XP
-	PMDL	pbytecnt_mdl;
-#endif
-	uint	counter; /* record the number that up-layer will return to drv; only when counter==0 can we  release recv_priv */
-	NDIS_EVENT	recv_resource_evt ;
-#endif
-
-
 	u32 is_any_non_be_pkts;
 
 	u64	rx_bytes;
@@ -318,14 +291,9 @@ struct recv_priv {
 	uint  rx_smallpacket_crcerr;
 	uint  rx_middlepacket_crcerr;
 
-#if defined(PLATFORM_LINUX) || defined(PLATFORM_FREEBSD)
-#ifdef PLATFORM_FREEBSD
-	struct task irq_prepare_beacon_tasklet;
-	struct task recv_tasklet;
-#else /* PLATFORM_FREEBSD */
+#if defined(PLATFORM_LINUX)
 	struct tasklet_struct irq_prepare_beacon_tasklet;
 	struct tasklet_struct recv_tasklet;
-#endif /* PLATFORM_FREEBSD */
 	struct sk_buff_head free_recv_skb_queue;
 	struct sk_buff_head rx_skb_queue;
 #ifdef CONFIG_RTW_NAPI
@@ -336,7 +304,7 @@ struct recv_priv {
 	struct ifqueue rx_indicate_queue;
 #endif /* CONFIG_RX_INDICATE_QUEUE */
 
-#endif /* defined(PLATFORM_LINUX) || defined(PLATFORM_FREEBSD) */
+#endif /* defined(PLATFORM_LINUX) */
 
 	u8 *pallocated_recv_buf;
 	u8 *precv_buf;    /* 4 alignment */
@@ -442,9 +410,6 @@ struct recv_buf {
 #ifdef PLATFORM_LINUX
 	_pkt	*pskb;
 #endif
-#ifdef PLATFORM_FREEBSD /* skb solution */
-	struct sk_buff *pskb;
-#endif /* PLATFORM_FREEBSD */ /* skb solution */
 };
 
 
@@ -694,9 +659,6 @@ __inline static _buffer *get_rxbuf_desc(union recv_frame *precvframe)
 
 	if (precvframe == NULL)
 		return NULL;
-#ifdef PLATFORM_WINDOWS
-	NdisQueryPacket(precvframe->u.hdr.pkt, NULL, NULL, &buf_desc, NULL);
-#endif
 
 	return buf_desc;
 }
@@ -717,13 +679,6 @@ __inline static union recv_frame *pkt_to_recvframe(_pkt *pkt)
 
 	u8 *buf_star;
 	union recv_frame *precv_frame;
-#ifdef PLATFORM_WINDOWS
-	_buffer *buf_desc;
-	uint len;
-
-	NdisQueryPacket(pkt, NULL, NULL, &buf_desc, &len);
-	NdisQueryBufferSafe(buf_desc, &buf_star, &len, HighPagePriority);
-#endif
 	precv_frame = rxmem_to_recvframe((unsigned char *)buf_star);
 
 	return precv_frame;

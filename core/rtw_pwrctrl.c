@@ -1267,7 +1267,7 @@ void LeaveAllPowerSaveModeDirect(PADAPTER Adapter)
 				if (_FALSE == ips_leave(pri_padapter))
 					RTW_INFO("======> ips_leave fail.............\n");
 #endif
-#endif /* CONFIG_SWLPS_IN_IPS || (CONFIG_PLATFORM_SPRD && CONFIG_RTL8188E) */
+#endif /* CONFIG_SWLPS_IN_IPS */
 			}
 		}
 	}
@@ -1340,12 +1340,12 @@ void LeaveAllPowerSaveMode(IN PADAPTER Adapter)
 			} else
 #endif
 			{
-#if defined(CONFIG_FWLPS_IN_IPS) || defined(CONFIG_SWLPS_IN_IPS) || (defined(CONFIG_PLATFORM_SPRD) && defined(CONFIG_RTL8188E))
+#if defined(CONFIG_FWLPS_IN_IPS) || defined(CONFIG_SWLPS_IN_IPS)
 #ifdef CONFIG_IPS
 				if (_FALSE == ips_leave(Adapter))
 					RTW_INFO("======> ips_leave fail.............\n");
 #endif
-#endif /* CONFIG_SWLPS_IN_IPS || (CONFIG_PLATFORM_SPRD && CONFIG_RTL8188E) */
+#endif /* CONFIG_SWLPS_IN_IPS */
 			}
 		}
 	}
@@ -1979,11 +1979,6 @@ void rtw_init_pwrctrl_priv(PADAPTER padapter)
 #if defined(CONFIG_CONCURRENT_MODE)
 	if (padapter->adapter_type != PRIMARY_ADAPTER)
 		return;
-#endif
-
-
-#ifdef PLATFORM_WINDOWS
-	pwrctrlpriv->pnp_current_pwr_state = NdisDeviceStateD0;
 #endif
 
 	_init_pwrlock(&pwrctrlpriv->lock);

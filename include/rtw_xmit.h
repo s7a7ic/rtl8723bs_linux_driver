@@ -33,14 +33,10 @@
 	#endif
 #endif
 
-#ifdef PLATFORM_OS_CE
-	#define XMITBUF_ALIGN_SZ 4
+#ifdef USB_XMITBUF_ALIGN_SZ
+	#define XMITBUF_ALIGN_SZ (USB_XMITBUF_ALIGN_SZ)
 #else
-	#ifdef USB_XMITBUF_ALIGN_SZ
-		#define XMITBUF_ALIGN_SZ (USB_XMITBUF_ALIGN_SZ)
-	#else
-		#define XMITBUF_ALIGN_SZ 512
-	#endif
+	#define XMITBUF_ALIGN_SZ 512
 #endif
 
 /* xmit extension buff defination */
@@ -451,11 +447,6 @@ struct xmit_buf {
 	u32 ff_hwaddr;
 	u8	pg_num;
 	u8	agg_num;
-#ifdef PLATFORM_OS_XP
-	PMDL pxmitbuf_mdl;
-	PIRP  pxmitbuf_irp;
-	PSDBUS_REQUEST_PACKET pxmitbuf_sdrp;
-#endif
 #endif
 
 #if defined(DBG_XMIT_BUF) || defined(DBG_XMIT_BUF_EXT)
