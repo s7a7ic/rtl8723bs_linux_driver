@@ -114,12 +114,6 @@ rtl8723b_HalDmWatchDog(
 	u8 bFwPSAwake = _TRUE;
 	PHAL_DATA_TYPE	pHalData = GET_HAL_DATA(Adapter);
 
-#ifdef CONFIG_MP_INCLUDED
-	/* #if MP_DRIVER */
-	if (Adapter->registrypriv.mp_mode == 1 && Adapter->mppriv.mp_dm == 0) /* for MP power tracking */
-		return;
-	/* #endif */
-#endif
 	if (!rtw_is_hw_init_completed(Adapter))
 		goto skip_dm;
 

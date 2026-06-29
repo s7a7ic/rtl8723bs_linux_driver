@@ -1054,15 +1054,8 @@ u16 rtw_get_cur_max_rate(_adapter *adapter)
 	u8	rf_type = 0;
 #endif
 
-#ifdef CONFIG_MP_INCLUDED
-	if (adapter->registrypriv.mp_mode == 1) {
-		if (check_fwstate(pmlmepriv, WIFI_MP_STATE) == _TRUE)
-			return 0;
-	}
-#endif
-
-	if ((check_fwstate(pmlmepriv, _FW_LINKED) != _TRUE)
-	    && (check_fwstate(pmlmepriv, WIFI_ADHOC_MASTER_STATE) != _TRUE))
+	if ((check_fwstate(pmlmepriv, _FW_LINKED) != true)
+	    && (check_fwstate(pmlmepriv, WIFI_ADHOC_MASTER_STATE) != true))
 		return 0;
 
 	psta = rtw_get_stainfo(&adapter->stapriv, get_bssid(pmlmepriv));

@@ -44,7 +44,6 @@ CONFIG_RTL8821C = n
 CONFIG_SDIO_HCI = y
 CONFIG_GSPI_HCI = n
 ########################## Features ###########################
-CONFIG_MP_INCLUDED = y
 CONFIG_POWER_SAVING = y
 CONFIG_USB_AUTOSUSPEND = n
 CONFIG_HW_PWRP_DETECTION = n
@@ -186,10 +185,6 @@ _OS_INTFS_FILES :=	os_dep/osdep_service.o \
 			os_dep/rtw_android.o \
  			os_dep/rtw_proc.o
 
-ifeq ($(CONFIG_MP_INCLUDED), y)
-_OS_INTFS_FILES += os_dep/ioctl_mp.o
-endif
-
 ifeq ($(CONFIG_SDIO_HCI), y)
 _OS_INTFS_FILES += os_dep/$(HCI_NAME)_ops_linux.o
 endif
@@ -207,11 +202,9 @@ _HAL_INTFS_FILES :=	hal/hal_intf.o \
 			hal/hal_dm_acs.o \
 			hal/hal_btcoex_wifionly.o \
 			hal/hal_btcoex.o \
-			hal/hal_mp.o \
 			hal/hal_mcc.o \
 			hal/hal_hci/hal_$(HCI_NAME).o \
 			hal/led/hal_$(HCI_NAME)_led.o
-
 
 ccflags-y += -I$(src)/platform
 _PLATFORM_FILES := platform/platform_ops.o
@@ -738,11 +731,6 @@ ifeq ($(CONFIG_USB_HCI), y)
 ifeq ($(CONFIG_USB_AUTOSUSPEND), y)
 ccflags-y += -DCONFIG_USB_AUTOSUSPEND
 endif
-endif
-
-ifeq ($(CONFIG_MP_INCLUDED), y)
-#MODULE_NAME := $(MODULE_NAME)_mp
-ccflags-y += -DCONFIG_MP_INCLUDED
 endif
 
 ifeq ($(CONFIG_POWER_SAVING), y)
@@ -1797,12 +1785,6 @@ $(MODULE_NAME)-y += $(_HAL_INTFS_FILES)
 $(MODULE_NAME)-y += $(_PHYDM_FILES)
 $(MODULE_NAME)-y += $(_BTC_FILES)
 $(MODULE_NAME)-y += $(_PLATFORM_FILES)
-
-$(MODULE_NAME)-$(CONFIG_MP_INCLUDED) += core/rtw_mp.o
-
-ifeq ($(CONFIG_RTL8723B), y)
-$(MODULE_NAME)-$(CONFIG_MP_INCLUDED)+= core/rtw_bt_mp.o
-endif
 
 obj-$(CONFIG_RTL8723BS) := $(MODULE_NAME).o
 

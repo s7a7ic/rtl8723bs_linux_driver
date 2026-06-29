@@ -279,12 +279,6 @@ odm_tx_pwr_track_set_pwr_8723b(
 
 		tx_rate = mpt_to_mgnt_rate(p_mpt_ctx->mpt_rate_index);
 #endif
-#elif (DM_ODM_SUPPORT_TYPE & ODM_CE)
-#ifdef CONFIG_MP_INCLUDED
-		PMPT_CONTEXT p_mpt_ctx = &(adapter->mppriv.mpt_ctx);
-
-		tx_rate = mpt_to_mgnt_rate(p_mpt_ctx->mpt_rate_index);
-#endif
 #endif
 #endif
 	} else {
@@ -497,12 +491,6 @@ get_delta_swing_table_8723b(
 #if (DM_ODM_SUPPORT_TYPE & ODM_WIN)
 #if (MP_DRIVER == 1)
 		PMPT_CONTEXT p_mpt_ctx = &(adapter->mpt_ctx);
-
-		tx_rate = mpt_to_mgnt_rate(p_mpt_ctx->mpt_rate_index);
-#endif
-#elif (DM_ODM_SUPPORT_TYPE & ODM_CE)
-#ifdef CONFIG_MP_INCLUDED
-		PMPT_CONTEXT p_mpt_ctx = &(adapter->mppriv.mpt_ctx);
 
 		tx_rate = mpt_to_mgnt_rate(p_mpt_ctx->mpt_rate_index);
 #endif

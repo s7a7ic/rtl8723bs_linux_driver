@@ -257,9 +257,6 @@ void rtl8723b_stop_thread(_adapter *padapter);
 #ifdef CONFIG_GPIO_WAKEUP
 	void HalSetOutPutGPIO(PADAPTER padapter, u8 index, u8 OutPutValue);
 #endif
-#ifdef CONFIG_MP_INCLUDED
-int FirmwareDownloadBT(IN PADAPTER Adapter, PRT_MP_FIRMWARE pFirmware);
-#endif
 void CCX_FwC2HTxRpt_8723b(PADAPTER padapter, u8 *pdata, u8 len);
 
 u8 MRateToHwRate8723B(u8  rate);
