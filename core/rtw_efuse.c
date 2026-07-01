@@ -17,8 +17,6 @@
 #include <drv_types.h>
 #include <hal_data.h>
 
-#include "../hal/efuse/efuse_mask.h"
-
 /*------------------------Define local variable------------------------------*/
 u8	fakeEfuseBank = {0};
 u32	fakeEfuseUsedBytes = {0};
@@ -2201,3 +2199,65 @@ exit:
 #endif /* CONFIG_EFUSE_CONFIG_FILE */
 
 #endif /* PLATFORM_LINUX */
+
+u1Byte Array_MP_8723B_MSDIO[] = {
+	0xFF,
+	0xF3,
+	0x00,
+	0x0E,
+	0x70,
+	0x00,
+	0x00,
+	0x00,
+	0x00,
+	0x00,
+	0x00,
+	0x07,
+	0xF3,
+	0xFF,
+	0xFF,
+	0xFF,
+	0xFF,
+	0xFF,
+	0x00,
+	0x00,
+	0x80,
+	0x00,
+	0x00,
+	0x00,
+	0x00,
+	0x00,
+	0x00,
+	0x00,
+	0x00,
+	0x00,
+	0x00,
+	0x00,
+};
+
+u2Byte EFUSE_GetArrayLen_MP_8723B_MSDIO(void)
+{
+	return sizeof(Array_MP_8723B_MSDIO) / sizeof(u1Byte);
+}
+
+void EFUSE_GetMaskArray_MP_8723B_MSDIO(IN OUT pu1Byte Array)
+{
+	u2Byte len = EFUSE_GetArrayLen_MP_8723B_MSDIO(), i = 0;
+
+	for (i = 0; i < len; ++i)
+		Array[i] = Array_MP_8723B_MSDIO[i];
+}
+
+bool EFUSE_IsAddressMasked_MP_8723B_MSDIO(IN u2Byte Offset)
+{
+	int r = Offset / 16;
+	int c = (Offset % 16) / 2;
+	int result = 0;
+
+	if (c < 4) /* Upper double word */
+		result = (Array_MP_8723B_MSDIO[r] & (0x10 << c));
+	else
+		result = (Array_MP_8723B_MSDIO[r] & (0x01 << (c - 4)));
+
+	return (result > 0) ? 0 : 1;
+}

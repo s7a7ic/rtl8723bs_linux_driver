@@ -245,4 +245,8 @@ u32 rtw_read_macaddr_from_file(const char *path, u8 *buf);
 #endif /* CONFIG_EFUSE_CONFIG_FILE */
 #endif /* PLATFORM_LINUX */
 
+u2Byte EFUSE_GetArrayLen_MP_8723B_MSDIO(void);
+void EFUSE_GetMaskArray_MP_8723B_MSDIO(IN OUT pu1Byte Array);
+bool EFUSE_IsAddressMasked_MP_8723B_MSDIO(IN u2Byte Offset);
+
 #endif
